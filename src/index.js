@@ -1,12 +1,31 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import './css/fonts.css';
 import reportWebVitals from './reportWebVitals';
+import { BrowserRouter, Route } from 'react-router-dom';
+import Routing from './Routing';
+import { createMuiTheme, ThemeProvider } from "@material-ui/core";
+
+const theme = createMuiTheme({
+    palette: {
+       primary: {
+          main: "#3B945E" // This is an orange looking color
+                 },
+       secondary: {
+          main: "#ffffff" //Another orange-ish color
+                  }
+             },
+ });
 
 ReactDOM.render(
+  
   <React.StrictMode>
-    <App />
+    <ThemeProvider theme={theme}>
+    <BrowserRouter>
+            <Route component={Routing}/>
+        </BrowserRouter>
+  </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
