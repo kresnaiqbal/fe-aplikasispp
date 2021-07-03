@@ -1,7 +1,11 @@
-import React from "react";
-import Navbar from "../components/Navbar";
-import { ShowRiwayatTransaksi } from "../Api";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import React, { useEffect, useState } from "react";
+import {
+  ApiShowSantri,
+  requestData,
+  ApiDeleteSantri,
+  ApiCreateSantri,
+} from "../../Api";
+import Navbar from "../../components/Navbar";
 import {
   Paper,
   Table,
@@ -13,27 +17,23 @@ import {
   TableRow,
   Button,
 } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import { Link } from "react-router-dom";
 
 const columns = [
-  { id: "no", label: "No.", minWidth: 60 },
-  { id: "transaksi", label: "Transaksi", minWidth: 170 },
+  { id: "nis", label: "Nis", minWidth: 50 },
+  { id: "nama_santri", label: "Nama", minWidth: 100 },
   {
-    id: "NamaSantri",
-    label: "Nama Santri",
-    minWidth: 60,
+    id: "kelas",
+    label: "Kelas",
+    minWidth: 50,
     format: (value) => value.toLocaleString("en-US"),
   },
   {
-    id: "jumlah",
-    label: "Jumlah",
-    minWidth: 60,
+    id: "subsidi",
+    label: "Status\u00a0Subsidi",
+    minWidth: 50,
     format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "BuktiTransfer",
-    label: "Bukti Transfer",
-    minWidth: 150,
-    format: (value) => value.toFixed(2),
   },
   {
     id: "aksi",
@@ -43,8 +43,8 @@ const columns = [
   },
 ];
 
-function createData(id, username, password, role) {
-  return { id, username, password, role };
+function createData(nis, nama, kelas, statusSubsidi, statusSPP) {
+  return { nis, nama, kelas, statusSubsidi, statusSPP };
 }
 
 const rows = [
@@ -76,13 +76,13 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     borderRadius: "20px",
     marginLeft: "80px",
+    marginTop: "-38px",
   },
   Head: {
     color: "black",
     fontSize: "18px",
     fontFamily: "Roboto",
     fontWeight: 700,
-    marginTop: "20px",
     marginLeft: "30px",
   },
   MyButton: {
@@ -100,16 +100,50 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "1%",
     color: "white",
   },
+  detailBtn: {
+    background: "#0B4FFF",
+    marginRight: "1%",
+    color: "white",
+  },
 }));
 
-function RiwayatTransaksi() {
+function DaftarSantri() {
   const classes = useStyles();
+  const [dataSantri, setDataSantri] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [dataAdmin, setDataAdmin] = React.useState([]);
-
-  const [dataRiwayatTransaksi, setDataRiwayatTransaksi] = React.useState([]);
-
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [shallRender, setShallRender] = useState(false);
+
+  let gateway = ApiShowSantri.getInstance();
+
+  let SantriInstance = gateway.getSantriInstance();
+
+  useEffect(() => {
+    let santriData = gateway.getDataSantri(SantriInstance);
+
+    let result = gateway.requestData([santriData]);
+    result.then((response) => {
+      if (Array.isArray(response)) {
+        setDataSantri(response);
+      }
+    });
+  }, [shallRender]);
+
+  const handleOnClickDelete = (nis) => {
+    let gateway = ApiDeleteSantri.getInstance();
+
+    let SantriInstance = gateway.getSantriInstance();
+    let santriData = gateway.deleteDataSantri(SantriInstance, nis);
+
+    let result = gateway.requestData([santriData]);
+    result.then((response) => {
+      if(response.status === 200 && response.data.message === "Data Santri Berhasil Dihapus"){
+      console.log("ini respon delete",response)
+      setShallRender(!shallRender);
+      // console.log('hapus ini',santriData);
+      }
+    })
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -120,13 +154,13 @@ function RiwayatTransaksi() {
     setPage(0);
   };
 
-  ShowRiwayatTransaksi(setDataRiwayatTransaksi);
+  // ShowSantri(setDataSantri);
 
   return (
     <div>
       <Navbar />
       <Paper className={classes.ukuranpaper} elevation="1">
-        <div className={classes.Head}>Riwayat Transaksi</div>
+        <div className={classes.Head}>Daftar Santri</div>
         <TableContainer className={classes.container}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
@@ -143,37 +177,39 @@ function RiwayatTransaksi() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => {
+              {dataSantri &&
+                dataSantri.map((data) => {
                   return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={row.code}
-                    >
-                      {columns.map((column) => {
-                        const value = row[column.id];
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            {column.format && typeof value === "number"
-                              ? column.format(value)
-                              : value}
-                          </TableCell>
-                        );
-                      })}
+                    <TableRow key="{data.nis}">
+                      <TableCell> {data.nis}</TableCell>
+                      <TableCell> {data.nama_santri}</TableCell>
+                      <TableCell> {data.id_kelas}</TableCell>
+                      <TableCell> {data.subsidi}</TableCell>
+
                       <TableCell>
+                        <Link
+                          to={`${process.env.PUBLIC_URL}/DaftarSantri/Detail`}
+                        >
+                          <Button
+                            variant="contained"
+                            className={classes.detailBtn}
+                          >
+                            Detail
+                          </Button>
+                        </Link>
+                        <Link
+                          to={`${process.env.PUBLIC_URL}/DaftarSantri/Sunting`}
+                        >
+                          <Button variant="contained" color="primary">
+                            Sunting
+                          </Button>
+                        </Link>
                         <Button
                           variant="contained"
-                          className={classes.detailBtn}
+                          className={classes.deleteBtn}
+                          onClick={() => handleOnClickDelete(data.nis)}
                         >
-                          Lihat
-                        </Button>
-                      </TableCell>
-                      <TableCell>
-                        <Button variant="contained" color="primary">
-                          Verifikasi
+                          Hapus
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -182,9 +218,12 @@ function RiwayatTransaksi() {
             </TableBody>
           </Table>
         </TableContainer>
-        <Button className={classes.MyButton} style={{ margin: "2%" }}>
-          Tambah Akun Admin
-        </Button>
+        <Link to={`${process.env.PUBLIC_URL}/DaftarSantri/Tambah`}>
+          <Button variant="contained" color="primary" style={{ margin: "2%" }}>
+            Tambah Data Santri
+          </Button>
+        </Link>
+
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
@@ -199,4 +238,4 @@ function RiwayatTransaksi() {
   );
 }
 
-export default RiwayatTransaksi;
+export default DaftarSantri;
