@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { useState } from "react";
 import Navbar from "../../components/Navbar";
 import {
   Paper,
@@ -10,29 +10,31 @@ import {
   IconButton,
   InputAdornment,
 } from "@material-ui/core";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import PersonIcon from '@material-ui/icons/Person';
-import LockIcon from '@material-ui/icons/Lock';
-import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
-import BorderColorIcon from '@material-ui/icons/BorderColor';
+import { makeStyles} from "@material-ui/core/styles";
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import PersonIcon from "@material-ui/icons/Person";
+import LockIcon from "@material-ui/icons/Lock";
+import SettingsApplicationsIcon from "@material-ui/icons/SettingsApplications";
+import BorderColorIcon from "@material-ui/icons/BorderColor";
+import { ApiCreateAdmin } from "../../Api";
+import { useHistory } from "react-router";
 
 const roles = [
   {
-    value: "admin",
+    value: "Admin",
     label: "Admin",
   },
   {
-    value: "operator",
+    value: "Operator",
     label: "Operator",
   },
 ];
 
 const state = {
   error: false, //<---- here
-  errorMessage: {} //<-----here
+  errorMessage: {}, //<-----here
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -45,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     maxHeight: 440,
   },
-  ukuranpaper: {
+  paperSize: {
     width: "100%",
     borderRadius: "20px",
     marginLeft: "80px",
@@ -77,44 +79,83 @@ const useStyles = makeStyles((theme) => ({
 
 function TambahAkunOperator() {
   const classes = useStyles();
-  const [values, setValues] = React.useState({
-    password: '',
+  const history = useHistory();
+  const [password, setPassword] = useState({
     showPassword: false,
   });
-  const [values1, setValues1] = React.useState({
-    confirmPassword: '',
+  const [confirmPassword, setConfirmPassword] = useState({
+    confirmPassword: "",
     showConfirmPassword: false,
   });
-  const [role, setRole] = React.useState("Admin");
+  const [role, setRole] = useState();
+  const [username, setUsername] = useState();
+  const [namaAdmin, setNamaAdmin] = useState();
+  const [paraf, setParaf] = useState();
 
-  const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
+  let gateway = ApiCreateAdmin.getInstance();
+
+  let AdminInstance = gateway.getAdminInstance();
+
+  const handleCreateAdmin = (callback) => {
+    let adminData = gateway.createDataAdmin(
+      AdminInstance,
+      username,
+      namaAdmin,
+      role,
+      paraf,
+      password,
+      callback
+    );
+  };
+
+  const handleChangePassword = (event) => {
+    setPassword( event.target.value);
+  };
+
+  const handleChangeConfirmPassword = (event) => {
+    setConfirmPassword( event.target.value);
   };
 
   const handleChange1 = (event) => {
     setRole(event.target.value);
   };
-  
+
   const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword });
+    setPassword({ ...password, showPassword: !password.showPassword });
   };
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
-  
+
   const handleClickShowPassword1 = () => {
-    setValues1({ ...values1, showConfirmPassword: !values.showConfirmPassword });
+    setConfirmPassword({
+      ...confirmPassword,
+      showConfirmPassword: !confirmPassword.showConfirmPassword,
+    });
   };
 
   const handleMouseDownPassword1 = (event) => {
     event.preventDefault();
   };
 
+  const handleChangeUsername = (event) => {
+    setUsername(event.target.value);
+  };
+
+  const handleChangeNamaAdmin = (event) => {
+    setNamaAdmin(event.target.value);
+  };
+
+  const handleChangeParaf = (event) => {
+    setParaf(event.target.value);
+    // console.log(event.target.value);
+  };
+
   return (
     <div>
       <Navbar />
-      <Paper className={classes.ukuranpaper}>
+      <Paper className={classes.paperSize}>
         <div className={classes.Head}>Tambah Akun Admin/Operator</div>
         <Divider />
         <FormControl component="fieldset">
@@ -127,6 +168,7 @@ function TambahAkunOperator() {
                   placeholder="Nama Lengkap"
                   variant="outlined"
                   style={{ width: "400px" }}
+                  onChange={handleChangeNamaAdmin}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -137,7 +179,7 @@ function TambahAkunOperator() {
                 />
               </div>
               <div>
-              <TextField
+                <TextField
                   id="outlined-select-gender"
                   required
                   select
@@ -149,7 +191,7 @@ function TambahAkunOperator() {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <SettingsApplicationsIcon  />
+                        <SettingsApplicationsIcon />
                       </InputAdornment>
                     ),
                   }}
@@ -167,6 +209,7 @@ function TambahAkunOperator() {
                   required
                   placeholder="Paraf"
                   variant="outlined"
+                  onChange={handleChangeParaf}
                   style={{ width: "400px" }}
                   InputProps={{
                     startAdornment: (
@@ -182,6 +225,7 @@ function TambahAkunOperator() {
                   id="outlined-basic"
                   required
                   placeholder="Username"
+                  onChange={handleChangeUsername}
                   variant="outlined"
                   style={{ width: "400px" }}
                   InputProps={{
@@ -197,15 +241,14 @@ function TambahAkunOperator() {
                 <TextField
                   id="outlined-adornment-password"
                   required
-                  type={values.showPassword ? 'text' : 'password'}
-                  value={values.password}
+                  type={password.showPassword ? "text" : "password"}
                   variant="outlined"
                   style={{ width: "400px" }}
-                  onChange={handleChange('password')}
+                  onChange={handleChangePassword}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <LockIcon/>
+                        <LockIcon />
                       </InputAdornment>
                     ),
                   }}
@@ -217,7 +260,11 @@ function TambahAkunOperator() {
                         onMouseDown={handleMouseDownPassword}
                         edge="end"
                       >
-                        {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                        {password.showPassword ? (
+                          <Visibility />
+                        ) : (
+                          <VisibilityOff />
+                        )}
                       </IconButton>
                     </InputAdornment>
                   }
@@ -227,17 +274,16 @@ function TambahAkunOperator() {
               </div>
               <div>
                 <TextField
-                  id="outlined-adornment-password"
+                  id="outlined-adornment-confrimpassword"
                   required
-                  type={values.showConfirmPassword ? 'text' : 'password'}
-                  value={values.confirmpassword}
+                  type={confirmPassword.showConfirmPassword ? "text" : "password"}
                   variant="outlined"
                   style={{ width: "400px" }}
-                  onChange={handleChange('confirmPassword')}
+                  onChange={handleChangeConfirmPassword}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <LockIcon/>
+                        <LockIcon />
                       </InputAdornment>
                     ),
                   }}
@@ -249,7 +295,11 @@ function TambahAkunOperator() {
                         onMouseDown={handleMouseDownPassword1}
                         edge="end"
                       >
-                        {values.showConfirmPassword ? <Visibility /> : <VisibilityOff />}
+                        {confirmPassword.showConfirmPassword ? (
+                          <Visibility />
+                        ) : (
+                          <VisibilityOff />
+                        )}
                       </IconButton>
                     </InputAdornment>
                   }
@@ -262,6 +312,9 @@ function TambahAkunOperator() {
                   variant="contained"
                   color="primary"
                   style={{ margin: "10px" }}
+                  onClick={() =>
+                    handleCreateAdmin(() => history.push("/akunadmin"))
+                  }
                 >
                   Tambah
                 </Button>

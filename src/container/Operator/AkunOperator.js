@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
-import { ApiShowAdmin } from "../../Api";
+import { ApiShowAdmin, ApiDeleteAdmin } from "../../Api";
 import {
   Paper,
   Table,
@@ -13,13 +13,14 @@ import {
   Button,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { Link } from "react-router-dom";
 
 const columns = [
   { id: "id", label: "ID", minWidth: 60 },
-  { id: "username", label: "Username", minWidth: 170 },
+  { id: "namaAdmin", label: "Nama Admin", minWidth: 170 },
   {
-    id: "password",
-    label: "Password",
+    id: "username",
+    label: "Username",
     minWidth: 60,
     format: (value) => value.toLocaleString("en-US"),
   },
@@ -44,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     maxHeight: 440,
   },
-  ukuranpaper: {
+  paperSize: {
     width: "100%",
     borderRadius: "20px",
     marginLeft: "80px",
@@ -83,10 +84,10 @@ const rows = [];
 
 function AkunOperator() {
   const classes = useStyles();
-  const [page, setPage] = React.useState(0);
-  const [dataAdmin, setDataAdmin] = React.useState([]);
-
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [page, setPage] = useState(0);
+  const [dataAdmin, setDataAdmin] = useState([]);
+  const [shallRender, setShallRender] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   let gateway = ApiShowAdmin.getInstance();
 
@@ -102,7 +103,22 @@ function AkunOperator() {
         console.log("ini view", response);
       }
     });
-  }, []);
+  }, [shallRender]);
+
+  const handleOnClickDelete = (id_admin) => {
+    let gateway = ApiDeleteAdmin.getInstance();
+
+    let AdminInstance = gateway.getAdminInstance();
+    let adminData = gateway.deleteDataAdmin(AdminInstance, id_admin);
+
+    let result = gateway.requestData([adminData]);
+    result.then((response) => {
+      if (response.data.message === "Data Admin Berhasil Dihapus") {
+        setShallRender(!shallRender);
+        // console.log('hapus ini',santriData);
+      }
+    });
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -116,7 +132,7 @@ function AkunOperator() {
   return (
     <div>
       <Navbar />
-      <Paper className={classes.ukuranpaper} elevation="1">
+      <Paper className={classes.paperSize} elevation="1">
         <div className={classes.Head}>Akun Admin</div>
         <TableContainer className={classes.container}>
           <Table stickyHeader aria-label="sticky table">
@@ -139,17 +155,28 @@ function AkunOperator() {
                   return (
                     <TableRow hover key="{data.id_admin}">
                       <TableCell>{data.id_admin}</TableCell>
-                      <TableCell>{data.username}</TableCell>
                       <TableCell>{data.nama_admin}</TableCell>
+                      <TableCell>{data.username}</TableCell>
                       <TableCell>{data.role}</TableCell>
 
                       <TableCell>
-                        <Button variant="contained" color="primary">
-                          Sunting
-                        </Button>
+                        <Link to={`${process.env.PUBLIC_URL}/AkunAdmin/Detail/${data.id_admin}`}>
+                          <Button
+                            variant="contained"
+                            className={classes.detailBtn}
+                          >
+                            Detail
+                          </Button>
+                        </Link>
+                        <Link to={`${process.env.PUBLIC_URL}/AkunAdmin/Sunting/${data.id_admin}`}>
+                          <Button variant="contained" color="primary">
+                            Sunting
+                          </Button>
+                        </Link>
                         <Button
                           variant="contained"
                           className={classes.deleteBtn}
+                          onClick={() => handleOnClickDelete(data.id_admin)}
                         >
                           Hapus
                         </Button>
@@ -160,9 +187,11 @@ function AkunOperator() {
             </TableBody>
           </Table>
         </TableContainer>
-        <Button className={classes.MyButton} style={{ margin: "2%" }}>
-          Tambah Akun Admin
-        </Button>
+        <Link to={`${process.env.PUBLIC_URL}/AkunAdmin/Tambah`}>
+          <Button className={classes.MyButton} style={{ margin: "2%" }}>
+            Tambah Akun Admin
+          </Button>
+        </Link>
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"

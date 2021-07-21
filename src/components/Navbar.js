@@ -147,6 +147,10 @@ const Navbar = () => {
   const [example, setExample] = useState("secondary");
   const isCustomColor = example === "customColor";
   const isCustomHeight = example === "customHeight";
+
+  let permission = sessionStorage.getItem("permission");
+  console.log("ininav", permission);
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -189,13 +193,6 @@ const Navbar = () => {
   const handleLogout = () => {
     sessionStorage.clear();
   };
-
-  // let hasLogin = sessionStorage.getItem("hasLogin")
-  // if (hasLogin == undefined || hasLogin == null || !hasLogin) return (<Redirect to='/' />)
-
-  // let division = user.division.sub_division.title;
-  // let user = JSON.parse(sessionStorage.getItem("user"))
-  // let firstName = user.firstname
 
   return (
     <React.Fragment>
@@ -296,151 +293,122 @@ const Navbar = () => {
           </div>
           <Divider />
           <List>
-            <Link to={`${process.env.PUBLIC_URL}/dashboard`}>
-              <ListItem button>
-                <ListItemIcon>
-                  <Dashboard className={classes.iconColor} />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Dashboard"
-                  className={classes.NavText}
-                  style={{ color: "#fff", fontSize: "12px" }}
-                />
-              </ListItem>
-            </Link>
-            <Link button onClick={expandMenuOpen}>
-              <ListItem button>
-                <ListItemIcon>
-                  <Person className={classes.iconColor} />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Santri"
-                  style={{ color: "#fff", fontSize: "12px" }}
-                />
-                {open2 ? (
-                  <ExpandLess style={{ color: "#fff" }} />
-                ) : (
-                  <ExpandMore style={{ color: "#fff" }} />
-                )}
-              </ListItem>
-              <Collapse in={open2} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  <Paper className={classes.NavPaper}>
-                    <Link to={`${process.env.PUBLIC_URL}/DaftarSantri`}>
-                      <ListItemText
-                        primary="Daftar Santri"
-                        className={classes.DropdownText}
-                      
-                      />
-                    </Link>
-                    <Link to={`${process.env.PUBLIC_URL}/AkunSantri`}>
-                      <ListItemText
-                        primary="Akun Santri"
-                        className={classes.DropdownText}
-                      />
-                    </Link>
-                  </Paper>
-                </List>
-              </Collapse>
-            </Link>
-
-            <Link to={`${process.env.PUBLIC_URL}/akunadmin`}>
-              <ListItem button>
-                <ListItemIcon>
-                  <People className={classes.iconColor} />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Admin"
-                  style={{ color: "#fff", fontSize: "12px" }}
-                />
-              </ListItem>
-            </Link>
-
-            <Link button onClick={expandMenuOpen1}>
-              <ListItem button>
-                <ListItemIcon>
-                  <ListAlt className={classes.iconColor} />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Transaksi"
-                  style={{ color: "#fff", fontSize: "12px" }}
-                />
-                {open21 ? (
-                  <ExpandLess style={{ color: "#fff" }} />
-                ) : (
-                  <ExpandMore style={{ color: "#fff" }} />
-                )}
-              </ListItem>
-              <Collapse in={open21} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  <Paper className={classes.NavPaper}>
-                    <Link to={`${process.env.PUBLIC_URL}/inputSPP`}>
-                      <ListItemText
-                        primary="Input SPP"
-                        className={classes.DropdownText}
-                      />
-                    </Link>
-                    <Link to={`${process.env.PUBLIC_URL}/RiwayatTransaksi`}>
-                      <ListItemText
-                        primary="Riwayat Transaksi"
-                        className={classes.DropdownText}
-                      />
-                    </Link>
-                  </Paper>
-                </List>
-              </Collapse>
-            </Link>
-            <Link button onClick={expandMenuOpen2}>
-              <ListItem button>
-                <ListItemIcon>
-                  <MenuBook className={classes.iconColor} />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Laporan"
-                  style={{ color: "#fff", fontSize: "12px" }}
-                />
-                {open22 ? (
-                  <ExpandLess style={{ color: "#fff" }} />
-                ) : (
-                  <ExpandMore style={{ color: "#fff" }} />
-                )}
-              </ListItem>
-              <Collapse in={open22} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  <Paper className={classes.NavPaper}>
-                    <Link to={`${process.env.PUBLIC_URL}/LaporanKeuangan`}>
-                      <ListItemText
-                        primary="Laporan Keuangan"
-                        className={classes.DropdownText}
-                      />
-                    </Link>
-                    <Link to={`${process.env.PUBLIC_URL}/LaporanTunggakan`}>
-                      <ListItemText
-                        primary="Laporan Tunggakan"
-                        className={classes.DropdownText}
-                      />
-                    </Link>
-                  </Paper>
-                </List>
-              </Collapse>
-            </Link>
-            <Link to={`${process.env.PUBLIC_URL}/pengaturan`}>
-              <ListItem button>
-                <ListItemIcon>
-                  <Settings className={classes.iconColor} />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Pengaturan"
-                  style={{ color: "#fff", fontSize: "12px" }}
-                />
-              </ListItem>
-            </Link>
-            {/* <Link to={`${process.env.PUBLIC_URL}`}>
+            {permission && permission.includes("dashboard") && (
+              <Link to={`${process.env.PUBLIC_URL}/dashboard`}>
                 <ListItem button>
-                  <ListItemIcon><ExitToApp className={classes.iconColor} /></ListItemIcon>
-                  <ListItemText primary="Log out" style={{ color: '#fff', fontSize: "12px" }} />
+                  <ListItemIcon>
+                    <Dashboard className={classes.iconColor} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Dashboard"
+                    className={classes.NavText}
+                    style={{ color: "#fff", fontSize: "12px" }}
+                  />
                 </ListItem>
-              </Link> */}
+              </Link>
+            )}
+            {permission && permission.includes("santri") && (
+              <Link to={`${process.env.PUBLIC_URL}/DaftarSantri`}>
+                <ListItem button>
+                  <ListItemIcon>
+                    <Person className={classes.iconColor} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Santri"
+                    style={{ color: "#fff", fontSize: "12px" }}
+                  />
+                </ListItem>
+              </Link>
+            )}
+            {permission && permission.includes("admin") && (
+              <Link to={`${process.env.PUBLIC_URL}/akunadmin`}>
+                <ListItem button>
+                  <ListItemIcon>
+                    <People className={classes.iconColor} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Admin"
+                    style={{ color: "#fff", fontSize: "12px" }}
+                  />
+                </ListItem>
+              </Link>
+            )}
+            {permission && (
+              <Link button onClick={expandMenuOpen1}>
+                <ListItem button>
+                  <ListItemIcon>
+                    <ListAlt className={classes.iconColor} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Transaksi"
+                    style={{ color: "#fff", fontSize: "12px" }}
+                  />
+                  {open21 ? (
+                    <ExpandLess style={{ color: "#fff" }} />
+                  ) : (
+                    <ExpandMore style={{ color: "#fff" }} />
+                  )}
+                </ListItem>
+                <Collapse in={open21} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding>
+                    <Paper className={classes.NavPaper}>
+                      {permission.includes("input_transaksi") && (
+                        <Link to={`${process.env.PUBLIC_URL}/inputSPP`}>
+                          <ListItemText
+                            primary="Input SPP"
+                            className={classes.DropdownText}
+                          />
+                        </Link>
+                      )}
+                      {permission.includes("riwayat_transaksi") && (
+                        <Link to={`${process.env.PUBLIC_URL}/RiwayatTransaksi`}>
+                          <ListItemText
+                            primary="Riwayat Transaksi"
+                            className={classes.DropdownText}
+                          />
+                        </Link>
+                      )}
+                    </Paper>
+                  </List>
+                </Collapse>
+              </Link>
+            )}
+            {permission && permission.includes("laporan") && (
+              <Link button onClick={expandMenuOpen2}>
+                <ListItem button>
+                  <ListItemIcon>
+                    <MenuBook className={classes.iconColor} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Laporan"
+                    style={{ color: "#fff", fontSize: "12px" }}
+                  />
+                  {open22 ? (
+                    <ExpandLess style={{ color: "#fff" }} />
+                  ) : (
+                    <ExpandMore style={{ color: "#fff" }} />
+                  )}
+                </ListItem>
+                <Collapse in={open22} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding>
+                    <Paper className={classes.NavPaper}>
+                      <Link to={`${process.env.PUBLIC_URL}/LaporanKeuangan`}>
+                        <ListItemText
+                          primary="Laporan Keuangan"
+                          className={classes.DropdownText}
+                        />
+                      </Link>
+                      <Link to={`${process.env.PUBLIC_URL}/LaporanTunggakan`}>
+                        <ListItemText
+                          primary="Laporan Tunggakan"
+                          className={classes.DropdownText}
+                        />
+                      </Link>
+                    </Paper>
+                  </List>
+                </Collapse>
+              </Link>
+            )}
           </List>
         </Drawer>
       </AppBar>

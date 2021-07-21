@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import {
   Paper,
@@ -8,8 +8,23 @@ import {
   FormLabel,
   TextField,
   MenuItem,
+  Select,
+  Fragment,
 } from "@material-ui/core";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
+import { useHistory } from "react-router";
+import ApiPembayaranSPPTunai from "../Api/Transaksi/PembayaranSPPTunai";
+
+const jumlahBulans = [
+  {
+    value: 1,
+    label: "1",
+  },
+  {
+    value: 2,
+    label: "2",
+  },
+];
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     maxHeight: 440,
   },
-  ukuranpaper: {
+  paperSize: {
     width: "100%",
     borderRadius: "20px",
     marginLeft: "80px",
@@ -53,12 +68,45 @@ const useStyles = makeStyles((theme) => ({
 
 function InputSPP() {
   const classes = useStyles();
+  const history = useHistory();
+  const [jumlahBulan, setJumlahBulan] = useState();
+  const [nis, setNis] = useState();
+  const [totalBayar, setTotalBayar] = useState(0);
+  const [spp, setSpp] = useState(0);
+  const [infaq, setInfaq] = useState(0);
+
+  let gateway = ApiPembayaranSPPTunai.getInstance();
+
+  let SPPInstance = gateway.getSPPInstance();
+
+  const handlePembayaranSPPTunai = (callback) => {
+    let sppData = gateway.createDataSPP(
+      SPPInstance,
+      nis,
+      jumlahBulan,
+      totalBayar,
+      spp,
+      infaq,
+      callback
+    );
+  };
+
+  const handleChangeNIS = (event) => {
+    setNis(event.target.value);
+  };
+
+  const handleChangeJumlahBulan = (event) => {
+    setJumlahBulan(event.target.value);
+    setSpp(35000 * event.target.value);
+    setInfaq(15000 * event.target.value);
+    setTotalBayar(35000 * event.target.value + 15000 * event.target.value);
+  };
 
   return (
     <div>
       <Navbar />
-      <Paper className={classes.ukuranpaper}>
-        <div className={classes.Head}>Tambah Data Santri</div>
+      <Paper className={classes.paperSize}>
+        <div className={classes.Head}>Pembayaran SPP santri Tunai</div>
         <Divider />
         <FormControl component="fieldset">
           <div className={classes.pad}>
@@ -68,42 +116,53 @@ function InputSPP() {
                 <TextField
                   id="outlined-basic"
                   variant="outlined"
-                  style={{ width: "400px" }}
-                  value="NIS"
+                  style={{ width: "400px" , marginLeft: "90px" }}
+                  onChange={handleChangeNIS}
                 />
               </div>
               <div>
                 <FormLabel>Bulan</FormLabel>
-                <TextField
+                <Select
                   id="outlined-basic"
                   variant="outlined"
-                  style={{ width: "400px" }}
-                  value="bulan"
-                />
+                  style={{ width: "400px" , marginLeft: "75px" }}
+                  onChange={handleChangeJumlahBulan}
+                >
+                  {jumlahBulans.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
               </div>
               <div>
                 <FormLabel>Nominal SPP</FormLabel>
                 <TextField
                   id="outlined-basic"
                   variant="outlined"
-                  style={{ width: "400px" }}
-                  value="spp"
+                  value={spp}
+                  disabled
+                  style={{ width: "400px" , marginLeft: "20px"}}
                 />
-              </div><div>
+              </div>
+              <div>
                 <FormLabel>Nominal Infaq</FormLabel>
                 <TextField
                   id="outlined-basic"
                   variant="outlined"
-                  style={{ width: "400px" }}
-                  value="infaq"
+                  disabled
+                  style={{ width: "400px" , marginLeft: "13px" }}
+                  value={infaq}
                 />
-              </div><div>
+              </div>
+              <div>
                 <FormLabel>Total Bayar</FormLabel>
                 <TextField
                   id="outlined-basic"
                   variant="outlined"
-                  style={{ width: "400px" }}
-                  value="total_bayar"
+                  style={{ width: "400px" , marginLeft: "35px" }}
+                  disabled
+                  value={totalBayar}
                 />
               </div>
               <div style={{ textAlign: "right" }}>
@@ -111,6 +170,11 @@ function InputSPP() {
                   variant="contained"
                   color="primary"
                   style={{ margin: "10px" }}
+                  onClick={() =>
+                    handlePembayaranSPPTunai(() =>
+                      history.push("/RiwayatTransaksi")
+                    )
+                  }
                 >
                   Bayar
                 </Button>

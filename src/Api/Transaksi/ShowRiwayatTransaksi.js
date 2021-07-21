@@ -1,27 +1,52 @@
+import React from 'react';
 
 const axios = require('axios');
 
-const BASE_URL = "https://kota201.herokuapp.com/api/";
+const BASE_URL = "https://kota201.xyz/aplikasi_spp/public/api/";
 
-export default function ShowRiwayatTransaksi(callback){
+export default class ApiShowRiwayatTransaksi extends React.Component{
 
-    const instance = axios.create({
-        baseURL: `${BASE_URL}`,
-      });
+    static INSTANCE = null
 
-    // Make a request for a user with a given ID
-    instance.get('transaksi', {
-        
-    })
-    .then(function (response) {
-        // handle success
-        callback(response);
-        const data = response.data;
-        console.log(data);
-        console.log(response);
-    })
-    .catch(function (error) {
-        // handle error
-        console.log(error); 
-    })
+    static getInstance(){
+        if(ApiShowRiwayatTransaksi.INSTANCE === null){
+            ApiShowRiwayatTransaksi.INSTANCE = new ApiShowRiwayatTransaksi()
+        }
+        return ApiShowRiwayatTransaksi.INSTANCE
+    }
+
+    getRiwayatTransaksiInstance = () =>{ 
+        // Header API
+        return axios.create({
+            baseURL: `${BASE_URL}`,
+          });    
+    }
+
+    showRiwayatTransaksiPath = () => {
+        return 'transaksi'
+    }
+
+    getDataRiwayatTransaksi = (instance) => {
+        if(instance !== null){
+            let path = BASE_URL + this.showRiwayatTransaksiPath()
+            return instance.get(path).then(response => response).catch(err => err)
+        }
+    }
+
+    requestData = (data) => {
+        if(Array.isArray(data)){
+            return Promise.all(data).then(
+                response => {
+                    console.log(response);
+                    let result = []
+                    for(let i = 0; i< response[0].data.transaksi.length; i++){
+                        result.push(response[0].data.transaksi[i] ? response[0].data.transaksi[i] : null)
+                    }
+                    return result
+                }
+            ).catch(
+                error => error
+            )
+        }
+    }
 }

@@ -1,25 +1,14 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { useState } from "react";
 import "../App.css";
 import "../css/fonts.css";
-import { Login, ShowSantri } from "../Api";
+import { ApiLogin } from "../Api";
 import YouTubeIcon from "@material-ui/icons/YouTube";
 import FacebookIcon from "@material-ui/icons/Facebook";
 import InstagramIcon from "@material-ui/icons/Instagram";
-import {
-  Button,
-  TextField,
-  Grid,
-  Paper,
-  List,
-  CardMedia,
-} from "@material-ui/core";
-import {
-  createMuiTheme,
-  MuiThemeProvider,
-  makeStyles,
-} from "@material-ui/core/styles";
+import { Button, TextField, Grid, Paper } from "@material-ui/core";
+import { createMuiTheme, makeStyles } from "@material-ui/core/styles";
 import Image from "../image/backgroundLP.png";
-import { Link, Redirect, useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 const theme1 = createMuiTheme({
   palette: {
@@ -31,17 +20,18 @@ const theme1 = createMuiTheme({
 });
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
   iconColor: {
     color: "#fff",
     marginRight: "8px",
+    fontSize: 32,
   },
   Paper: {
     padding: theme.spacing(4),
     textAlign: "center",
     backgroundColor: "#76B690",
+    marginLeft: "40px",
+    marginTop: "20px",
+    width: "300px"
   },
   SidebarLogo: {
     color: "white",
@@ -52,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "20px",
     marginLeft: "40px",
   },
-  Judul: {
+  Header: {
     color: "white",
     alignItems: "center",
     fontSize: "48px",
@@ -60,9 +50,9 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: "Poppins",
     margin: "9px",
     marginLeft: "40px",
-    marginBottom: "40px",
+
   },
-  LoginJudul: {
+  LoginHeader: {
     color: "white",
     alignItems: "center",
     fontSize: "36px",
@@ -70,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "20px",
     marginLeft: "44px",
   },
-  Kontakdll: {
+  Menu: {
     fontFamily: "Poppins",
     fontStyle: "bold",
     fontDisplay: "swap",
@@ -78,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     alignItems: "center",
     fontSize: "12px",
-    marginTop: "2%",
+    marginTop: "20px",
   },
   LoginForm: {
     alignItems: "center",
@@ -96,8 +86,11 @@ const useStyles = makeStyles((theme) => ({
   },
   BackgroundLP: {
     backgroundImage: `url(${Image})`,
-    height: "667px",
-    maxHeight: "667px",
+    position:'absolute',
+    height: "100%",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center center",
   },
   bp: {
     height: "100%",
@@ -124,32 +117,32 @@ function LandingPage() {
       <div className={classes.root}>
         <Paper className={classes.BackgroundLP}>
           <Grid container direction="row">
-            <Grid item md={9}>
+            <Grid item xs={6} sm={6} md={9} lg={9} xl={9}>
               <div className={classes.SidebarLogo}>SM</div>
             </Grid>
-            <Grid item md={1} style={{ marginTop: "2%" }}>
+            <Grid item xs={3} sm={3} md={1} lg={1} xl={1} style={{ marginTop: "2%" }}>
               <Link to={""}>
-                <div className={classes.Kontakdll}>Kontak</div>
+                <div className={classes.Menu}>Kontak</div>
               </Link>
             </Grid>
-            <Grid item md={2} style={{ marginTop: "2%" }}>
+            <Grid item xs={3} sm={3} md={2} lg={2} xl={2} style={{ marginTop: "2%" }}>
               <Link to={""}>
-                <div className={classes.Kontakdll}>Tentang Kami</div>
+                <div className={classes.Menu}>Tentang Kami</div>
               </Link>
             </Grid>
           </Grid>
           <Grid container direction="row" style={{ marginTop: "5%" }}>
-            <Grid item md={8}>
-              <Grid item md={8} style={{ marginLeft: "5%" }}>
+            <Grid item xs={12} sm={12} md={8} lg={8} xl={8}>
+              <Grid item xs={12} sm={12} md={8} lg={8} xl={8}style={{ marginLeft: "40px", }}>
                 Madrasah Diniyyah Mubarokulhuda
               </Grid>
-              <Grid item md={10}>
-                <div className={classes.Judul}>
+              <Grid item xs={12} sm={12} md={10} lg={10} xl={10}>
+                <div className={classes.Header}>
                   Selamat Datang di Portal Pencatatan SPP Madrasah Diniyyah
                   Mubarokulhuda
                 </div>
               </Grid>
-              <Grid item xs={8} style={{ marginLeft: "5%" }}>
+              <Grid item xs={8} sm={8} md={8} lg={8} xl={8} style={{ marginLeft: "40px" }}>
                 <Link
                   to={`https://www.youtube.com/channel/UCfCCVByq3vT7Aj7uqE1J4Xw`}
                 >
@@ -165,11 +158,11 @@ function LandingPage() {
                 </Link>
               </Grid>
             </Grid>
-            <Grid item xs={4}>
-              <Paper className={classes.Paper} style={{ width: "80%" }}>
-                <Grid item xs={12}>
+            <Grid item xs={12} sm={12} md={4} lg={4} xl={4}>
+              <Paper className={classes.Paper} >
+                <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
                   <div
-                    className={classes.LoginJudul}
+                    className={classes.LoginHeader}
                     style={{
                       marginTop: "0px",
                     }}
@@ -177,7 +170,7 @@ function LandingPage() {
                     Login
                   </div>
                   <Grid container spacing={2}>
-                    <Grid item xs={12}>
+                    <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
                       <TextField
                         fullWidth
                         label="Username"
@@ -188,7 +181,7 @@ function LandingPage() {
                         value={username}
                       />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
                       <TextField
                         fullWidth
                         label="Password"
@@ -201,7 +194,7 @@ function LandingPage() {
                       />
                     </Grid>
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
                     {/* <Link to='dashboard'> */}
                     <Button
                       className={classes.MyButton}
@@ -209,7 +202,7 @@ function LandingPage() {
                       type="submit"
                       variant="contained"
                       onClick={() =>
-                        Login(username, password, () =>
+                        ApiLogin(username, password, () =>
                           history.push("/dashboard")
                         )
                       }
@@ -218,7 +211,7 @@ function LandingPage() {
                     </Button>
                     {/* </Link> */}
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
                     <div
                       className={classes.Kontakdll}
                       style={{

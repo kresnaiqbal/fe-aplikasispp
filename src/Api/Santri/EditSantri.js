@@ -2,7 +2,7 @@ import React from "react";
 
 const axios = require("axios");
 
-const BASE_URL = "https://kota201.herokuapp.com/api/";
+const BASE_URL = "https://kota201.xyz/aplikasi_spp/public/api/";
 
 export default class ApiEditSantri extends React.Component {
   static INSTANCE = null;
@@ -22,18 +22,14 @@ export default class ApiEditSantri extends React.Component {
   };
 
   editSantriPath = (id) => {
-    return "santri" + id;
+    return "santri/" + id;
   };
 
   editDataSantri = (
     instance,
-    namaSantri,
-    nis,
-    gender,
-    tanggalLahir,
+    dataSantri,
     alamat,
     noHp,
-    namaWali,
     jumlahTunggakan,
     kelas,
     subsidi,
@@ -41,22 +37,21 @@ export default class ApiEditSantri extends React.Component {
   ) => {
     if (instance !== null) {
       let params = {
-        nis: nis,
-        nama_santri: namaSantri,
-        tanggal_lahir: tanggalLahir,
+        nis: dataSantri.nis,
+        nama_santri: dataSantri.nama_santri,
+        tanggal_lahir: dataSantri.tanggal_lahir,
         alamat: alamat,
         no_hp: noHp,
-        nama_wali: namaWali,
-        jenis_kelamin: gender,
+        nama_wali: dataSantri.nama_wali,
+        jenis_kelamin: dataSantri.jenis_kelamin,
         subsidi: subsidi,
         jumlah_tunggakan: jumlahTunggakan,
         nama_kelas: kelas,
       };
-      let path = BASE_URL + this.editSantriPath();
+      let path = BASE_URL + this.editSantriPath(dataSantri.nis);
       return instance
         .put(path, params)
         .then((response) => {
-          console.log("ini update", response);
           callback();
         })
 
@@ -69,11 +64,6 @@ export default class ApiEditSantri extends React.Component {
       return Promise.all(data)
         .then((response) => {
           let result = [];
-          for (let i = 0; i < response[0].data.santri.length; i++) {
-            result.put(
-              response[0].data.santri[i] ? response[0].data.santri[i] : null
-            );
-          }
           return result;
         })
         .catch((error) => error);

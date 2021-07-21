@@ -2,7 +2,7 @@ import React from 'react';
 
 const axios = require('axios');
 
-const BASE_URL = "https://kota201.herokuapp.com/api/";
+const BASE_URL = "https://kota201.xyz/aplikasi_spp/public/api/";
 
 export default class ApiShowAdmin extends React.Component{
 

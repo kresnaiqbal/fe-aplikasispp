@@ -11,7 +11,7 @@ import {
   TableRow,
   Button,
 } from "@material-ui/core";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 const columns = [
   { id: "nis", label: "Nis", minWidth: 60 },
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     maxHeight: 440,
   },
-  ukuranpaper: {
+  paperSize: {
     width: "100%",
     borderRadius: "20px",
     marginLeft: "80px",
@@ -106,7 +106,7 @@ function AkunSantri() {
   return (
     <div>
       <Navbar />
-      <Paper className={classes.ukuranpaper} elevation="1">
+      <Paper className={classes.paperSize} elevation="1">
         <div className={classes.Head}>Akun Santri</div>
         <TableContainer className={classes.container}>
           <Table stickyHeader aria-label="sticky table">

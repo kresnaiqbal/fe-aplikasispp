@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   ApiShowSantri,
-  requestData,
   ApiDeleteSantri,
-  ApiCreateSantri,
 } from "../../Api";
 import Navbar from "../../components/Navbar";
 import {
@@ -43,26 +41,8 @@ const columns = [
   },
 ];
 
-function createData(nis, nama, kelas, statusSubsidi, statusSPP) {
-  return { nis, nama, kelas, statusSubsidi, statusSPP };
-}
-
 const rows = [
-  createData("India", "IN", 1324171354, 3287263),
-  createData("China", "CN", 1403500365, 9596961),
-  createData("Italy", "IT", 60483973, 301340),
-  createData("United States", "US", 327167434, 9833520),
-  createData("Canada", "CA", 37602103, 9984670),
-  createData("Australia", "AU", 25475400, 7692024),
-  createData("Germany", "DE", 83019200, 357578),
-  createData("Ireland", "IE", 4857000, 70273),
-  createData("Mexico", "MX", 126577691, 1972550),
-  createData("Japan", "JP", 126317000, 377973),
-  createData("France", "FR", 67022000, 640679),
-  createData("United Kingdom", "GB", 67545757, 242495),
-  createData("Russia", "RU", 146793744, 17098246),
-  createData("Nigeria", "NG", 200962417, 923768),
-  createData("Brazil", "BR", 210147125, 8515767),
+
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -72,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     maxHeight: 440,
   },
-  ukuranpaper: {
+  paperSize: {
     width: "100%",
     borderRadius: "20px",
     marginLeft: "80px",
@@ -109,9 +89,9 @@ const useStyles = makeStyles((theme) => ({
 
 function DaftarSantri() {
   const classes = useStyles();
-  const [dataSantri, setDataSantri] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [dataSantri, setDataSantri] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [shallRender, setShallRender] = useState(false);
 
   let gateway = ApiShowSantri.getInstance();
@@ -138,9 +118,7 @@ function DaftarSantri() {
     let result = gateway.requestData([santriData]);
     result.then((response) => {
       if(response.status === 200 && response.data.message === "Data Santri Berhasil Dihapus"){
-      console.log("ini respon delete",response)
       setShallRender(!shallRender);
-      // console.log('hapus ini',santriData);
       }
     })
   };
@@ -154,12 +132,10 @@ function DaftarSantri() {
     setPage(0);
   };
 
-  // ShowSantri(setDataSantri);
-
   return (
     <div>
       <Navbar />
-      <Paper className={classes.ukuranpaper} elevation="1">
+      <Paper className={classes.paperSize} elevation="1">
         <div className={classes.Head}>Daftar Santri</div>
         <TableContainer className={classes.container}>
           <Table stickyHeader aria-label="sticky table">
@@ -188,7 +164,7 @@ function DaftarSantri() {
 
                       <TableCell>
                         <Link
-                          to={`${process.env.PUBLIC_URL}/DaftarSantri/Detail`}
+                          to={`${process.env.PUBLIC_URL}/DaftarSantri/Detail/${data.nis}`}
                         >
                           <Button
                             variant="contained"
@@ -198,7 +174,7 @@ function DaftarSantri() {
                           </Button>
                         </Link>
                         <Link
-                          to={`${process.env.PUBLIC_URL}/DaftarSantri/Sunting`}
+                          to={`${process.env.PUBLIC_URL}/DaftarSantri/Sunting/${data.nis}`}
                         >
                           <Button variant="contained" color="primary">
                             Sunting

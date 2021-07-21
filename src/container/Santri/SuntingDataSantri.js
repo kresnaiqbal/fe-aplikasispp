@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
+import React, {useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import {
   Paper,
@@ -8,58 +8,53 @@ import {
   FormLabel,
   TextField,
   MenuItem,
+  Select,
+  Grid,
 } from "@material-ui/core";
-import { makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
+import { useParams } from "react-router-dom";
+import { ApiEditSantri, ApiDetailSantri } from "../../Api";
+import { useHistory } from "react-router";
 
-const genders = [
-  {
-    value: "Pria",
-    label: "Pria",
-  },
-  {
-    value: "Wanita",
-    label: "Wanita",
-  },
-];
+
 
 const kelass = [
   {
-    value: "1A",
+    value: 1,
     label: "1A",
   },
   {
-    value: "2A",
+    value: 2,
     label: "2A",
   },
   {
-    value: "3A",
+    value: 3,
     label: "3A",
   },
 ];
 
-
 const subsidis = [
   {
-    value: "tidak",
+    value: 0,
     label: "Tidak",
   },
   {
-    value: "Subsidi",
+    value: 1,
     label: "Subsidi",
   },
 ];
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    '& .MuiTextField-root': {
+    "& .MuiTextField-root": {
       margin: theme.spacing(1),
     },
-    width: '100%'
+    width: "100%",
   },
   container: {
     maxHeight: 440,
   },
-  ukuranpaper: {
+  paperSize: {
     width: "100%",
     borderRadius: "20px",
     marginLeft: "80px",
@@ -90,164 +85,237 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function SuntingDataSantri() {
+  const params = useParams();
   const classes = useStyles();
-  const [gender, setGender] = React.useState('Pria');
-  const [kelas, setKelas] = React.useState("1A");
-  const [subsidi, setSubsidi] = React.useState("Tidak");
+  const history = useHistory();
+  const [dataSantri, setDataSantri] = React.useState(null);
+  const [kelas, setKelas] = React.useState();
+  const [subsidi, setSubsidi] = React.useState();
+  const [alamat, setAlamat] = useState();
+  const [noHp, setNoHp] = useState();
+  const [jumlahTunggakan, setJumlahTunggakan] = useState();
+  let gateway = ApiDetailSantri.getInstance();
 
-  const handleChange = (event) => {
-    setGender(event.target.value);
-  };
+  let SantriInstance = gateway.getSantriInstance();
+  
+  useEffect(() => {
+    if (params && params.id) {
+      let santriData = gateway.getDetailSantri(SantriInstance, params.id);
 
-  const handleChange1 = (event) => {
+      let result = gateway.requestData([santriData]);
+      result.then((response) => {
+        if (response) {
+          setDataSantri(response);
+          setKelas(response.id_kelas);
+          setAlamat(response.alamat);
+          setNoHp(response.no_hp);
+          setSubsidi(response.subsidi);
+          setJumlahTunggakan(response.jumlah_tunggakan);
+        }
+      });
+    }
+  }, [params]);
+
+  const handleEditSantri = (callback) => {
+    let gateway = ApiEditSantri.getInstance();
+    let SantriInstance = gateway.getSantriInstance();
+    let santriData = gateway.editDataSantri(
+      SantriInstance,
+      dataSantri,
+      alamat,
+      noHp,
+      jumlahTunggakan,
+      kelas,
+      subsidi,
+      callback,
+    );
+  }
+
+  const handleChangeKelas = (event) => {
     setKelas(event.target.value);
   };
 
-  const handleChange2 = (event) => {
-    setSubsidi(event.target.value);
+  const handleChangeAlamat = (event) => {
+    setAlamat(event.target.value);
   };
 
+  const handleChangeNoHp = (event) => {
+    setNoHp(event.target.value);
+  };
+
+  const handleChangeSubsidi = (event) => {
+    setSubsidi(event.target.value);
+  };
+  const handleChangeJumlahTunggakan = (event) => {
+    setJumlahTunggakan(event.target.value);
+  };
 
   return (
     <div>
-    <Navbar />
-    <Paper className={classes.ukuranpaper}>
-      <div className={classes.Head}>Sunting Data Santri</div>
-      <Divider />
-      <FormControl component="fieldset">
-        <div className={classes.pad}>
-          <form className={classes.root} noValidate autoComplete="off">
-            <div>
-              <FormLabel>Nama Lengkap</FormLabel>
-              <TextField
-                id="outlined-basic"
-                variant="outlined"
-                style={{ width: "400px" }}
-                value=''
-                disabled
-              />
-            </div>
-            <div>
-              <FormLabel>NIS</FormLabel>
-              <TextField
-                id="outlined-basic"
-                variant="outlined"
-                style={{ width: "400px" }}
-                disabled
-              />
-            </div>
-            <div>
-              <FormLabel>Tanggal Lahir</FormLabel>
-              <TextField
-                id="outlined-basic"
-                placeholder="YYYY/MM/DD"
-                variant="outlined"
-                style={{ width: "400px" }}
-                disabled
-              />
-            </div>
-            <div>
-              <FormLabel>Jenis Kelamin</FormLabel>
-              <TextField
-                id="outlined-select-gender"
-                select
-                value={gender}
-                onChange={handleChange}
-                variant="outlined"
-                style={{ width: "400px" }}
-                disabled
-              >
-                {genders.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </div>
-            <div>
-              <FormLabel>Alamat</FormLabel>
-              <TextField
-                id="outlined-basic"
-                variant="outlined"
-                style={{ width: "400px" }}
-              />
-            </div>
-            <div>
-              <FormLabel>Nomor HP</FormLabel>
-              <TextField
-                id="outlined-basic"
-                variant="outlined"
-                style={{ width: "400px" }}
-              />
-            </div>
-            <div>
-              <FormLabel>Kelas</FormLabel>
-              <TextField
-                id="outlined-select-kelas"
-                select
-                value={kelas}
-                onChange={handleChange1}
-                variant="outlined"
-                style={{ width: "400px" }}
-              >
-                {kelass.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </div>
-            <div>
-              <FormLabel>Keterangan Subsidi</FormLabel>
-              <TextField
-                id="outlined-select-subsidi"
-                select
-                value={subsidi}
-                onChange={handleChange2}
-                variant="outlined"
-                style={{ width: "400px" }}
-              >
-                {subsidis.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </div>
-            <div>
-              <FormLabel>Jumlah Tunggakan</FormLabel>
-              <TextField
-                id="outlined-basic"
-                variant="outlined"
-                style={{ width: "400px" }}
-              />
-            </div>
-            <div>
-              <FormLabel>Nama OrangTua/Wali</FormLabel>
-              <TextField
-                id="outlined-basic"
-                variant="outlined"
-                style={{ width: "400px" }}
-                disabled
-              />
-            </div>
-            <div style={{ textAlign: "right" }}>
-              <Button
-                variant="contained"
-                color="primary"
-                style={{ margin: "10px" }}
-              >
-                Tambah
-              </Button>
-              <Button variant="contained" color="secondary">
-                Kembali
-              </Button>
-            </div>
-          </form>
-        </div>
-      </FormControl>
-    </Paper>
-  </div>
+      <Navbar />
+      <Paper className={classes.paperSize}>
+        <div className={classes.Head}>Sunting Data Santri</div>
+        <Divider />
+        <FormControl component="fieldset">
+          <div className={classes.pad}>
+            <form className={classes.root} noValidate autoComplete="off">
+              <Grid container direction="row">
+                <FormLabel>Nama Lengkap</FormLabel>
+                {dataSantri && dataSantri.nama_santri && (
+                  <TextField
+                    id="outlined-basic"
+                    variant="outlined"
+                    style={{ width: "400px" , marginLeft: "55px" }}
+                    value={dataSantri.nama_santri}
+                    disabled
+                  />
+                )}
+              <div>
+                <FormLabel>NIS</FormLabel>
+                {dataSantri && dataSantri.nis && 
+                  <TextField
+                    id="outlined-basic"
+                    variant="outlined"
+                    style={{ width: "400px" , marginLeft: "100px" }}
+                    value={dataSantri.nis}
+                    disabled
+                  />
+                }
+              </div>
+              <div>
+                <FormLabel>Tanggal Lahir</FormLabel>
+                {dataSantri && dataSantri.tanggal_lahir && 
+                  <TextField
+                    id="outlined-basic"
+                    placeholder="YYYY/MM/DD"
+                    variant="outlined"
+                    style={{ width: "400px" , marginLeft: "65px" }}
+                    value={dataSantri.tanggal_lahir}
+                    disabled
+                  />
+                }
+              </div>
+              <div>
+                <FormLabel>Jenis Kelamin</FormLabel>
+                {dataSantri && dataSantri.jenis_kelamin &&
+                  <TextField
+                    id="outlined-basic"
+                    value={dataSantri.jenis_kelamin}
+                    // onChange={handleChange}
+                    variant="outlined"
+                    style={{ width: "400px", marginLeft: "25px"  }}
+                    disabled
+                  />
+                }
+              </div>
+              <div>
+                <FormLabel>Alamat</FormLabel>
+                {dataSantri && dataSantri.alamat && 
+                  <TextField
+                    id="outlined-basic"
+                    variant="outlined"
+                    style={{ width: "400px" , marginLeft: "110px" }}
+                    value={alamat}
+                    onChange={handleChangeAlamat}
+                    
+                  />
+                }
+              </div>
+              <div>
+                <FormLabel>Nomor HP</FormLabel>
+                {dataSantri && dataSantri.no_hp && 
+                  <TextField
+                    id="outlined-basic"
+                    variant="outlined"
+                    style={{ width: "400px", marginLeft: "50px" }}
+                    value={noHp}
+                    onChange={handleChangeNoHp}
+                  />
+                }
+              </div>
+              <div>
+                <FormLabel>Kelas</FormLabel>
+                {dataSantri && dataSantri.id_kelas && kelas &&
+                  <Select
+                    id="outlined-select-kelas"
+                    select
+                    value={kelas}
+                    onChange={handleChangeKelas}
+                    variant="outlined"
+                    style={{ width: "400px" , marginLeft: "121px" }}
+                  >
+                    {kelass.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                }
+              </div>
+              <Grid>
+                <FormLabel>Keterangan Subsidi</FormLabel>
+                {dataSantri && dataSantri.subsidi && subsidi &&
+                  <Select
+                    id="outlined-select-subsidi"
+                    select
+                    value={subsidi}
+                    onChange={handleChangeSubsidi}
+                    variant="outlined"
+                    style={{ width: "400px" }}
+                  >
+                    {subsidis.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                }
+              </Grid> 
+              <Grid>
+                <FormLabel>Jumlah Tunggakan</FormLabel>
+                {dataSantri && 
+                  <TextField
+                    id="outlined-basic"
+                    variant="outlined"
+                    style={{ width: "400px" }}
+                    value={ jumlahTunggakan}
+                    onChange={handleChangeJumlahTunggakan}
+                  />
+                }
+              </Grid>
+              <div>
+                <FormLabel>Nama OrangTua/Wali</FormLabel>
+                {dataSantri && dataSantri.nama_wali && 
+                  <TextField
+                    id="outlined-basic"
+                    variant="outlined"
+                    style={{ width: "400px" }}
+                    value={dataSantri.nama_wali}
+                    disabled
+                  />
+                }
+              </div>
+              <div style={{ textAlign: "right" }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  style={{ margin: "10px" }}
+                  onClick={() => handleEditSantri(() =>
+                    history.push("/daftarsantri")
+                  )}
+                >
+                  Tambah
+                </Button>
+                <Button variant="contained" color="secondary">
+                  Kembali
+                </Button>
+              </div>
+              </Grid>
+            </form>
+          </div>
+        </FormControl>
+      </Paper>
+    </div>
   );
 }
 

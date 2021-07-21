@@ -9,8 +9,9 @@ import {
   FormLabel,
   TextField,
   MenuItem,
+  Grid,
 } from "@material-ui/core";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router";
 
 const genders = [
@@ -60,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     maxHeight: 440,
   },
-  ukuranpaper: {
+  paperSize: {
     width: "100%",
     borderRadius: "20px",
     marginLeft: "80px",
@@ -87,6 +88,9 @@ const useStyles = makeStyles((theme) => ({
   },
   pad: {
     margin: "20px",
+  },
+  marginForm: {
+    marginLeft: "5px",
   },
 }));
 
@@ -123,13 +127,6 @@ function TambahDataSantri() {
       subsidi,
       callback
     );
-
-    // let result = gateway.requestData([santriData]);
-    // result.then((response) => {
-    //   if (Array.isArray(response)) {
-    //     setDataSantri(response);
-    //   }
-    // });
   };
 
   const handleChangeNamaSantri = (event) => {
@@ -171,142 +168,144 @@ function TambahDataSantri() {
   return (
     <div>
       <Navbar />
-      <Paper className={classes.ukuranpaper}>
+      <Paper className={classes.paperSize}>
         <div className={classes.Head}>Tambah Data Santri</div>
         <Divider />
         <FormControl component="fieldset">
           <div className={classes.pad}>
             <form className={classes.root} noValidate autoComplete="off">
-              <div>
-                <FormLabel>Nama Lengkap</FormLabel>
-                <TextField
-                  id="outlined-basic"
-                  variant="outlined"
-                  style={{ width: "400px" }}
-                  onChange={handleChangeNamaSantri}
-                />
-              </div>
-              <div>
-                <FormLabel>NIS</FormLabel>
-                <TextField
-                  id="outlined-basic"
-                  variant="outlined"
-                  style={{ width: "400px" }}
-                  onChange={handleChangeNIS}
-                />
-              </div>
-              <div>
-                <FormLabel>Tanggal Lahir</FormLabel>
-                <TextField
-                  id="outlined-basic"
-                  placeholder="YYYY/MM/DD"
-                  variant="outlined"
-                  style={{ width: "400px" }}
-                  onChange={handleChangeTanggalLahir}
-                />
-              </div>
-              <div>
-                <FormLabel>Jenis Kelamin</FormLabel>
-                <TextField
-                  id="outlined-select-gender"
-                  select
-                  value={gender}
-                  onChange={handleChangeGender}
-                  variant="outlined"
-                  style={{ width: "400px" }}
-                >
-                  {genders.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </div>
-              <div>
-                <FormLabel>Alamat</FormLabel>
-                <TextField
-                  id="outlined-basic"
-                  variant="outlined"
-                  style={{ width: "400px" }}
-                  onChange={handleChangeAlamat}
-                />
-              </div>
-              <div>
-                <FormLabel>Nomor HP</FormLabel>
-                <TextField
-                  id="outlined-basic"
-                  variant="outlined"
-                  style={{ width: "400px" }}
-                  onChange={handleChangeNoHp}
-                />
-              </div>
-              <div>
-                <FormLabel>Kelas</FormLabel>
-                <TextField
-                  id="outlined-select-kelas"
-                  select
-                  value={kelas}
-                  onChange={handleChangeKelas}
-                  variant="outlined"
-                  style={{ width: "400px" }}
-                >
-                  {kelass.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </div>
-              <div>
-                <FormLabel>Keterangan Subsidi</FormLabel>
-                <TextField
-                  id="outlined-select-subsidi"
-                  select
-                  value={subsidi}
-                  onChange={handleChangeSubsidi}
-                  variant="outlined"
-                  style={{ width: "400px" }}
-                >
-                  {subsidis.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </div>
-              <div>
-                <FormLabel>Jumlah Tunggakan</FormLabel>
-                <TextField
-                  id="outlined-basic"
-                  variant="outlined"
-                  style={{ width: "400px" }}
-                  onChange={handleChangeJumlahTunggakan}
-                />
-              </div>
-              <div>
-                <FormLabel>Nama OrangTua/Wali</FormLabel>
-                <TextField
-                  id="outlined-basic"
-                  variant="outlined"
-                  style={{ width: "400px" }}
-                  onChange={handleChangeNamaWali}
-                />
-              </div>
-              <div style={{ textAlign: "right" }}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  style={{ margin: "10px" }}
-                  onClick={() => handleCreateSantri(() =>
-                    history.push("/daftarsantri")
-                  )}
-                >
-                  Tambah
-                </Button>
-                <Button variant="contained" color="secondary">
-                  Kembali
-                </Button>
-              </div>
+              <Grid container direction="row">
+                <Grid >
+                  <FormLabel>Nama Lengkap</FormLabel>
+                  <TextField
+                    id="outlined-basic"
+                    variant="outlined"
+                    style={{ width: "400px", marginLeft: "55px" }}
+                    onChange={handleChangeNamaSantri}
+                  />
+                </Grid>
+                <Grid item md={6}>
+                  <FormLabel>NIS</FormLabel>
+                  <TextField
+                    id="outlined-basic"
+                    variant="outlined"
+                    style={{ width: "400px", marginLeft: "137px" }}
+                    onChange={handleChangeNIS}
+                  />
+                </Grid>
+                <div>
+                  <FormLabel>Tanggal Lahir</FormLabel>
+                  <TextField
+                    id="outlined-basic"
+                    placeholder="YYYY/MM/DD"
+                    variant="outlined"
+                    style={{ width: "400px", marginLeft: "65px" }}
+                    onChange={handleChangeTanggalLahir}
+                  />
+                </div>
+                <div>
+                  <FormLabel>Jenis Kelamin</FormLabel>
+                  <TextField
+                    id="outlined-select-gender"
+                    select
+                    value={gender}
+                    onChange={handleChangeGender}
+                    variant="outlined"
+                    style={{ width: "400px", marginLeft: "60px" }}
+                  >
+                    {genders.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </div>
+                <div>
+                  <FormLabel>Alamat</FormLabel>
+                  <TextField
+                    id="outlined-basic"
+                    variant="outlined"
+                    style={{ width: "400px", marginLeft: "110px" }}
+                    onChange={handleChangeAlamat}
+                  />
+                </div>
+                <div>
+                  <FormLabel>Nomor HP</FormLabel>
+                  <TextField
+                    id="outlined-basic"
+                    variant="outlined"
+                    style={{ width: "400px", marginLeft: "85px" }}
+                    onChange={handleChangeNoHp}
+                  />
+                </div>
+                <div>
+                  <FormLabel>Kelas</FormLabel>
+                  <TextField
+                    id="outlined-select-kelas"
+                    select
+                    value={kelas}
+                    onChange={handleChangeKelas}
+                    variant="outlined"
+                    style={{ width: "400px", marginLeft: "120px" }}
+                  >
+                    {kelass.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </div>
+                <div>
+                  <FormLabel>Keterangan Subsidi</FormLabel>
+                  <TextField
+                    id="outlined-select-subsidi"
+                    select
+                    value={subsidi}
+                    onChange={handleChangeSubsidi}
+                    variant="outlined"
+                    style={{ width: "400px", marginLeft: "20px" }}
+                  >
+                    {subsidis.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </div>
+                <div>
+                  <FormLabel>Jumlah Tunggakan</FormLabel>
+                  <TextField
+                    id="outlined-basic"
+                    variant="outlined"
+                    style={{ width: "400px", marginLeft: "20px" }}
+                    onChange={handleChangeJumlahTunggakan}
+                  />
+                </div>
+                <div>
+                  <FormLabel>Nama OrangTua/Wali</FormLabel>
+                  <TextField
+                    id="outlined-basic"
+                    variant="outlined"
+                    style={{ width: "400px", marginLeft: "3px" }}
+                    onChange={handleChangeNamaWali}
+                  />
+                </div>
+                <div style={{ textAlign: "right" }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    style={{ margin: "10px" }}
+                    onClick={() =>
+                      handleCreateSantri(() => history.push("/daftarsantri"))
+                    }
+                  >
+                    Tambah
+                  </Button>
+                  <Button variant="contained" color="secondary">
+                    Kembali
+                  </Button>
+                </div>
+              </Grid>
             </form>
           </div>
         </FormControl>

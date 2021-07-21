@@ -2,7 +2,7 @@ import React from 'react';
 
 const axios = require('axios');
 
-const BASE_URL = "https://kota201.herokuapp.com/api/";
+const BASE_URL = "https://kota201.xyz/aplikasi_spp/public/api/";
 
 export default class ApiShowSantri extends React.Component{
 
@@ -48,49 +48,4 @@ export default class ApiShowSantri extends React.Component{
             )
         }
     }
-
-    // const instance = axios.create({
-    //     baseURL: `${BASE_URL}`,
-    //   });
-
-    // // Make a request for a user with a given ID
-    // instance.get('santri', {
-        
-    // })
-    // .then(function (response) {
-    //     // handle success
-    //     // callback(response);
-    //     // const data = response.data;
-    //     // console.log(data);
-    //     if(response){
-    //         // response.then((data) => {
-    //             if(response.status === 200 && response.statusText === "OK"){
-    //                 console.log('ini awal',response);
-    //                 return response
-    //             }
-    //         // }
-    //         // )
-    //     }
-    // })
-    // .catch(function (error) {
-    //     // handle error
-    //     console.log(error); 
-    // })
 }
-
-// export function requestData(data){
-//     console.log("MASUKK", data)
-//     if(Array.isArray(data)){
-//         return Promise.all(data).then(
-//             response => {
-//                 let result = []
-//                 for(let i = 0; i< response.data; i++){
-//                     result.push(response.data[i] ? response.data[i] : null)
-//                 }
-//                 return result
-//             }
-//         ).catch(
-//             error => error
-//         )
-//     }
-// }

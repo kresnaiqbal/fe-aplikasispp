@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
+import { ApiShowLaporanUangMasuk } from "../../Api";
 import {
   Paper,
+  FormControl,
+  TextField,
+  MenuItem,
   Table,
   TableBody,
   TableCell,
@@ -10,12 +14,67 @@ import {
   TablePagination,
   TableRow,
   Button,
+  Divider,
+  FormLabel,
+  Grid,
 } from "@material-ui/core";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
+import { useHistory } from "react-router";
+
+const months = [
+  {
+    value: 1,
+    label: "Januari",
+  },
+  {
+    value: 2,
+    label: "Februari",
+  },
+  {
+    value: 3,
+    label: "Maret",
+  },
+  {
+    value: 4,
+    label: "April",
+  },
+  {
+    value: 5,
+    label: "Mei",
+  },
+  {
+    value: 6,
+    label: "Juni",
+  },
+  {
+    value: 7,
+    label: "Juli",
+  },
+  {
+    value: 8,
+    label: "Agustus",
+  },
+  {
+    value: 9,
+    label: "September",
+  },
+  {
+    value: 10,
+    label: "Oktober",
+  },
+  {
+    value: 11,
+    label: "November",
+  },
+  {
+    value: 12,
+    label: "Desember",
+  },
+];
 
 const columns = [
-  { id: "no", label: "No", minWidth: 30 },
-  { id: "tanggal", label: "Tanggal", minWidth: 100 },
+  { id: "no", label: "No", minWidth: 10 },
+  { id: "tanggal", label: "Tanggal", minWidth: 60 },
   {
     id: "nis",
     label: "NIS",
@@ -25,19 +84,24 @@ const columns = [
   {
     id: "NamaSantri",
     label: "Nama Santri",
-    minWidth: 150,
+    minWidth: 100,
     format: (value) => value.toLocaleString("en-US"),
   },
   {
-    id: "BayarSPP",
-    label: "Bayar SPP (Rp)",
-    minWidth: 60,
+    id: "kelas",
+    label: "Kelas",
+    minWidth: 30,
     format: (value) => value.toFixed(2),
+  },
+  {
+    id: "BayarSPP",
+    label: "Nominal SPP (Rp)",
+    minWidth: 10,
   },
   {
     id: "keterangan",
     label: "Keterangan",
-    minWidth: 100,
+    minWidth: 30,
     format: (value) => value.toFixed(2),
   },
 ];
@@ -46,32 +110,23 @@ function createData(no, tanggal, nis, NamaSantri, BayarSPP, keterangan) {
   return { no, tanggal, nis, NamaSantri, BayarSPP, keterangan };
 }
 
-const rows = [
-  createData("India", "IN", 1324171354, 3287263),
-  createData("China", "CN", 1403500365, 9596961),
-  createData("Italy", "IT", 60483973, 301340),
-  createData("United States", "US", 327167434, 9833520),
-  createData("Canada", "CA", 37602103, 9984670),
-  createData("Australia", "AU", 25475400, 7692024),
-  createData("Germany", "DE", 83019200, 357578),
-  createData("Ireland", "IE", 4857000, 70273),
-  createData("Mexico", "MX", 126577691, 1972550),
-  createData("Japan", "JP", 126317000, 377973),
-  createData("France", "FR", 67022000, 640679),
-  createData("United Kingdom", "GB", 67545757, 242495),
-  createData("Russia", "RU", 146793744, 17098246),
-  createData("Nigeria", "NG", 200962417, 923768),
-  createData("Brazil", "BR", 210147125, 8515767),
-];
+const rows = [];
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
+    display: "inline",
+    marginTop: 10,
   },
   container: {
+    margin: 30,
     maxHeight: 440,
   },
-  ukuranpaper: {
+  monthPicker: {
+    width: "150px",
+    // height: "100px",
+  },
+  paperSize: {
     width: "100%",
     borderRadius: "20px",
     marginLeft: "80px",
@@ -104,8 +159,38 @@ const useStyles = makeStyles((theme) => ({
 
 function LaporanKeuangan() {
   const classes = useStyles();
+  const history = useHistory();
   const [page, setPage] = React.useState(0);
+
+  const [month, setMonth] = useState();
+  const [dataLaporanUangMasuk, setDataLaporanUangMasuk] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+  let gateway = ApiShowLaporanUangMasuk.getInstance();
+
+  let LaporanUangMasukInstance = gateway.getLaporanUangMasukInstance();
+
+  const handleMonthPicker = (callback) => {
+    let monthData = gateway.getDataLaporanUangMasuk(
+      LaporanUangMasukInstance,
+      month,
+      callback
+    );
+  };
+
+  useEffect(() => {
+    let laporanUangMasukData = gateway.getDataLaporanUangMasuk(
+      LaporanUangMasukInstance
+    );
+
+    let result = gateway.requestData([laporanUangMasukData]);
+    result.then((response) => {
+      if (Array.isArray(response)) {
+        setDataLaporanUangMasuk(response);
+        console.log("ini laporan", response);
+      }
+    });
+  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -116,11 +201,56 @@ function LaporanKeuangan() {
     setPage(0);
   };
 
+  const handleChangeMonth = (event) => {
+    setMonth(event.target.value);
+  };
+
   return (
     <div>
       <Navbar />
-      <Paper className={classes.ukuranpaper} elevation="1">
+      <Paper className={classes.paperSize} elevation="1">
         <div className={classes.Head}>Laporan Keuangan</div>
+        <Divider />
+        <FormControl component="fieldset">
+          <form className={classes.root} noValidate autoComplete="off">
+            <Grid container direction="row">
+              <Grid item xs={2} sm={2} md={2} lg={2} xl={2}>
+                <FormLabel style={{ fontSize: "14px" }}>
+                  Periode Bulan
+                </FormLabel>
+              </Grid>
+              <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
+                <TextField
+                  id="outlined-select-gender"
+                  required
+                  select
+                  value={month}
+                  onChange={handleChangeMonth}
+                  variant="outlined"
+                  className={classes.monthPicker}
+                >
+                  {months.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid item xs={4} sm={4} md={4} lg={4} xl={4}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  style={{ height: "50px", width: 100 }}
+                  onClick={() =>
+                    handleMonthPicker(() => history.push(`/LaporanKeuangan/${month}`))
+                  }
+                >
+                  Tampilkan
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
+        </FormControl>
         <TableContainer className={classes.container}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
@@ -137,33 +267,23 @@ function LaporanKeuangan() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => {
+              {dataLaporanUangMasuk &&
+                dataLaporanUangMasuk.map((data) => {
                   return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={row.code}
-                    >
-                      {columns.map((column) => {
-                        const value = row[column.id];
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            {column.format && typeof value === "number"
-                              ? column.format(value)
-                              : value}
-                          </TableCell>
-                        );
-                      })}
+                    <TableRow hover key="{data.id_transaksi}">
+                      <TableCell>{data.id_transaksi}</TableCell>
+                      <TableCell>{data.tanggal_transaksi}</TableCell>
+                      <TableCell>{data.nis}</TableCell>
+                      <TableCell>{data.nama_santri}</TableCell>
+                      <TableCell>{data.nama_kelas}</TableCell>
+                      <TableCell>{data.total_bayar}</TableCell>
+                      <TableCell>{data.status_transaksi}</TableCell>
                     </TableRow>
                   );
                 })}
             </TableBody>
           </Table>
         </TableContainer>
-
         <Button className={classes.MyButton} style={{ margin: "2%" }}>
           Cetak
         </Button>

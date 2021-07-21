@@ -4,30 +4,30 @@ const axios = require("axios");
 
 const BASE_URL = "https://kota201.xyz/aplikasi_spp/public/api/";
 
-export default class ApiDetailSantri extends React.Component {
+export default class ApiDetailAdmin extends React.Component {
   static INSTANCE = null;
 
   static getInstance() {
-    if (ApiDetailSantri.INSTANCE === null) {
-      ApiDetailSantri.INSTANCE = new ApiDetailSantri();
+    if (ApiDetailAdmin.INSTANCE === null) {
+      ApiDetailAdmin.INSTANCE = new ApiDetailAdmin();
     }
-    return ApiDetailSantri.INSTANCE;
+    return ApiDetailAdmin.INSTANCE;
   }
 
-  getSantriInstance = () => {
+  getAdminInstance = () => {
     // Header API
     return axios.create({
       baseURL: `${BASE_URL}`,
     });
   };
 
-  getDetailSantriPath = (id) => {
-    return "santri/" + id;
+  getDetailAdminPath = (id) => {
+    return "admin/" + id;
   };
 
-  getDetailSantri = (instance, nis) => {
+  getDetailAdmin = (instance, id_admin) => {
     if (instance !== null) {
-      let path = BASE_URL + this.getDetailSantriPath(nis);
+      let path = BASE_URL + this.getDetailAdminPath(id_admin);
       return instance
         .get(path)
         .then((response) => response)
@@ -40,9 +40,9 @@ export default class ApiDetailSantri extends React.Component {
       console.log('ini detail', data);
       return Promise.all(data)
         .then((response) => {
-          if(response[0].data.santri){
+          if(response[0].data.admin){
               console.log('ini detail', response);
-              return response[0].data.santri;
+              return response[0].data.admin;
           }}
         )
         .catch((error) => error);

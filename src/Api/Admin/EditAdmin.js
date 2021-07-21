@@ -4,14 +4,14 @@ const axios = require("axios");
 
 const BASE_URL = "https://kota201.xyz/aplikasi_spp/public/api/";
 
-export default class ApiCreateAdmin extends React.Component {
+export default class ApiEditAdmin extends React.Component {
   static INSTANCE = null;
 
   static getInstance() {
-    if (ApiCreateAdmin.INSTANCE === null) {
-      ApiCreateAdmin.INSTANCE = new ApiCreateAdmin();
+    if (ApiEditAdmin.INSTANCE === null) {
+      ApiEditAdmin.INSTANCE = new ApiEditAdmin();
     }
-    return ApiCreateAdmin.INSTANCE;
+    return ApiEditAdmin.INSTANCE;
   }
 
   getAdminInstance = () => {
@@ -21,33 +21,29 @@ export default class ApiCreateAdmin extends React.Component {
     });
   };
 
-  createAdminPath = () => {
-    return "admin";
+  editAdminPath = (id) => {
+    return "Admin/" + id;
   };
 
-  createDataAdmin = (
+  editDataAdmin = (
     instance,
-    username,
-    namaAdmin,
+    dataAdmin,
     role,
-    paraf,
+    username,
     password,
-    callback
+    callback,
   ) => {
     if (instance !== null) {
       let params = {
-        id_admin: 2,
-        username: username,
-        nama_admin: namaAdmin,
+        nama_admin: dataAdmin.nama_admin,
         role: role,
+        username: username,
         password: password,
-        paraf: paraf,
       };
-      let path = BASE_URL + this.createAdminPath();
+      let path = BASE_URL + this.editAdminPath(dataAdmin.id_admin);
       return instance
-        .post(path, params)
+        .put(path, params)
         .then((response) => {
-          console.log("cekpw", response);
           callback();
         })
 
@@ -59,16 +55,11 @@ export default class ApiCreateAdmin extends React.Component {
     if (Array.isArray(data)) {
       return Promise.all(data)
         .then((response) => {
-          console.log("ini create Admin", response);
           let result = [];
-          for (let i = 0; i < response[0].data.admin.length; i++) {
-            result.push(
-              response[0].data.admin[i] ? response[0].data.admin[i] : null
-            );
-          }
           return result;
         })
         .catch((error) => error);
     }
   };
+
 }
