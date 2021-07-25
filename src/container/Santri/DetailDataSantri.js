@@ -1,6 +1,13 @@
 import React, { useEffect, Fragment } from "react";
 import Navbar from "../../components/Navbar";
-import { Paper, Divider, Typography, Grid } from "@material-ui/core";
+import {
+  Paper,
+  Divider,
+  Typography,
+  Grid,
+  Link,
+  Button,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useParams } from "react-router";
 import { ApiDetailSantri } from "../../Api";
@@ -66,7 +73,7 @@ function DetailDataSantri() {
       result.then((response) => {
         if (response) {
           console.log("ini di view detail", response);
-          setDataSantri(response);
+          setDataSantri(response[0].data.santri);
         }
       });
     }
@@ -78,55 +85,61 @@ function DetailDataSantri() {
       <Paper className={classes.paperSize}>
         <div className={classes.Head}>Detail Data Santri</div>
         <Divider />
-          <Grid>
-            {dataSantri && dataSantri.nama_santri && (
-              <Typography className={classes.data}>
-                Nama Lengkap : {dataSantri.nama_santri}
-              </Typography>
-            )}
-            {dataSantri && dataSantri.nama_santri && (
-              <Typography className={classes.data}>
-                Tempat Tanggal Lahir :{dataSantri.tanggal_lahir}
-              </Typography>
-            )}
-          </Grid>
-          <Grid>
-            {dataSantri && dataSantri.nis && (
-              <Typography className={classes.data}>
-                NIS : {dataSantri.nis}
-              </Typography>
-            )}
-            {dataSantri && dataSantri.jenis_kelamin && (
-              <Typography className={classes.data}>
-                Jenis Kelamin :{dataSantri.jenis_kelamin}
-              </Typography>
-            )}
-          </Grid>
-          <Grid>
-            {dataSantri && dataSantri.alamat && (
-              <Typography className={classes.data}>
-                Alamat : {dataSantri.alamat}
-              </Typography>
-            )}
-            {dataSantri && dataSantri.nama_santri && (
-              <Typography className={classes.data}>
-                No. Hp : {dataSantri.no_hp}
-              </Typography>
-            )}
-          </Grid>
-          <Grid>
-            {dataSantri && dataSantri.nama_wali && (
-              <Typography className={classes.data}>
-                Nama Orang Tua :{dataSantri.nama_wali}
-              </Typography>
-            )}
-            {dataSantri && dataSantri.subsidi && (
-              <Typography className={classes.data}>
-                Keterangan Subsidi : {dataSantri.subsidi}
-              </Typography>
-            )}
-          </Grid>
-
+        <Grid>
+          {dataSantri && dataSantri.nama_santri && (
+            <Typography className={classes.data}>
+              Nama Lengkap : {dataSantri.nama_santri}
+            </Typography>
+          )}
+          {dataSantri && dataSantri.nama_santri && (
+            <Typography className={classes.data}>
+              Tempat Tanggal Lahir :{dataSantri.tanggal_lahir}
+            </Typography>
+          )}
+        </Grid>
+        <Grid>
+          {dataSantri && dataSantri.nis && (
+            <Typography className={classes.data}>
+              NIS : {dataSantri.nis}
+            </Typography>
+          )}
+          {dataSantri && dataSantri.jenis_kelamin && (
+            <Typography className={classes.data}>
+              Jenis Kelamin :{dataSantri.jenis_kelamin}
+            </Typography>
+          )}
+        </Grid>
+        <Grid>
+          {dataSantri && dataSantri.alamat && (
+            <Typography className={classes.data}>
+              Alamat : {dataSantri.alamat}
+            </Typography>
+          )}
+          {dataSantri && dataSantri.nama_santri && (
+            <Typography className={classes.data}>
+              No. Hp : {dataSantri.no_hp}
+            </Typography>
+          )}
+        </Grid>
+        <Grid>
+          {dataSantri && dataSantri.nama_wali && (
+            <Typography className={classes.data}>
+              Nama Orang Tua :{dataSantri.nama_wali}
+            </Typography>
+          )}
+          {dataSantri && dataSantri.subsidi && (
+            <Typography className={classes.data}>
+              Keterangan Subsidi : {dataSantri.subsidi}
+            </Typography>
+          )}
+        </Grid>
+        <div style={{ textAlign: "right" }}>
+          <Link to={`${process.env.PUBLIC_URL}/dashboard`}>
+            <Button variant="contained" color="secondary">
+              Kembali
+            </Button>
+          </Link>
+        </div>
       </Paper>
     </Fragment>
   );

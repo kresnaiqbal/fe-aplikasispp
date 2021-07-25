@@ -23,49 +23,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CardGraphPersentaseKelas(props) {
   const classes = useStyles();
-  // const state = {
-  //   progress: 50,
-  // };
-
-  // const handleIncrement = () => {
-  //   if (this.state.progress !== 100) {
-  //     this.setState(
-  //       (prevState) => ({ progress: prevState.progress + 1 }),
-  //       () => console.log(this.state.progress)
-  //     );
-  //   } else alert("oops, you hit the max value!");
-  // };
-
-  // const handleDecrement = () => {
-  //   if (this.state.progress !== 0) {
-  //     this.setState(
-  //       (prevState) => ({ progress: prevState.progress - 1 }),
-  //       () => console.log(this.state.progress)
-  //     );
-  //   } else alert("oops, you hit the min value!");
-  // };
-
-  // const test = this.state.progress + "%";
-  // var style = { width: test };
   return (
     <Paper className={classes.paperSize}>
       <Typography className={classes.Head}>Persentase Siswa Lunas</Typography>
       <Divider />
-      {/* <div className="flex-container">
-        <h1>react progress bar</h1>
-        <div className="progress" data-label={`${test} completed`}>
-          <span className="value" style={style}></span>
-        </div>
-        <br />
-        <div>
-          <button className="button" onClick={this.handleDecrement}>
-            -
-          </button>
-          <button className="button" onClick={this.handleIncrement}>
-            +
-          </button>
-        </div>
-      </div> */}
     </Paper>
   );
 }

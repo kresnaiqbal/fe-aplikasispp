@@ -99,6 +99,7 @@ function AkunOperator() {
     let result = gateway.requestData([adminData]);
     result.then((response) => {
       if (Array.isArray(response)) {
+        
         setDataAdmin(response);
         console.log("ini view", response);
       }
@@ -113,7 +114,7 @@ function AkunOperator() {
 
     let result = gateway.requestData([adminData]);
     result.then((response) => {
-      if (response.data.message === "Data Admin Berhasil Dihapus") {
+      if (response.status === 200 && response.data.message === "Data Admin Berhasil Dihapus") {
         setShallRender(!shallRender);
         // console.log('hapus ini',santriData);
       }

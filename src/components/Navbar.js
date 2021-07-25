@@ -100,6 +100,18 @@ const useStyles = makeStyles((theme) => ({
     height: "100px",
     marginLeft: "10px",
   },
+  NavPaper: {
+    color: "#fff",
+    width: "220px",
+    height: "100px",
+    marginLeft: "10px",
+  },
+  NavPaperLong: {
+    color: "#fff",
+    width: "220px",
+    height: "125px",
+    marginLeft: "10px",
+  },
   menuprofile: {
     marginLeft: theme.spacing(2),
   },
@@ -351,16 +363,24 @@ const Navbar = () => {
                 </ListItem>
                 <Collapse in={open21} timeout="auto" unmountOnExit>
                   <List component="div" disablePadding>
-                    <Paper className={classes.NavPaper}>
+                    <Paper className={classes.NavPaperLong}>
                       {permission.includes("input_transaksi") && (
                         <Link to={`${process.env.PUBLIC_URL}/inputSPP`}>
                           <ListItemText
-                            primary="Input SPP"
+                            primary="Pembayaran SPP Tunai"
                             className={classes.DropdownText}
                           />
                         </Link>
                       )}
                       {permission.includes("riwayat_transaksi") && (
+                        <Link to={`${process.env.PUBLIC_URL}/ApprovalTransfer`}>
+                          <ListItemText
+                            primary="Approval Transfer"
+                            className={classes.DropdownText}
+                          />
+                        </Link>
+                      )}
+                       {permission.includes("riwayat_transaksi") && (
                         <Link to={`${process.env.PUBLIC_URL}/RiwayatTransaksi`}>
                           <ListItemText
                             primary="Riwayat Transaksi"

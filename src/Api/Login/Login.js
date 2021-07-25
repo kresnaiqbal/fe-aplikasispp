@@ -23,7 +23,6 @@ export default function ApiLogin(username, password, callback) {
       sessionStorage.setItem("token", response.data.token);
       sessionStorage.setItem("id_admin", response.data.id_admin);
       sessionStorage.setItem("permission", JSON.stringify(response.data.list_menu));
-      console.log("astaga", response);
     })
     .catch(function (error) {
       // handle error

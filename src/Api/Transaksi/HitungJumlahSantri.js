@@ -22,7 +22,7 @@ export default class ApiHitungJumlahSantri extends React.Component {
   };
 
   showJumlahSantriPath = () => {
-    return "transaksi/hitung/santri";
+    return "transaksi/santri/bayar";
   };
 
   getJumlahSantri = (instance) => {
@@ -39,9 +39,9 @@ export default class ApiHitungJumlahSantri extends React.Component {
     if (Array.isArray(data)) {
       return Promise.all(data)
       .then((response) => {
-        let result = {};
+        let result = [];
         if (response) {
-          result = response[0].data
+          result = response;
             return result;
           }
         })

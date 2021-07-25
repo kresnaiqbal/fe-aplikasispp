@@ -32,6 +32,7 @@ export default class ApiPembayaranSPPTunai extends React.Component {
     totalBayar,
     spp,
     infaq,
+    admin_id,
     callback
   ) => {
     if (instance !== null) {
@@ -42,7 +43,7 @@ export default class ApiPembayaranSPPTunai extends React.Component {
         spp: spp,
         infaq: infaq,
         status_transaksi: "Tunai",
-        id_admin: sessionStorage.setItem("id_admin"),
+        id_admin: admin_id,
       };
       let path = BASE_URL + this.createSPPPath();
       return instance

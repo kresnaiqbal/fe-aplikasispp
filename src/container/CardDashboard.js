@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Paper, Typography, Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import ApiHitungJumlahSantri from "../Api/Transaksi/HitungJumlahSantri";
 
 const useStyles = makeStyles((theme) => ({
   root: {

@@ -4,30 +4,30 @@ const axios = require("axios");
 
 const BASE_URL = "https://kota201.xyz/aplikasi_spp/public/api/";
 
-export default class ApiHitungJumlahUang extends React.Component {
+export default class ApiHitungJumlahUangDaily extends React.Component {
   static INSTANCE = null;
 
   static getInstance() {
-    if (ApiHitungJumlahUang.INSTANCE === null) {
-      ApiHitungJumlahUang.INSTANCE = new ApiHitungJumlahUang();
+    if (ApiHitungJumlahUangDaily.INSTANCE === null) {
+      ApiHitungJumlahUangDaily.INSTANCE = new ApiHitungJumlahUangDaily();
     }
-    return ApiHitungJumlahUang.INSTANCE;
+    return ApiHitungJumlahUangDaily.INSTANCE;
   }
 
-  getJumlahUangInstance = () => {
+  getJumlahUangDailyInstance = () => {
     // Header API
     return axios.create({
       baseURL: `${BASE_URL}`,
     });
   };
 
-  showJumlahUangPath = () => {
-    return "transaksi/total/bulanan";
+  showJumlahUangDailyPath = () => {
+    return "transaksi/total/harian";
   };
 
-  getJumlahUang = (instance) => {
+  getJumlahUangDaily = (instance) => {
     if (instance !== null) {
-      let path = BASE_URL + this.showJumlahUangPath();
+      let path = BASE_URL + this.showJumlahUangDailyPath();
       return instance
         .get(path)
         .then((response) => response)
@@ -42,12 +42,11 @@ export default class ApiHitungJumlahUang extends React.Component {
         let result = {};
         if (response) {
           result = response[0].data.uang_masuk;
-          console.log("jml uang", result);
+          console.log("jml uang daily", result);
             return result;
           }
         })
         .catch((error) => {
-          console.log("wada", error);
           return error;
         });
     }

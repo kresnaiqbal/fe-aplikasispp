@@ -39,16 +39,12 @@ export default class ApiShowLaporanTunggakan extends React.Component {
     if (Array.isArray(data)) {
       return Promise.all(data)
         .then((response) => {
-          console.log("awe", response);
-          let result = [];
-          for (let i = 0; i < response[0].data.tunggakan.length; i++) {
-            result.push(
-              response[0].data.tunggakan[i]
-                ? response[0].data.tunggakan[i]
-                : null
-            );
+          // console.log("awe", response);
+          if(response){
+            console.log("responz", response);
+            return response;
           }
-          return result;
+          // return result;
         })
         .catch((error) => error);
     }

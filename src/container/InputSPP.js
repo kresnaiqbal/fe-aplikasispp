@@ -10,12 +10,13 @@ import {
   MenuItem,
   Select,
   Fragment,
+  Link,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router";
 import ApiPembayaranSPPTunai from "../Api/Transaksi/PembayaranSPPTunai";
 
-const jumlahBulans = [
+const totalMonths = [
   {
     value: 1,
     label: "1",
@@ -23,6 +24,22 @@ const jumlahBulans = [
   {
     value: 2,
     label: "2",
+  },
+  {
+    value: 3,
+    label: "3",
+  },
+  {
+    value: 4,
+    label: "4",
+  },
+  {
+    value: 5,
+    label: "5",
+  },
+  {
+    value: 6,
+    label: "6",
   },
 ];
 
@@ -75,6 +92,7 @@ function InputSPP() {
   const [spp, setSpp] = useState(0);
   const [infaq, setInfaq] = useState(0);
 
+  let admin_id = sessionStorage.getItem("id_admin");
   let gateway = ApiPembayaranSPPTunai.getInstance();
 
   let SPPInstance = gateway.getSPPInstance();
@@ -87,6 +105,7 @@ function InputSPP() {
       totalBayar,
       spp,
       infaq,
+      admin_id,
       callback
     );
   };
@@ -116,7 +135,7 @@ function InputSPP() {
                 <TextField
                   id="outlined-basic"
                   variant="outlined"
-                  style={{ width: "400px" , marginLeft: "90px" }}
+                  style={{ width: "400px", marginLeft: "90px" }}
                   onChange={handleChangeNIS}
                 />
               </div>
@@ -125,10 +144,10 @@ function InputSPP() {
                 <Select
                   id="outlined-basic"
                   variant="outlined"
-                  style={{ width: "400px" , marginLeft: "75px" }}
+                  style={{ width: "400px", marginLeft: "75px" }}
                   onChange={handleChangeJumlahBulan}
                 >
-                  {jumlahBulans.map((option) => (
+                  {totalMonths.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>
@@ -142,7 +161,7 @@ function InputSPP() {
                   variant="outlined"
                   value={spp}
                   disabled
-                  style={{ width: "400px" , marginLeft: "20px"}}
+                  style={{ width: "400px", marginLeft: "20px" }}
                 />
               </div>
               <div>
@@ -151,7 +170,7 @@ function InputSPP() {
                   id="outlined-basic"
                   variant="outlined"
                   disabled
-                  style={{ width: "400px" , marginLeft: "13px" }}
+                  style={{ width: "400px", marginLeft: "13px" }}
                   value={infaq}
                 />
               </div>
@@ -160,7 +179,7 @@ function InputSPP() {
                 <TextField
                   id="outlined-basic"
                   variant="outlined"
-                  style={{ width: "400px" , marginLeft: "35px" }}
+                  style={{ width: "400px", marginLeft: "35px" }}
                   disabled
                   value={totalBayar}
                 />
@@ -178,9 +197,11 @@ function InputSPP() {
                 >
                   Bayar
                 </Button>
-                <Button variant="contained" color="secondary">
-                  Kembali
-                </Button>
+                <Link to={`${process.env.PUBLIC_URL}/dashboard`}>
+                  <Button variant="contained" color="secondary">
+                    Kembali
+                  </Button>
+                </Link>
               </div>
             </form>
           </div>

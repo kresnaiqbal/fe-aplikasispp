@@ -119,7 +119,7 @@ function DaftarSantri() {
     result.then((response) => {
       if(response.status === 200 && response.data.message === "Data Santri Berhasil Dihapus"){
       setShallRender(!shallRender);
-      }
+      } 
     })
   };
 
@@ -159,7 +159,7 @@ function DaftarSantri() {
                     <TableRow key="{data.nis}">
                       <TableCell> {data.nis}</TableCell>
                       <TableCell> {data.nama_santri}</TableCell>
-                      <TableCell> {data.id_kelas}</TableCell>
+                      <TableCell> {data.nama_kelas}</TableCell>
                       <TableCell> {data.subsidi}</TableCell>
 
                       <TableCell>

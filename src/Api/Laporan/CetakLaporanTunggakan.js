@@ -4,32 +4,30 @@ const axios = require("axios");
 
 const BASE_URL = "https://kota201.xyz/aplikasi_spp/public/api/";
 
-export default class ApiShowLaporanUangMasuk extends React.Component {
+export default class ApiExportLaporanTunggakan extends React.Component {
   static INSTANCE = null;
 
   static getInstance() {
-    if (ApiShowLaporanUangMasuk.INSTANCE === null) {
-      ApiShowLaporanUangMasuk.INSTANCE = new ApiShowLaporanUangMasuk();
+    if (ApiExportLaporanTunggakan.INSTANCE === null) {
+      ApiExportLaporanTunggakan.INSTANCE = new ApiExportLaporanTunggakan();
     }
-    return ApiShowLaporanUangMasuk.INSTANCE;
+    return ApiExportLaporanTunggakan.INSTANCE;
   }
 
-  getLaporanUangMasukInstance = () => {
+  getExportLaporanTunggakanInstance = () => {
     // Header API
     return axios.create({
       baseURL: `${BASE_URL}`,
     });
   };
 
-  showLaporanUangMasukPath = (bulan) => {
-    return "laporan/uang/" + bulan;
+  exportLaporanTunggakanPath = () => {
+    return "laporan/unduh/tunggakan"
   };
 
-  getDataLaporanUangMasuk = (instance,month,callback) => {
+  getExportLaporanTunggakan = (instance) => {
     if (instance !== null) {
-      let bulan = month;
-      console.log("bulan berapa", bulan);
-      let path = BASE_URL + this.showLaporanUangMasukPath(bulan);
+      let path = BASE_URL + this.exportLaporanTunggakanPath();
       return instance
         .get(path)
         .then((response) => response)
@@ -38,15 +36,16 @@ export default class ApiShowLaporanUangMasuk extends React.Component {
   };
 
   requestData = (data) => {
-    if (Array.isArray(data)) {
+    // if (Array.isArray(data)) 
+    // {
       return Promise.all(data)
         .then((response) => {
           if(response){
-           console.log("responz", response);
+           console.log("responT", response);
            return response;
          }
         })
         .catch((error) => error);
-    }
+    // }
   };
 }

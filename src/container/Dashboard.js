@@ -3,11 +3,17 @@ import Navbar from "../components/Navbar";
 import CardGraphHitungUang from "./CardGraphHitungUang";
 import CardDashboard from "./CardDashboard";
 import CardGraphPersentaseKelas from "./CardGraphPersentaseKelas";
-import { Grid, Typography } from "@material-ui/core";
+import { Grid, CircularProgress } from "@material-ui/core";
 import { AssignmentTurnedIn, AssignmentLate, Money } from "@material-ui/icons";
 import ApiHitungJumlahSantri from "../Api/Transaksi/HitungJumlahSantri";
-import { ApiHitungJumlahUang } from "../Api";
+import {
+  ApiHitungJumlahUang,
+  ApiHitungJumlahSantriMenunggak,
+  ApiHitungJumlahUangDaily,
+} from "../Api";
 import { makeStyles } from "@material-ui/core/styles";
+import { useHistory } from "react-router";
+import { getToken } from "../components/Common";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -18,61 +24,100 @@ const useStyles = makeStyles((theme) => ({
 
 function DashboardView() {
   const classes = useStyles();
+  const history = useHistory();
   const [cardDashboard, setCardDashboard] = useState(null);
   const [hasResponse, setHasResponse] = useState(false);
+  const [progress, setProgress] = React.useState(0);
 
   let gateway = ApiHitungJumlahSantri.getInstance();
   let gatewayUang = ApiHitungJumlahUang.getInstance();
+  let gatewayTunggakan = ApiHitungJumlahSantriMenunggak.getInstance();
+  let gatewayUangDaily = ApiHitungJumlahUangDaily.getInstance();
 
   let JumlahSantriInstance = gateway.getJumlahSantriInstance();
   let JumlahUangInstance = gatewayUang.getJumlahUangInstance();
+  let JumlahTunggakanInstance =
+    gatewayTunggakan.getJumlahSantriMenunggakInstance();
+  let JumlahUangDailyInstance = gatewayUangDaily.getJumlahUangDailyInstance();
 
   useEffect(() => {
-    let jumlahSantriData = gateway.getJumlahSantri(JumlahSantriInstance);
-    let jumlahUangData = gatewayUang.getJumlahUang(JumlahUangInstance);
+    const token = getToken();
+    const timer = setInterval(() => {
+      setProgress((prevProgress) => (prevProgress >= 100 ? 0 : prevProgress + 10));
+    }, 800);
 
-    let result = gateway.requestData([jumlahSantriData]);
-    result.then((response) => {
-      if (response) {
-        setHasResponse(true);
-        // setJumlahSantri(response.santri);
-        let cardData = [
-          {
-            title: "Jumlah Santri Lunas",
-            data: response.santri,
-            // data: 0,
-            icon: <AssignmentTurnedIn className={classes.icon} />,
-            color: "#3B945E",
-          },
-          {
-            title: "Jumlah Santri Menunggak",
-            data: 200,
-            icon: <AssignmentLate className={classes.icon} />,
-            color: "#000000",
-          },
-          {
-            title: "Jumlah Uang Masuk hari ini",
-            data: 200,
-            icon: <Money className={classes.icon} />,
-            color: "#FC7D58",
-          },
-          {
-            title: "Jumlah Uang Masuk bulan ini",
-            data: 200,
-            icon: <Money className={classes.icon} />,
-            color: "#DFE313",
-          },
-        ];
+    if (!token) {
+      history.push("/");
+    } else {
+      let jumlahSantriData = gateway.getJumlahSantri(JumlahSantriInstance);
+      let jumlahSantriMenunggakData = gatewayTunggakan.getJumlahSantriMenunggak(
+        JumlahTunggakanInstance
+      );
+      let jumlahUangData = gatewayUang.getJumlahUang(JumlahUangInstance);
+      let jumlahUangDailyData = gatewayUangDaily.getJumlahUangDaily(
+        JumlahUangDailyInstance
+      );
+      // let jumlahUangDailyData = gatewayUangDaily.getJumlahUangDaily(JumlahUangDailyInstance);
+
+      let result = gateway.requestData([
+        jumlahSantriData,
+        jumlahSantriMenunggakData,
+        jumlahUangDailyData,
+        jumlahUangData,
+      ]);
+      result.then((response) => {
+        let cardData = [];
+        for (let i = 0; i < response.length; i++) {
+          setHasResponse(true);
+          if (response[i].status === 200) {
+            if (i === 0) {
+              cardData.push({
+                title: "Jumlah Santri Lunas",
+                data: response[i].data.santri,
+                // data: 0,
+                icon: <AssignmentTurnedIn className={classes.icon} />,
+                color: "#3B945E",
+              });
+            } else if (i === 1) {
+              cardData.push({
+                title: "Jumlah Santri yang Menunggak",
+                data: response[i].data.santri,
+                // data: 0,
+                icon: <AssignmentLate className={classes.icon} />,
+                color: "#000000",
+              });
+            } else if (i === 2) {
+              cardData.push({
+                title: "Jumlah Uang Masuk hari ini",
+                data: response[i].data.uang_masuk,
+                // data: 0,
+                icon: <Money className={classes.icon} />,
+                color: "#FC7D58",
+              });
+            } else if (i === 3) {
+              cardData.push({
+                title: "Jumlah Uang Masuk bulan ini",
+                data: response[i].data.uang_masuk,
+                // data: 0,
+                icon: <Money className={classes.icon} />,
+                color: "#DFE313",
+              });
+            }
+          }
+        }
+        // console.log("CARd daTA", cardData);
         setCardDashboard(cardData);
-      }
-    });
+      });
+    }
+    clearInterval(timer);
   }, [hasResponse]);
+
 
   if (!hasResponse) {
     console.log("return loading");
-    return <Typography>loading data</Typography>;
+    return <CircularProgress variant="determinate" value={progress} />;
   }
-  console.log("lala", cardDashboard);
+  // console.log("lala", cardDashboard);
   return (
     <div>
       <Navbar />
@@ -85,12 +130,12 @@ function DashboardView() {
           ))}
       </Grid>
       <Grid container direction="row">
-        <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+        <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
           <CardGraphHitungUang />
         </Grid>
-        <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-          <CardGraphPersentaseKelas />
-        </Grid>
+        {/* <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+          <CardGraphPersentaseKelas /> 
+        </Grid> */}
       </Grid>
     </div>
   );

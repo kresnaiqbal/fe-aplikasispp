@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
-import { ApiShowLaporanUangMasuk } from "../../Api";
+import {
+  ApiShowLaporanUangMasuk,
+  ApiDownloadLaporanUangMasuk,
+} from "../../Api";
 import {
   Paper,
   FormControl,
@@ -20,6 +23,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router";
+import { saveAs } from "file-saver";
 
 const months = [
   {
@@ -106,10 +110,6 @@ const columns = [
   },
 ];
 
-function createData(no, tanggal, nis, NamaSantri, BayarSPP, keterangan) {
-  return { no, tanggal, nis, NamaSantri, BayarSPP, keterangan };
-}
-
 const rows = [];
 
 const useStyles = makeStyles((theme) => ({
@@ -120,6 +120,7 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     margin: 30,
+    marginTop: 10,
     maxHeight: 440,
   },
   monthPicker: {
@@ -162,32 +163,75 @@ function LaporanKeuangan() {
   const history = useHistory();
   const [page, setPage] = React.useState(0);
 
-  const [month, setMonth] = useState();
-  const [dataLaporanUangMasuk, setDataLaporanUangMasuk] = React.useState([]);
+  const [month, setMonth] = useState(1);
+  const [dataLaporanUangMasuk, setDataLaporanUangMasuk] = React.useState(null);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   let gateway = ApiShowLaporanUangMasuk.getInstance();
-
   let LaporanUangMasukInstance = gateway.getLaporanUangMasukInstance();
 
   const handleMonthPicker = (callback) => {
+    // callback()
     let monthData = gateway.getDataLaporanUangMasuk(
       LaporanUangMasukInstance,
       month,
       callback
     );
+
+    let result = gateway.requestData([monthData]);
+    result.then((response) => {
+      if (Array.isArray(response)) {
+        // setDataLaporanUangMasuk(response);
+        console.log("ini laporan", response);
+        for (let i = 0; i < response.length; i++) {
+          if (response[i].status === 200) {
+            if (i === 0) {
+              setDataLaporanUangMasuk(response[i].data.transaksi);
+            }
+          } else {
+          }
+        }
+      }
+    });
   };
 
+  const handleExportData = () => {
+    let exportGateway = ApiDownloadLaporanUangMasuk.getInstance();
+    let DownloadLaporanInstance = exportGateway.getDownloadLaporanInstance();
+
+    let monthData = exportGateway.getDownloadLaporanUangMasuk(
+      DownloadLaporanInstance,
+      month
+    );
+    let result = exportGateway.requestData(monthData);
+    result.then((response) => {
+      if (response) {
+        var filename = "Laporan Uang Masuk SPP periode.pdf";
+        var blob = new Blob([response], {
+          type: "application/pdf;charset=utf-8",
+        });
+        var filesaver = saveAs(blob, filename);
+      }
+    });
+  };
   useEffect(() => {
     let laporanUangMasukData = gateway.getDataLaporanUangMasuk(
-      LaporanUangMasukInstance
+      LaporanUangMasukInstance,
+      month
     );
 
     let result = gateway.requestData([laporanUangMasukData]);
     result.then((response) => {
       if (Array.isArray(response)) {
-        setDataLaporanUangMasuk(response);
-        console.log("ini laporan", response);
+        console.log("ini laporan1", response);
+        for (let i = 0; i < response.length; i++) {
+          if (response[i].status === 200) {
+            if (i === 0) {
+              setDataLaporanUangMasuk(response[i].data.transaksi);
+            }
+          }
+        }
+        // if(response[])
       }
     });
   }, []);
@@ -213,13 +257,13 @@ function LaporanKeuangan() {
         <Divider />
         <FormControl component="fieldset">
           <form className={classes.root} noValidate autoComplete="off">
-            <Grid container direction="row">
-              <Grid item xs={2} sm={2} md={2} lg={2} xl={2}>
+            <Grid container direction="row" style={{ margin:20,}}>
+              <Grid item xs={3} sm={3} md={3} lg={3} xl={3}>
                 <FormLabel style={{ fontSize: "14px" }}>
                   Periode Bulan
                 </FormLabel>
               </Grid>
-              <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
+              <Grid item xs={5} sm={5} md={5} lg={5} xl={5}>
                 <TextField
                   id="outlined-select-gender"
                   required
@@ -240,10 +284,8 @@ function LaporanKeuangan() {
                 <Button
                   variant="contained"
                   color="primary"
-                  style={{ height: "50px", width: 100 }}
-                  onClick={() =>
-                    handleMonthPicker(() => history.push(`/LaporanKeuangan/${month}`))
-                  }
+                  style={{ height: "50px", width: 100, marginLeft:20}}
+                  onClick={handleMonthPicker}
                 >
                   Tampilkan
                 </Button>
@@ -284,7 +326,11 @@ function LaporanKeuangan() {
             </TableBody>
           </Table>
         </TableContainer>
-        <Button className={classes.MyButton} style={{ margin: "2%" }}>
+        <Button
+          className={classes.MyButton}
+          style={{ margin: "2%" }}
+          onClick={handleExportData}
+        >
           Cetak
         </Button>
         <TablePagination

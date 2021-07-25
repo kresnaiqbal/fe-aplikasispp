@@ -2,7 +2,7 @@ import React from 'react';
 
 const axios = require('axios');
 
-const BASE_URL = "https://kota201.xyz/aplikasi_spp/public/api/";
+const BASE_URL = "https://kota201.xyz/aplikasi_spp/public/api";
 
 export default class ApiShowRiwayatTransaksi extends React.Component{
 
@@ -23,7 +23,7 @@ export default class ApiShowRiwayatTransaksi extends React.Component{
     }
 
     showRiwayatTransaksiPath = () => {
-        return 'transaksi'
+        return '/transaksi'
     }
 
     getDataRiwayatTransaksi = (instance) => {
@@ -37,16 +37,15 @@ export default class ApiShowRiwayatTransaksi extends React.Component{
         if(Array.isArray(data)){
             return Promise.all(data).then(
                 response => {
-                    console.log(response);
                     let result = []
-                    for(let i = 0; i< response[0].data.transaksi.length; i++){
+                    for(let i = 0; i < response[0].data.transaksi.length; i++){
                         result.push(response[0].data.transaksi[i] ? response[0].data.transaksi[i] : null)
                     }
                     return result
                 }
-            ).catch(
-                error => error
-            )
+                ).catch(
+                    error => error
+                    )
         }
     }
 }

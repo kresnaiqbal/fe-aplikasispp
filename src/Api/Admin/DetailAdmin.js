@@ -6,7 +6,7 @@ const BASE_URL = "https://kota201.xyz/aplikasi_spp/public/api/";
 
 export default class ApiDetailAdmin extends React.Component {
   static INSTANCE = null;
-
+  
   static getInstance() {
     if (ApiDetailAdmin.INSTANCE === null) {
       ApiDetailAdmin.INSTANCE = new ApiDetailAdmin();
@@ -37,12 +37,10 @@ export default class ApiDetailAdmin extends React.Component {
 
   requestData = (data) => {
     if (Array.isArray(data)) {
-      console.log('ini detail', data);
       return Promise.all(data)
         .then((response) => {
-          if(response[0].data.admin){
-              console.log('ini detail', response);
-              return response[0].data.admin;
+          if(response){
+              return response;
           }}
         )
         .catch((error) => error);

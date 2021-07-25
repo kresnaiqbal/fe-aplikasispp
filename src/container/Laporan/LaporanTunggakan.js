@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import {
   Paper,
@@ -11,8 +11,10 @@ import {
   TableRow,
   Button,
 } from "@material-ui/core";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { ApiShowLaporanTunggakan } from "../../Api";
+import { makeStyles } from "@material-ui/core/styles";
+import { ApiShowLaporanTunggakan, ApiExportLaporanTunggakan } from "../../Api";
+import { useHistory } from "react-router";
+import { saveAs } from "file-saver";
 
 const columns = [
   {
@@ -47,15 +49,11 @@ const columns = [
   },
   {
     id: "aksi",
-    label: "Aksi",
+    label: "Surat Tagihan",
     minWidth: 60,
     format: (value) => value.toFixed(2),
   },
 ];
-
-function createData(nis, NamaSantri, bulan, tahun, Aksi) {
-  return { nis, NamaSantri, bulan, tahun, Aksi };
-}
 
 const rows = [];
 
@@ -90,13 +88,8 @@ const useStyles = makeStyles((theme) => ({
     padding: "0 30px",
     marginTop: "20px",
   },
-  deleteBtn: {
-    background: "#FC4445",
-    marginLeft: "1%",
-    color: "white",
-  },
   detailBtn: {
-    background: "#0B4FFF",
+    background: "#368756",
     marginRight: "1%",
     color: "white",
   },
@@ -104,6 +97,7 @@ const useStyles = makeStyles((theme) => ({
 
 function LaporanTunggakan() {
   const classes = useStyles();
+  const history = useHistory();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [dataLaporanTunggakan, setDataLaporanTunggakan] = React.useState([]);
@@ -119,11 +113,38 @@ function LaporanTunggakan() {
     let result = gateway.requestData([laporanTunggakanData]);
     result.then((response) => {
       if (Array.isArray(response)) {
-        setDataLaporanTunggakan(response);
-        console.log("ini laporan", response);
+        console.log("ini laporan1", response);
+        for (let i = 0; i < response.length; i++) {
+          if (response[i].status === 200) {
+            if (i === 0) {
+              setDataLaporanTunggakan(response[i].data.tunggakan);
+              // setDataLaporanUangMasuk(response[i].data.transaksi);
+            }
+          }else {
+            // history.push('/errorHandler')
+          }
+        }
       }
     });
   }, []);
+
+  const handleExportData = () => {
+    let exportGateway = ApiExportLaporanTunggakan.getInstance();
+    let exportLaporanInstance =
+      exportGateway.getExportLaporanTunggakanInstance();
+
+    let data = exportGateway.getExportLaporanTunggakan(exportLaporanInstance);
+    let result = exportGateway.requestData(data);
+    result.then((response) => {
+      if (response) {
+        var filename = "Laporan Tunggakan.pdf";
+        var blob = new Blob([response], {
+          type: "application/pdf;charset=utf-8",
+        });
+        var filesaver = saveAs(blob, filename);
+      }
+    });
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -162,14 +183,14 @@ function LaporanTunggakan() {
                       <TableCell>{data.nis}</TableCell>
                       <TableCell>{data.nama_santri}</TableCell>
                       <TableCell>{data.jumlah_tunggakan}</TableCell>
-                      <TableCell>{data.jumlah_tunggakan}</TableCell>
+                      <TableCell>{data.tahun}</TableCell>
                       <TableCell>{data.nominal_tunggakan}</TableCell>
                       <TableCell>
                         <Button
                           variant="contained"
                           className={classes.detailBtn}
                         >
-                          Detail
+                          Cetak
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -178,7 +199,11 @@ function LaporanTunggakan() {
             </TableBody>
           </Table>
         </TableContainer>
-        <Button className={classes.MyButton} style={{ margin: "2%" }}>
+        <Button
+          className={classes.MyButton}
+          style={{ margin: "2%" }}
+          onClick={handleExportData}
+        >
           Cetak
         </Button>
         <TablePagination

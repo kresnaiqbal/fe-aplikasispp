@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../App.css";
 import "../css/fonts.css";
 import { ApiLogin } from "../Api";
@@ -9,6 +9,9 @@ import { Button, TextField, Grid, Paper } from "@material-ui/core";
 import { createMuiTheme, makeStyles } from "@material-ui/core/styles";
 import Image from "../image/backgroundLP.png";
 import { Link, useHistory } from "react-router-dom";
+import {
+  getToken,
+} from "../components/Common";
 
 const theme1 = createMuiTheme({
   palette: {
@@ -104,6 +107,12 @@ function LandingPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  useEffect(() => {
+    const token = getToken();
+    if (!token) {
+      history.push('/')
+    }
+  }, []);
   const handleChangeUsername = (event) => {
     setUsername(event.target.value);
   };
@@ -176,6 +185,7 @@ function LandingPage() {
                         label="Username"
                         name="username"
                         size="small"
+                        required
                         variant="outlined"
                         onChange={handleChangeUsername}
                         value={username}
@@ -187,6 +197,7 @@ function LandingPage() {
                         label="Password"
                         name="password"
                         size="small"
+                        required
                         type="password"
                         variant="outlined"
                         onChange={handleChangePassword}

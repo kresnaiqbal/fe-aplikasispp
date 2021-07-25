@@ -4,32 +4,32 @@ const axios = require("axios");
 
 const BASE_URL = "https://kota201.xyz/aplikasi_spp/public/api/";
 
-export default class ApiShowLaporanUangMasuk extends React.Component {
+export default class ApiDownloadLaporanUangMasuk extends React.Component {
   static INSTANCE = null;
 
   static getInstance() {
-    if (ApiShowLaporanUangMasuk.INSTANCE === null) {
-      ApiShowLaporanUangMasuk.INSTANCE = new ApiShowLaporanUangMasuk();
+    if (ApiDownloadLaporanUangMasuk.INSTANCE === null) {
+      ApiDownloadLaporanUangMasuk.INSTANCE = new ApiDownloadLaporanUangMasuk();
     }
-    return ApiShowLaporanUangMasuk.INSTANCE;
+    return ApiDownloadLaporanUangMasuk.INSTANCE;
   }
 
-  getLaporanUangMasukInstance = () => {
+  getDownloadLaporanInstance = () => {
     // Header API
     return axios.create({
       baseURL: `${BASE_URL}`,
     });
   };
 
-  showLaporanUangMasukPath = (bulan) => {
-    return "laporan/uang/" + bulan;
+  downloadLaporanUangMasukPath = (bulan) => {
+    return "laporan/unduh/uang/" + bulan;
   };
 
-  getDataLaporanUangMasuk = (instance,month,callback) => {
+  getDownloadLaporanUangMasuk = (instance,month) => {
     if (instance !== null) {
       let bulan = month;
-      console.log("bulan berapa", bulan);
-      let path = BASE_URL + this.showLaporanUangMasukPath(bulan);
+      console.log("unduh lap", bulan);
+      let path = BASE_URL + this.downloadLaporanUangMasukPath(bulan);
       return instance
         .get(path)
         .then((response) => response)
@@ -38,7 +38,8 @@ export default class ApiShowLaporanUangMasuk extends React.Component {
   };
 
   requestData = (data) => {
-    if (Array.isArray(data)) {
+    // if (Array.isArray(data)) 
+    // {
       return Promise.all(data)
         .then((response) => {
           if(response){
@@ -47,6 +48,6 @@ export default class ApiShowLaporanUangMasuk extends React.Component {
          }
         })
         .catch((error) => error);
-    }
+    // }
   };
 }

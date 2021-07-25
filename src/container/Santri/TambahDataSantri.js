@@ -10,17 +10,18 @@ import {
   TextField,
   MenuItem,
   Grid,
+  Link,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router";
 
 const genders = [
   {
-    value: "Pria",
+    value: "L",
     label: "Pria",
   },
   {
-    value: "Wanita",
+    value: "P",
     label: "Wanita",
   },
 ];
@@ -31,12 +32,24 @@ const kelass = [
     label: "1A",
   },
   {
-    value: "2A",
-    label: "2A",
+    value: "1B",
+    label: "1B",
   },
   {
-    value: "3A",
-    label: "3A",
+    value: "1C",
+    label: "1C",
+  },
+  {
+    value: "1D",
+    label: "1D",
+  },
+  {
+    value: "1E",
+    label: "1E",
+  },
+  {
+    value: "1F",
+    label: "1F",
   },
 ];
 
@@ -175,7 +188,7 @@ function TambahDataSantri() {
           <div className={classes.pad}>
             <form className={classes.root} noValidate autoComplete="off">
               <Grid container direction="row">
-                <Grid >
+                <Grid>
                   <FormLabel>Nama Lengkap</FormLabel>
                   <TextField
                     id="outlined-basic"
@@ -301,9 +314,11 @@ function TambahDataSantri() {
                   >
                     Tambah
                   </Button>
-                  <Button variant="contained" color="secondary">
-                    Kembali
-                  </Button>
+                  <Link to={`${process.env.PUBLIC_URL}/dashboard`}>
+                    <Button variant="contained" color="secondary">
+                      Kembali
+                    </Button>
+                  </Link>
                 </div>
               </Grid>
             </form>

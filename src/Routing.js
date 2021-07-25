@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Switch, Route, NavLink } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter, Switch, Route, NavLink } from "react-router-dom";
+import { useHistory } from "react-router";
 
 import LandingPage from "./container/LandingPage";
 import Dashboard from "./container/Dashboard";
@@ -16,37 +17,38 @@ import AkunOperator from "./container/Operator/AkunOperator";
 import TambahAkunOperator from "./container/Operator/TambahAkunOperator";
 import DetailDataOperator from "./container/Operator/DetailDataOperator";
 import EditDataOperator from "./container/Operator/EditDataOperator";
+import errorHandler from "./components/errorHandler";
+import ApprovalTransfer from "./container/Transaksi/ApprovalTransfer";
 
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
-import { getToken, removeUserSession, setUserSession } from './components/Common';
+import {
+  getToken,
+  removeUserSession,
+  setUserSession,
+} from "./components/Common";
 
 function Routing() {
-    // const [authLoading, setAuthLoading] = useState(true);
- 
-    useEffect(() => {
-      const token = getToken();
-      if (!token) {
-        return;
-      }
-    //   axios.get(`http://localhost:4000/verifyToken?token=${token}`).then(response => {
-    //     setUserSession(response.data.token, response.data.user);
-    //     setAuthLoading(false);
-    //   }).catch(error => {
-    //     removeUserSession();
-    //     setAuthLoading(false);
-    //   });
-    }, []);
-    // if (authLoading && getToken()) {
-    //     return <div className="content">Checking Authentication...</div>
-    //   }
+  const history = useHistory();
+  // const [authLoading, setAuthLoading] = useState(true);
+
+  useEffect(() => {
+    const token = getToken();
+    if (!token) {
+      history.push("/");
+    }
+  }, []);
+  // if (authLoading && getToken()) {
+  //     return <div className="content">Checking Authentication...</div>
+  //   }
 
   return (
     <div className="Route">
       <BrowserRouter>
         <Switch>
           <PublicRoute exact path="/" component={LandingPage} />
-          <PrivateRoute exact path="/dashboard" component={Dashboard} />
+          <Route exact path="/dashboard" component={Dashboard} />
+          <PrivateRoute exact path="/errorHandler" component={errorHandler} />
           <PrivateRoute exact path="/DaftarSantri" component={DaftarSantri} />
           <PrivateRoute
             exact
@@ -64,6 +66,7 @@ function Routing() {
             component={SuntingDataSantri}
           />
           <PrivateRoute exact path="/AkunSantri" component={AkunSantri} />
+          //Data Operator/Admin
           <PrivateRoute exact path="/AkunAdmin" component={AkunOperator} />
           <PrivateRoute
             exact
@@ -80,9 +83,28 @@ function Routing() {
             path="/AkunAdmin/Detail/:id"
             component={DetailDataOperator}
           />
-          <PrivateRoute exact path="/LaporanKeuangan" component={LaporanKeuangan} />
-          <PrivateRoute exact path="/LaporanTunggakan" component={LaporanTunggakan} />
-          <PrivateRoute exact path="/RiwayatTransaksi" component={RiwayatTransaksi} />
+          //Laporan
+          <PrivateRoute
+            exact
+            path="/LaporanKeuangan"
+            component={LaporanKeuangan}
+          />
+          <PrivateRoute
+            exact
+            path="/LaporanTunggakan"
+            component={LaporanTunggakan}
+          />
+          // Transaksi
+          <PrivateRoute
+            exact
+            path="/RiwayatTransaksi"
+            component={RiwayatTransaksi}
+          />
+          <PrivateRoute
+            exact
+            path="/ApprovalTransfer"
+            component={ApprovalTransfer}
+          />
           <PrivateRoute exact path="/InputSPP" component={InputSPP} />
         </Switch>
       </BrowserRouter>

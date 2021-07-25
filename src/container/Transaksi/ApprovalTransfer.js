@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import Navbar from "../components/Navbar";
-import { ApiShowRiwayatTransaksi } from "../Api";
+import Navbar from "../../components/Navbar";
+import { ApiShowRiwayatTransfer, ApiApprovalTransaksi } from "../../Api";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Paper,
@@ -11,17 +11,18 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Button,
 } from "@material-ui/core";
 import { useHistory } from "react-router";
 
 const columns = [
-  { id: "no", label: "ID Transaksi", minWidth: 60 },
+  { id: "no", label: "No.", minWidth: 60 },
   { id: "transaksi", label: "Transaksi", minWidth: 170 },
   {
-    id: "tglTransaksi",
-    label: "Tanggal Transaksi",
-    minWidth: 150,
-    format: (value) => value.toFixed(2),
+    id: "kodeUnik",
+    label: "Kode Unik",
+    minWidth: 60,
+    format: (value) => value.toLocaleString("en-US"),
   },
   {
     id: "NamaSantri",
@@ -30,18 +31,28 @@ const columns = [
     format: (value) => value.toLocaleString("en-US"),
   },
   {
-    id: "nominal",
-    label: "Nominal Pembayaran",
+    id: "jumlah",
+    label: "Jumlah",
     minWidth: 60,
     format: (value) => value.toLocaleString("en-US"),
   },
   {
-    id: "tipe",
-    label: "Tipe Transaksi",
-    minWidth: 60,
-    format: (value) => value.toLocaleString("en-US"),
+    id: "BuktiTransfer",
+    label: "Bukti Transfer",
+    minWidth: 150,
+    format: (value) => value.toFixed(2),
+  },
+  {
+    id: "aksi",
+    label: "Aksi",
+    minWidth: 150,
+    format: (value) => value.toFixed(2),
   },
 ];
+
+function createData(id, username, password, role) {
+  return { id, username, password, role };
+}
 
 const rows = [];
 
@@ -85,27 +96,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function RiwayatTransaksi() {
+function ApprovalTransfer() {
   const classes = useStyles();
   const history = useHistory();
   const [page, setPage] = React.useState(0);
-  const [dataRiwayatTransaksi, setDataRiwayatTransaksi] = React.useState([]);
+  const [dataRiwayatTransfer, setDataRiwayatTransfer] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [shallRender, setShallRender] = React.useState(false);
 
-  let gateway = ApiShowRiwayatTransaksi.getInstance();
+  let admin_id = sessionStorage.getItem("id_admin");
+  let gateway = ApiShowRiwayatTransfer.getInstance();
 
-  let RiwayatTransaksiInstance = gateway.getRiwayatTransaksiInstance();
+  let RiwayatTransferInstance = gateway.getRiwayatTransferInstance();
   useEffect(() => {
-    let riwayatTransaksiData = gateway.getDataRiwayatTransaksi(
-      RiwayatTransaksiInstance
+    let riwayatTransferData = gateway.getDataRiwayatTransfer(
+      RiwayatTransferInstance
     );
 
-    let result = gateway.requestData([riwayatTransaksiData]);
+    let result = gateway.requestData([riwayatTransferData]);
     result.then((response) => {
       if (Array.isArray(response)) {
         // if (response.status === 200) {
-        setDataRiwayatTransaksi(response);
+        setDataRiwayatTransfer(response);
+        console.log("ini riwayat", dataRiwayatTransfer);
         // }
       }
     });
@@ -119,12 +132,31 @@ function RiwayatTransaksi() {
     setPage(0);
   };
 
+  const handleApproval = (id_admin, id_tf) => {
+    let gateway = ApiApprovalTransaksi.getInstance();
+    let RiwayatTransaksiInstance = gateway.getApprovalInstance();
+    let riwayatTransaksiData = gateway.editDataApproval(
+      RiwayatTransaksiInstance,
+      admin_id,
+      id_tf,
+    );
+
+    let result = gateway.requestData([riwayatTransaksiData]);
+    result.then((response) => {
+      if (
+        response.status === 200 &&
+        response.data.message === "Transaksi Berhasil"
+      ) {
+        setShallRender(!shallRender);
+      }
+    });
+  };
 
   return (
     <div>
       <Navbar />
       <Paper className={classes.paperSize} elevation="1">
-        <div className={classes.Head}>Riwayat Transaksi</div>
+        <div className={classes.Head}>Approval Pembayaran SPP via ATM</div>
         <TableContainer className={classes.container}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
@@ -141,18 +173,39 @@ function RiwayatTransaksi() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {dataRiwayatTransaksi &&
-                dataRiwayatTransaksi.map((data) => {
+              {dataRiwayatTransfer &&
+                dataRiwayatTransfer.map((data) => {
                   return (
                     <TableRow hover key="{data.id_transaksi}">
-                      <TableCell>{data.id_transaksi}</TableCell>
+                      <TableCell>{data.id_transfer}</TableCell>
                       <TableCell>
-                        SPP {data.tanggal_transaksi} {data.status_transaksi} {data.kode_unik}
+                        SPP {data.tanggal_transfer} {data.status_transfer} {data.kode_unik}
                       </TableCell>
-                      <TableCell>{data.tanggal_transaksi}</TableCell>
+                      <TableCell>{data.kode_unik}</TableCell>
                       <TableCell>{data.nama_santri}</TableCell>
-                      <TableCell>{data.total_bayar}</TableCell>
-                      <TableCell>{data.status_transaksi}</TableCell>
+                      <TableCell>{data.total_transfer}</TableCell>
+                      {dataRiwayatTransfer && (
+                        <TableCell>
+                          <img className={classes.pic} src={data.path_gambar} />
+                          {/* <Button
+                            variant="contained"
+                            className={classes.detailBtn}
+                          >
+                            Lihat
+                          </Button> */}
+                        </TableCell>
+                      )}
+                      <TableCell>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() =>
+                            handleApproval(admin_id, data.id_transfer)
+                          }
+                        >
+                          Verifikasi
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   );
                 })}
@@ -173,4 +226,4 @@ function RiwayatTransaksi() {
   );
 }
 
-export default RiwayatTransaksi;
+export default ApprovalTransfer;

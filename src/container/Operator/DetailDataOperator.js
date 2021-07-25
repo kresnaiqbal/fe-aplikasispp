@@ -83,9 +83,9 @@ function DetailDataOperator() {
 
       let result = gateway.requestData([adminData]);
       result.then((response) => {
-        if (response) {
+        if (response && response[0].status===200) {
           console.log("ini di view detail", response);
-          setDataAdmin(response);
+          setDataAdmin(response[0].data.admin);
         }
       });
     }

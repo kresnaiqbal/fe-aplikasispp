@@ -37,12 +37,15 @@ export default class ApiDetailSantri extends React.Component {
 
   requestData = (data) => {
     if (Array.isArray(data)) {
-      console.log('ini detail', data);
+      // console.log('ini detail', data);
       return Promise.all(data)
         .then((response) => {
-          if(response[0].data.santri){
-              console.log('ini detail', response);
-              return response[0].data.santri;
+          if(response && response.status===200){
+            return response;
+          
+          // if(response[0].data.santri){
+          //     // console.log('ini detail1', response);
+          //     return response[0].data.santri;
           }}
         )
         .catch((error) => error);
