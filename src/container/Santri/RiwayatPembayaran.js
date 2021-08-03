@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import Navbar from "../components/Navbar";
-import { ApiShowRiwayatTransaksi } from "../Api";
+import Navbar from "../../components/Navbar";
+import { ApiShowRiwayatPembayaran } from "../../Api";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Divider,
@@ -12,27 +12,31 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Button,
 } from "@material-ui/core";
+import { useParams } from "react-router";
 import { useHistory } from "react-router";
+import { Link } from "react-router-dom";
+import moment from "moment";
 
 const columns = [
   { id: "no", label: "ID Transaksi", minWidth: 60 },
-  { id: "transaksi", label: "Transaksi", minWidth: 170 },
   {
     id: "tglTransaksi",
     label: "Tanggal Transaksi",
     minWidth: 150,
     format: (value) => value.toFixed(2),
   },
+  { id: "Bulan", label: "Bulan", minWidth: 170 },
   {
-    id: "NamaSantri",
-    label: "Nama Santri",
+    id: "nominal",
+    label: "Nominal Pembayaran",
     minWidth: 60,
     format: (value) => value.toLocaleString("en-US"),
   },
   {
-    id: "nominal",
-    label: "Nominal Pembayaran",
+    id: "paraf",
+    label: "Paraf",
     minWidth: 60,
     format: (value) => value.toLocaleString("en-US"),
   },
@@ -85,30 +89,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function RiwayatTransaksi() {
+function RiwayatPembayaran() {
+  const params = useParams();
   const classes = useStyles();
   const history = useHistory();
   const [page, setPage] = React.useState(0);
-  const [dataRiwayatTransaksi, setDataRiwayatTransaksi] = React.useState([]);
+  const [dataRiwayatPembayaran, setDataRiwayatPembayaran] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [shallRender, setShallRender] = React.useState(false);
 
-  let gateway = ApiShowRiwayatTransaksi.getInstance();
+  let gateway = ApiShowRiwayatPembayaran.getInstance();
 
-  let RiwayatTransaksiInstance = gateway.getRiwayatTransaksiInstance();
+  let RiwayatPembayaranInstance = gateway.getRiwayatPembayaranInstance();
   useEffect(() => {
-    let riwayatTransaksiData = gateway.getDataRiwayatTransaksi(
-      RiwayatTransaksiInstance
-    );
+    if (params && params.id) {
+      let RiwayatPembayaranData = gateway.getDataRiwayatPembayaran(
+        RiwayatPembayaranInstance,
+        params.id
+      );
 
-    let result = gateway.requestData([riwayatTransaksiData]);
-    result.then((response) => {
-      if (Array.isArray(response)) {
-        // if (response.status === 200) {
-        setDataRiwayatTransaksi(response);
-        // }
-      }
-    });
+      let result = gateway.requestData([RiwayatPembayaranData]);
+      result.then((response) => {
+        if (Array.isArray(response)) {
+          console.log("ini di view detail", response);
+          setDataRiwayatPembayaran(response);
+        }
+      });
+    }
   }, [shallRender]);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -127,9 +134,12 @@ function RiwayatTransaksi() {
     <div>
       <Navbar />
       <Paper className={classes.paperSize} elevation="1">
-        <div className={classes.Head}>Riwayat Transaksi</div>
-        <Divider style={{marginTop:'10px'}}/>
-        <TableContainer className={classes.container} style={{marginTop:'10px'}}>
+        <div className={classes.Head}>Riwayat Pembayaran </div>
+        <Divider style={{ marginTop: "10px" }} />
+        <TableContainer
+          className={classes.container}
+          style={{ marginTop: "10px" }}
+        >
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
@@ -137,7 +147,11 @@ function RiwayatTransaksi() {
                   <TableCell
                     key={column.id}
                     align={column.align}
-                    style={{ minWidth: column.minWidth, fontWeight:"bold", fontSize:"13px" }}
+                    style={{
+                      minWidth: column.minWidth,
+                      fontWeight: "bold",
+                      fontSize: "13px",
+                    }}
                   >
                     {column.label}
                   </TableCell>
@@ -145,20 +159,24 @@ function RiwayatTransaksi() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {dataRiwayatTransaksi &&
-                dataRiwayatTransaksi.map((data) => {
+              {dataRiwayatPembayaran &&
+                dataRiwayatPembayaran.map((data) => {
                   return (
                     <TableRow hover key="{data.id_transaksi}">
-                      <TableCell style={{ width: "10%" }}>{data.id_transaksi}</TableCell>
-                      <TableCell style={{ width: "20%" }}>
-                        SPP {data.tanggal_transaksi} {data.status_transaksi}{" "}
-                        {data.kode_unik}
+                      <TableCell style={{ width: "10%" }}>
+                        {data.id_transaksi}
                       </TableCell>
-                      <TableCell style={{ width: "10%" }}>{data.tanggal_transaksi}</TableCell>
-                      <TableCell style={{ width: "20%" }}>{data.nama_santri}</TableCell>
+                      <TableCell style={{ width: "20%" }}>
+                        {/* {data.tanggal_transaksi} */}
+                        {moment(data.tanggal_transaksi).format('D MMMM, YYYY')}
+                      </TableCell>
+                      <TableCell style={{ width: "10%" }}>
+                        {moment().month(data.bulan).format("MMMM")}
+                      </TableCell>
                       <TableCell style={{ width: "15%" }}>
                         {formatter.format(data.total_bayar)}
                       </TableCell>
+                      <TableCell>{data.paraf}</TableCell>
                       <TableCell>{data.status_transaksi}</TableCell>
                     </TableRow>
                   );
@@ -166,6 +184,14 @@ function RiwayatTransaksi() {
             </TableBody>
           </Table>
         </TableContainer>
+        <Link to={`${process.env.PUBLIC_URL}/DaftarSantri`}>
+          <Button
+            variant="contained"
+            style={{ margin: "2%", background: "#c4c4c4" }}
+          >
+            Kembali
+          </Button>
+        </Link>
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
@@ -180,4 +206,4 @@ function RiwayatTransaksi() {
   );
 }
 
-export default RiwayatTransaksi;
+export default RiwayatPembayaran;

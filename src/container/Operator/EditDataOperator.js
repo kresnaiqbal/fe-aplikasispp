@@ -46,7 +46,6 @@ const useStyles = makeStyles((theme) => ({
   },
   paperSize: {
     width: "100%",
-    borderRadius: "20px",
     marginLeft: "80px",
     marginTop: "-38px",
   },
@@ -62,7 +61,6 @@ const useStyles = makeStyles((theme) => ({
   MyButton: {
     background: "#368756",
     border: 0,
-    borderRadius: 3,
     boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
     color: "white",
     height: 48,
@@ -79,14 +77,7 @@ function EditDataOperator() {
   const classes = useStyles();
   const history = useHistory();
   const [dataAdmin, setDataAdmin] = useState();
-  const [password, setPassword] = useState({
-    password: "",
-    showPassword: false,
-  });
-  const [values1, setValues1] = useState({
-    confirmPassword: "",
-    showConfirmPassword: false,
-  });
+  const [namaAdmin, setNamaAdmin] = useState();
   const [role, setRole] = useState();
   const [username, setUsername] = useState();
   const [paraf, setParaf] = useState();
@@ -101,57 +92,24 @@ function EditDataOperator() {
 
       let result = gateway.requestData([adminData]);
       result.then((response) => {
-        console.log('ini awa', response);
-        if (response) {
-          setDataAdmin(response);
-          setUsername(response.username);
-          setRole(response.role);
-          setParaf(response.paraf);
-          setPassword(response.password);
+        if (response && response[0].status === 200) {
+          setDataAdmin(response[0].data.admin);
+          setNamaAdmin(response[0].data.admin.nama_admin);
+          setUsername(response[0].data.admin.username);
+          setRole(response[0].data.admin.role);
+          setParaf(response[0].data.admin.paraf);
         }
       });
     }
   }, [params]);
 
-  const handleEditAdmin = (callback) => {
-    let gateway = ApiEditAdmin.getInstance();
-    let AdminInstance = gateway.getAdminInstance();
-    let adminData = gateway.createDataAdmin(
-      AdminInstance,
-      dataAdmin,
-      username,
-      role,
-      paraf,
-      password,
-      callback
-    );
-  };
-
-  const handleChange = (prop) => (event) => {
-    setPassword({ ...password, [prop]: event.target.value });
-  };
 
   const handleChange1 = (event) => {
     setRole(event.target.value);
   };
 
-  const handleClickShowPassword = () => {
-    setPassword({ ...password, showPassword: !password.showPassword });
-  };
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
-
-  const handleClickShowPassword1 = () => {
-    setValues1({
-      ...values1,
-      showConfirmPassword: !values1.showConfirmPassword,
-    });
-  };
-
-  const handleMouseDownPassword1 = (event) => {
-    event.preventDefault();
+  const handleChangeNamaAdmin = (event) => {
+    setNamaAdmin(event.target.value);
   };
 
   const handleChangeUsername = (event) => {
@@ -163,25 +121,39 @@ function EditDataOperator() {
     // console.log(event.target.value);
   };
 
+  const handleEditAdmin = (callback) => {
+    let gateway = ApiEditAdmin.getInstance();
+    let AdminInstance = gateway.getAdminInstance();
+    let adminData = gateway.editDataAdmin(
+      AdminInstance,
+      dataAdmin,
+      namaAdmin,
+      username,
+      role,
+      paraf,
+      callback
+    );
+  };
+
   return (
     <div>
       <Navbar />
       <Paper className={classes.paperSize}>
-        <div className={classes.Head}>Tambah Akun Admin/Operator</div>
+        <div className={classes.Head}>Sunting data Admin/Operator</div>
         <Divider />
         <FormControl component="fieldset">
           <div className={classes.pad}>
             <form className={classes.root} noValidate autoComplete="off">
               <div>
-                {dataAdmin && (
+                {dataAdmin && dataAdmin.nama_admin && (
                   <TextField
                     id="outlined-basic"
                     required
                     placeholder="Nama Lengkap"
                     variant="outlined"
                     style={{ width: "400px" }}
-                    value={dataAdmin.nama_admin}
-                    disabled
+                    value={namaAdmin}
+                    onChange={handleChangeNamaAdmin}
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
@@ -193,14 +165,13 @@ function EditDataOperator() {
                 )}
               </div>
               <div>
-                {dataAdmin && dataAdmin.nama_admin && (
+                {dataAdmin && dataAdmin.role && (
                   <TextField
                     id="outlined-select-gender"
                     required
                     select
                     value={role}
                     onChange={handleChange1}
-                    value={dataAdmin.nama_role}
                     placeholder="Role"
                     variant="outlined"
                     style={{ width: "400px" }}
@@ -221,13 +192,13 @@ function EditDataOperator() {
                 )}
               </div>
               <div>
-                {dataAdmin && dataAdmin.nama_admin && (
+                {dataAdmin && dataAdmin.paraf && (
                   <TextField
                     id="outlined-basic"
                     placeholder="Paraf"
                     variant="outlined"
                     onChange={handleChangeParaf}
-                    value={dataAdmin.paraf}
+                    value={paraf}
                     style={{ width: "400px" }}
                     InputProps={{
                       startAdornment: (
@@ -240,13 +211,13 @@ function EditDataOperator() {
                 )}
               </div>
               <div>
-                {dataAdmin && dataAdmin.nama_admin && (
+                {dataAdmin && dataAdmin.username && (
                   <TextField
                     id="outlined-basic"
                     required
                     placeholder="Username"
                     onChange={handleChangeUsername}
-                    value={dataAdmin.username}
+                    value={username}
                     variant="outlined"
                     style={{ width: "400px" }}
                     InputProps={{
@@ -268,7 +239,7 @@ function EditDataOperator() {
                     handleEditAdmin(() => history.push("/akunadmin"))
                   }
                 >
-                  Tambah
+                  Sunting
                 </Button>
                 <Button variant="contained" color="secondary">
                   Kembali

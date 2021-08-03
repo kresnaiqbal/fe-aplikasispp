@@ -22,23 +22,16 @@ export default class ApiEditAdmin extends React.Component {
   };
 
   editAdminPath = (id) => {
-    return "Admin/" + id;
+    return "admin/" + id;
   };
 
-  editDataAdmin = (
-    instance,
-    dataAdmin,
-    role,
-    username,
-    password,
-    callback,
-  ) => {
+  editDataAdmin = (instance, dataAdmin, namaAdmin, username, role, paraf, callback) => {
     if (instance !== null) {
       let params = {
-        nama_admin: dataAdmin.nama_admin,
-        role: role,
+        nama_admin: namaAdmin,
         username: username,
-        password: password,
+        role: role,
+        paraf: paraf,
       };
       let path = BASE_URL + this.editAdminPath(dataAdmin.id_admin);
       return instance
@@ -47,7 +40,7 @@ export default class ApiEditAdmin extends React.Component {
           callback();
         })
 
-        .catch((err) => err);
+        .catch((err) => alert(err.response.data.message));
     }
   };
 
@@ -58,8 +51,7 @@ export default class ApiEditAdmin extends React.Component {
           let result = [];
           return result;
         })
-        .catch((error) => error);
+        .catch((error) => alert(error.response.data.message));
     }
   };
-
 }

@@ -51,7 +51,7 @@ export default class ApiCreateAdmin extends React.Component {
           callback();
         })
 
-        .catch((err) => err);
+        .catch((err) => alert(err.response.data.message));
     }
   };
 
@@ -68,7 +68,7 @@ export default class ApiCreateAdmin extends React.Component {
           }
           return result;
         })
-        .catch((error) => error);
+        .catch((error) => alert(error.response.data.message));
     }
   };
 }

@@ -17,6 +17,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
+import {EditOutlined, AddOutlined, DeleteOutlineOutlined, SearchRounded} from '@material-ui/icons';
 
 const columns = [
   { id: "nis", label: "Nis", minWidth: 50 },
@@ -54,7 +55,6 @@ const useStyles = makeStyles((theme) => ({
   },
   paperSize: {
     width: "100%",
-    borderRadius: "20px",
     marginLeft: "80px",
     marginTop: "-38px",
   },
@@ -68,7 +68,6 @@ const useStyles = makeStyles((theme) => ({
   MyButton: {
     background: "#368756",
     border: 0,
-    borderRadius: 3,
     boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
     color: "white",
     height: 48,
@@ -108,7 +107,7 @@ function DaftarSantri() {
       }
     });
   }, [shallRender]);
-
+  
   const handleOnClickDelete = (nis) => {
     let gateway = ApiDeleteSantri.getInstance();
 
@@ -145,7 +144,7 @@ function DaftarSantri() {
                   <TableCell
                     key={column.id}
                     align={column.align}
-                    style={{ minWidth: column.minWidth }}
+                    style={{ minWidth: column.minWidth, fontWeight:"bold", fontSize:"13px"   }}
                   >
                     {column.label}
                   </TableCell>
@@ -160,7 +159,7 @@ function DaftarSantri() {
                       <TableCell> {data.nis}</TableCell>
                       <TableCell> {data.nama_santri}</TableCell>
                       <TableCell> {data.nama_kelas}</TableCell>
-                      <TableCell> {data.subsidi}</TableCell>
+                      <TableCell> {data.subsidi=== '0' ? 'Tidak Subsidi' : 'Subsidi'}</TableCell>
 
                       <TableCell>
                         <Link
@@ -170,6 +169,7 @@ function DaftarSantri() {
                             variant="contained"
                             className={classes.detailBtn}
                           >
+                            <SearchRounded/>
                             Detail
                           </Button>
                         </Link>
@@ -177,6 +177,7 @@ function DaftarSantri() {
                           to={`${process.env.PUBLIC_URL}/DaftarSantri/Sunting/${data.nis}`}
                         >
                           <Button variant="contained" color="primary">
+                            <EditOutlined/>
                             Sunting
                           </Button>
                         </Link>
@@ -185,6 +186,7 @@ function DaftarSantri() {
                           className={classes.deleteBtn}
                           onClick={() => handleOnClickDelete(data.nis)}
                         >
+                          <DeleteOutlineOutlined/>
                           Hapus
                         </Button>
                       </TableCell>
@@ -196,6 +198,7 @@ function DaftarSantri() {
         </TableContainer>
         <Link to={`${process.env.PUBLIC_URL}/DaftarSantri/Tambah`}>
           <Button variant="contained" color="primary" style={{ margin: "2%" }}>
+            <AddOutlined/>
             Tambah Data Santri
           </Button>
         </Link>

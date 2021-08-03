@@ -19,6 +19,7 @@ import DetailDataOperator from "./container/Operator/DetailDataOperator";
 import EditDataOperator from "./container/Operator/EditDataOperator";
 import errorHandler from "./components/errorHandler";
 import ApprovalTransfer from "./container/Transaksi/ApprovalTransfer";
+import RiwayatPembayaran from "./container/Santri/RiwayatPembayaran";
 
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
@@ -64,6 +65,11 @@ function Routing() {
             exact
             path="/DaftarSantri/Sunting/:id"
             component={SuntingDataSantri}
+          />
+          <PrivateRoute
+            exact
+            path="/RiwayatPembayaran/:id"
+            component={RiwayatPembayaran}
           />
           <PrivateRoute exact path="/AkunSantri" component={AkunSantri} />
           //Data Operator/Admin

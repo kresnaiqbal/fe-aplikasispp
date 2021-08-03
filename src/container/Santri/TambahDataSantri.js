@@ -76,7 +76,6 @@ const useStyles = makeStyles((theme) => ({
   },
   paperSize: {
     width: "100%",
-    borderRadius: "20px",
     marginLeft: "80px",
     marginTop: "-38px",
   },
@@ -92,7 +91,6 @@ const useStyles = makeStyles((theme) => ({
   MyButton: {
     background: "#368756",
     border: 0,
-    borderRadius: 3,
     boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
     color: "white",
     height: 48,

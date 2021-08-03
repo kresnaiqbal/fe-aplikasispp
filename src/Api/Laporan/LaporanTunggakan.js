@@ -31,7 +31,7 @@ export default class ApiShowLaporanTunggakan extends React.Component {
       return instance
         .get(path)
         .then((response) => response)
-        .catch((err) => err);
+        .catch((err) => alert(err.response.data.message));
     }
   };
 
@@ -41,12 +41,12 @@ export default class ApiShowLaporanTunggakan extends React.Component {
         .then((response) => {
           // console.log("awe", response);
           if(response){
-            console.log("responz", response);
+            // console.log("responz", response);
             return response;
           }
           // return result;
         })
-        .catch((error) => error);
+        .catch((error) => alert(error.response.data.message));
     }
   };
 }

@@ -43,7 +43,7 @@ export default class ApiDownloadLaporanUangMasuk extends React.Component {
       return Promise.all(data)
         .then((response) => {
           if(response){
-           console.log("responz", response);
+          //  console.log("responz", response);
            return response;
          }
         })

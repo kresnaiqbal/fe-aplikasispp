@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Fragment } from "react";
-import { Paper, Typography, Button, Divider } from "@material-ui/core";
+import { Paper, Typography, Button, Divider, CardHeader} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { ApiHitungJumlahTransaksi } from "../Api";
 import { Line } from "react-chartjs-2";
@@ -8,19 +8,17 @@ import moment from 'moment';
 
 const useStyles = makeStyles((theme) => ({
   paperSize: {
-    width: "550px",
-    height: "400px",
-    borderRadius: "20px",
-    marginTop: "20px",
+    width: "600px",
+    height: "380px",
     marginLeft: "80px",
-    boxShadow: "5px 5px 5px #929191",
+    boxShadow: "3px 3px 3px 3px #929191",
   },
   Head: {
     color: "#368756",
     fontSize: "18px",
     fontFamily: "Roboto",
     fontWeight: 700,
-    paddingTop: "20px",
+    paddingTop: "10px",
     paddingLeft: "20px",
   },
 }));
@@ -87,8 +85,8 @@ export default function CardGraphHitungUang() {
 
   return (
     <Paper className={classes.paperSize}>
-      <Typography className={classes.Head}>Pemasukan</Typography>
-      <Divider />
+      <Typography className={classes.Head}>Pemasukan SPP</Typography>
+      <Divider style={{marginTop:"10px"}} />
       {transactionData && <Line data={transactionData} />}
     </Paper>
   );

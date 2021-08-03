@@ -6,7 +6,6 @@ const useStyles = makeStyles((theme) => ({
   paperSize: {
     width: "440px",
     height: "400px",
-    borderRadius: "20px",
     marginTop: "20px",
     marginLeft: "40px",
     boxShadow: "5px 5px 5px #929191",

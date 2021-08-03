@@ -37,7 +37,7 @@ export default class ApiDeleteAdmin extends React.Component {
           console.log("ini awalan", response);
           return response;
         })
-        .catch((err) => err);
+        .catch((err) => alert(err.response.data.message));
     }
   };
 
@@ -50,7 +50,7 @@ export default class ApiDeleteAdmin extends React.Component {
             return response[0];
           }
         })
-        .catch((error) => error);
+        .catch((error) => alert(error.response.data.message));
     }
   };
 }

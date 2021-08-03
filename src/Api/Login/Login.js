@@ -23,9 +23,11 @@ export default function ApiLogin(username, password, callback) {
       sessionStorage.setItem("token", response.data.token);
       sessionStorage.setItem("id_admin", response.data.id_admin);
       sessionStorage.setItem("permission", JSON.stringify(response.data.list_menu));
+      console.log("menu", response);
     })
     .catch(function (error) {
       // handle error
-      console.log(error);
+      alert(error.response.data.message)
+      console.log(error.response);
     });
 }

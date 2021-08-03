@@ -46,6 +46,11 @@ function DashboardView() {
       setProgress((prevProgress) => (prevProgress >= 100 ? 0 : prevProgress + 10));
     }, 800);
 
+    const formatter = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'IDR',
+    })
+
     if (!token) {
       history.push("/");
     } else {
@@ -89,7 +94,7 @@ function DashboardView() {
             } else if (i === 2) {
               cardData.push({
                 title: "Jumlah Uang Masuk hari ini",
-                data: response[i].data.uang_masuk,
+                data: formatter.format(response[i].data.uang_masuk),
                 // data: 0,
                 icon: <Money className={classes.icon} />,
                 color: "#FC7D58",
@@ -97,7 +102,7 @@ function DashboardView() {
             } else if (i === 3) {
               cardData.push({
                 title: "Jumlah Uang Masuk bulan ini",
-                data: response[i].data.uang_masuk,
+                data: formatter.format(response[i].data.uang_masuk),
                 // data: 0,
                 icon: <Money className={classes.icon} />,
                 color: "#DFE313",
@@ -117,14 +122,16 @@ function DashboardView() {
     console.log("return loading");
     return <CircularProgress variant="determinate" value={progress} />;
   }
-  // console.log("lala", cardDashboard);
+
+  
+
   return (
     <div>
       <Navbar />
       <Grid container direction="row">
         {cardDashboard &&
           cardDashboard.map((data) => (
-            <Grid item xs={12} sm={12} md={3} lg={3} xl={3}>
+            <Grid item xs={6} sm={6} md={3} lg={3} xl={3} style={{marginBottom:'30px'}}>
               <CardDashboard params={data} />
             </Grid>
           ))}

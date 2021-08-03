@@ -29,7 +29,7 @@ export default class ApiShowRiwayatTransaksi extends React.Component{
     getDataRiwayatTransaksi = (instance) => {
         if(instance !== null){
             let path = BASE_URL + this.showRiwayatTransaksiPath()
-            return instance.get(path).then(response => response).catch(err => err)
+            return instance.get(path).then(response => response).catch(err => alert(err.response.data.message))
         }
     }
 
@@ -44,7 +44,7 @@ export default class ApiShowRiwayatTransaksi extends React.Component{
                     return result
                 }
                 ).catch(
-                    error => error
+                    error => alert(error.response.data.message)
                     )
         }
     }

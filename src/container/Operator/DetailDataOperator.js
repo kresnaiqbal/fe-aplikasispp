@@ -5,6 +5,8 @@ import {
   Typography,
   Grid,
   Divider,
+  Link,
+  Button,
 } from "@material-ui/core";
 import { useParams } from "react-router";
 import { makeStyles } from "@material-ui/core/styles";
@@ -39,13 +41,12 @@ const useStyles = makeStyles((theme) => ({
   },
   paperSize: {
     width: "100%",
-    borderRadius: "20px",
     marginLeft: "80px",
     marginTop: "-38px",
   },
   Head: {
     color: "black",
-    fontSize: "18px",
+    fontSize: "24px",
     fontFamily: "Roboto",
     fontWeight: 700,
     marginLeft: "30px",
@@ -55,7 +56,6 @@ const useStyles = makeStyles((theme) => ({
   MyButton: {
     background: "#368756",
     border: 0,
-    borderRadius: 3,
     boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
     color: "white",
     height: 48,
@@ -64,6 +64,13 @@ const useStyles = makeStyles((theme) => ({
   },
   pad: {
     margin: "20px",
+  },
+  data: {
+    fontSize: "24px",
+  },
+  header: {
+    color: "#969696",
+    fontSize: "20px",
   },
 }));
 
@@ -83,44 +90,98 @@ function DetailDataOperator() {
 
       let result = gateway.requestData([adminData]);
       result.then((response) => {
-        if (response && response[0].status===200) {
-          console.log("ini di view detail", response);
+        if (response && response[0].status === 200) {
           setDataAdmin(response[0].data.admin);
         }
       });
     }
   }, [params]);
 
-
   return (
     <div>
       <Navbar />
       <Paper className={classes.paperSize}>
         <div className={classes.Head}>Detail Data Admin/Operator</div>
-        <Divider />
-        <Grid>
-          {dataAdmin && dataAdmin.nama_admin && (
-            <Typography className={classes.data}>
-              Nama Lengkap : {dataAdmin.nama_admin}
-            </Typography>
-          )}
-          {dataAdmin && dataAdmin.role && (
-            <Typography className={classes.data}>
-              Role :{dataAdmin.role}
-            </Typography>
-          )}
-        </Grid>
-        <Grid>
-          {dataAdmin && dataAdmin.paraf && (
-            <Typography className={classes.data}>
-              Paraf :{dataAdmin.paraf}
-            </Typography>
-          )}
-          {dataAdmin && dataAdmin.username && (
-            <Typography className={classes.data}>
-              Username : {dataAdmin.username}
-            </Typography>
-          )}
+        <Divider style={{ marginBottom: "10px" }} />
+        <Grid container direction="row">
+          <Grid
+            xs={6}
+            sm={6}
+            md={6}
+            lg={4}
+            xl={4}
+            style={{ marginLeft: "30px", marginBottom: "30px" }}
+          >
+            <Typography className={classes.header}>Nama Lengkap</Typography>
+            {dataAdmin && dataAdmin.nama_admin && (
+              <Typography className={classes.data}>
+                {dataAdmin.nama_admin}
+              </Typography>
+            )}
+          </Grid>
+          <Grid
+            xs={6}
+            sm={6}
+            md={6}
+            lg={4}
+            xl={4}
+            style={{ marginLeft: "30px", marginBottom: "30px" }}
+          >
+            <Typography className={classes.header}>Role</Typography>
+            {dataAdmin && dataAdmin.role && (
+              <Typography className={classes.data}>
+                Role :{dataAdmin.role}
+              </Typography>
+            )}
+          </Grid>
+          <Grid
+            xs={6}
+            sm={6}
+            md={6}
+            lg={4}
+            xl={4}
+            style={{ marginLeft: "30px", marginBottom: "30px" }}
+          >
+            <Typography className={classes.header}>Paraf</Typography>
+            {dataAdmin && dataAdmin.paraf && (
+              <Typography className={classes.data}>
+                {dataAdmin.paraf}
+              </Typography>
+            )}
+          </Grid>
+          <Grid
+            xs={6}
+            sm={6}
+            md={6}
+            lg={4}
+            xl={4}
+            style={{ marginLeft: "30px", marginBottom: "30px" }}
+          >
+            <Typography className={classes.header}>Username</Typography>
+            {dataAdmin && dataAdmin.username && (
+              <Typography className={classes.data}>
+                {dataAdmin.username}
+              </Typography>
+            )}
+          </Grid>
+          <Grid
+            xs={6}
+            sm={6}
+            md={6}
+            lg={4}
+            xl={4}
+            style={{ marginLeft: "30px", marginBottom: "30px" }}
+          >
+            <Link to={`${process.env.PUBLIC_URL}/akunadmin`}>
+              <Button
+                variant="contained"
+                color="#969696"
+                style={{ marginTop: "20px", marginBottom: "20px" }}
+              >
+                Kembali
+              </Button>
+            </Link>
+          </Grid>
         </Grid>
       </Paper>
     </div>

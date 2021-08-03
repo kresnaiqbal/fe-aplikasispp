@@ -11,9 +11,12 @@ import {
   TablePagination,
   TableRow,
   Button,
+  Divider,
+  Typography,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
+import {EditOutlined, AddOutlined, DeleteOutlineOutlined, SearchRounded} from '@material-ui/icons';
 
 const columns = [
   { id: "id", label: "ID", minWidth: 60 },
@@ -44,24 +47,26 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     maxHeight: 440,
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   paperSize: {
-    width: "100%",
-    borderRadius: "20px",
+    width: "95%",
     marginLeft: "80px",
+    marginTop: "-40px",
+    boxShadow: "0 3px 5px 2px #969696",
   },
   Head: {
     color: "black",
     fontSize: "18px",
     fontFamily: "Roboto",
     fontWeight: 700,
-    marginTop: "20px",
+    paddingTop: "20px",
     marginLeft: "30px",
   },
   MyButton: {
     background: "#368756",
     border: 0,
-    borderRadius: 3,
     boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
     color: "white",
     height: 48,
@@ -99,9 +104,15 @@ function AkunOperator() {
     let result = gateway.requestData([adminData]);
     result.then((response) => {
       if (Array.isArray(response)) {
-        
-        setDataAdmin(response);
-        console.log("ini view", response);
+        let result = [];
+        if (response && response[0].status === 200) {
+          for (let i = 0; i < response[0].data.admin.length; i++) {
+            result.push(response[0].data.admin[i] ? response[0].data.admin[i] : null)
+          }
+          setDataAdmin(result);
+        }
+
+        // console.log("ini view", response);
       }
     });
   }, [shallRender]);
@@ -114,7 +125,10 @@ function AkunOperator() {
 
     let result = gateway.requestData([adminData]);
     result.then((response) => {
-      if (response.status === 200 && response.data.message === "Data Admin Berhasil Dihapus") {
+      if (
+        response.status === 200 &&
+        response.data.message === "Data Admin Berhasil Dihapus"
+      ) {
         setShallRender(!shallRender);
         // console.log('hapus ini',santriData);
       }
@@ -134,7 +148,8 @@ function AkunOperator() {
     <div>
       <Navbar />
       <Paper className={classes.paperSize} elevation="1">
-        <div className={classes.Head}>Akun Admin</div>
+        <Typography className={classes.Head}>Akun Admin</Typography>
+        <Divider style={{marginTop:10, marginBottom:10}}/>
         <TableContainer className={classes.container}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
@@ -143,7 +158,7 @@ function AkunOperator() {
                   <TableCell
                     key={column.id}
                     align={column.align}
-                    style={{ minWidth: column.minWidth }}
+                    style={{ minWidth: column.minWidth, fontWeight:"bold", fontSize:"13px"   }}
                   >
                     {column.label}
                   </TableCell>
@@ -161,16 +176,22 @@ function AkunOperator() {
                       <TableCell>{data.role}</TableCell>
 
                       <TableCell>
-                        <Link to={`${process.env.PUBLIC_URL}/AkunAdmin/Detail/${data.id_admin}`}>
+                        <Link
+                          to={`${process.env.PUBLIC_URL}/AkunAdmin/Detail/${data.id_admin}`}
+                        >
                           <Button
                             variant="contained"
                             className={classes.detailBtn}
                           >
+                            <SearchRounded/>
                             Detail
                           </Button>
                         </Link>
-                        <Link to={`${process.env.PUBLIC_URL}/AkunAdmin/Sunting/${data.id_admin}`}>
+                        <Link
+                          to={`${process.env.PUBLIC_URL}/AkunAdmin/Sunting/${data.id_admin}`}
+                        >
                           <Button variant="contained" color="primary">
+                          <EditOutlined/>
                             Sunting
                           </Button>
                         </Link>
@@ -179,6 +200,7 @@ function AkunOperator() {
                           className={classes.deleteBtn}
                           onClick={() => handleOnClickDelete(data.id_admin)}
                         >
+                          <DeleteOutlineOutlined/>
                           Hapus
                         </Button>
                       </TableCell>
@@ -190,6 +212,7 @@ function AkunOperator() {
         </TableContainer>
         <Link to={`${process.env.PUBLIC_URL}/AkunAdmin/Tambah`}>
           <Button className={classes.MyButton} style={{ margin: "2%" }}>
+          <AddOutlined/>
             Tambah Akun Admin
           </Button>
         </Link>

@@ -20,10 +20,12 @@ import {
   Divider,
   FormLabel,
   Grid,
+  Typography,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router";
 import { saveAs } from "file-saver";
+import GetAppIcon from "@material-ui/icons/GetApp";
 
 const months = [
   {
@@ -128,9 +130,11 @@ const useStyles = makeStyles((theme) => ({
     // height: "100px",
   },
   paperSize: {
-    width: "100%",
-    borderRadius: "20px",
+    width: "95%",
+    height: "50%",
     marginLeft: "80px",
+    marginTop: "-45px",
+    boxShadow: "0 3px 5px 2px #969696",
   },
   Head: {
     color: "black",
@@ -139,11 +143,11 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 700,
     marginTop: "20px",
     marginLeft: "30px",
+    paddingTop: 10,
   },
   MyButton: {
     background: "#368756",
     border: 0,
-    borderRadius: 3,
     boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
     color: "white",
     width: "140px",
@@ -163,7 +167,7 @@ function LaporanKeuangan() {
   const history = useHistory();
   const [page, setPage] = React.useState(0);
 
-  const [month, setMonth] = useState(1);
+  const [month, setMonth] = useState(7);
   const [dataLaporanUangMasuk, setDataLaporanUangMasuk] = React.useState(null);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -236,6 +240,11 @@ function LaporanKeuangan() {
     });
   }, []);
 
+  const formatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "IDR",
+  });
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -253,14 +262,16 @@ function LaporanKeuangan() {
     <div>
       <Navbar />
       <Paper className={classes.paperSize} elevation="1">
-        <div className={classes.Head}>Laporan Keuangan</div>
-        <Divider />
+        <Typography className={classes.Head}>Laporan Keuangan</Typography>
+        <Divider style={{ marginTop: 10, marginBottom: 10 }} />
         <FormControl component="fieldset">
           <form className={classes.root} noValidate autoComplete="off">
-            <Grid container direction="row" style={{ margin:20,}}>
+            <Grid container direction="row" style={{ margin: 20 }}>
               <Grid item xs={3} sm={3} md={3} lg={3} xl={3}>
                 <FormLabel style={{ fontSize: "14px" }}>
-                  Periode Bulan
+                  <Typography style={{ paddingTop: "14px" }}>
+                    Periode Bulan
+                  </Typography>
                 </FormLabel>
               </Grid>
               <Grid item xs={5} sm={5} md={5} lg={5} xl={5}>
@@ -275,7 +286,9 @@ function LaporanKeuangan() {
                 >
                   {months.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
-                      {option.label}
+                      <Typography style={{ textAlign: "center" }}>
+                        {option.label}
+                      </Typography>
                     </MenuItem>
                   ))}
                 </TextField>
@@ -284,7 +297,7 @@ function LaporanKeuangan() {
                 <Button
                   variant="contained"
                   color="primary"
-                  style={{ height: "50px", width: 100, marginLeft:20}}
+                  style={{ height: "50px", width: 100, marginLeft: 20 }}
                   onClick={handleMonthPicker}
                 >
                   Tampilkan
@@ -301,7 +314,7 @@ function LaporanKeuangan() {
                   <TableCell
                     key={column.id}
                     align={column.align}
-                    style={{ minWidth: column.minWidth }}
+                    style={{ minWidth: column.minWidth , fontWeight:"bold", fontSize:"13px"  }}
                   >
                     {column.label}
                   </TableCell>
@@ -318,7 +331,9 @@ function LaporanKeuangan() {
                       <TableCell>{data.nis}</TableCell>
                       <TableCell>{data.nama_santri}</TableCell>
                       <TableCell>{data.nama_kelas}</TableCell>
-                      <TableCell>{data.total_bayar}</TableCell>
+                      <TableCell>
+                        {formatter.format(data.total_bayar)}{" "}
+                      </TableCell>
                       <TableCell>{data.status_transaksi}</TableCell>
                     </TableRow>
                   );
@@ -331,6 +346,7 @@ function LaporanKeuangan() {
           style={{ margin: "2%" }}
           onClick={handleExportData}
         >
+          <GetAppIcon style={{ paddingRight: "20px" }} />
           Cetak
         </Button>
         <TablePagination

@@ -23,6 +23,8 @@ import ApiHitungJumlahSantriMenunggak from "./Transaksi/HitungJumlahSantriMenung
 import ApiDownloadLaporanUangMasuk from "./Laporan/CetakLaporanKeuangan";
 import ApiExportLaporanTunggakan from "./Laporan/CetakLaporanTunggakan";
 import ApiApprovalTransaksi from "./Transaksi/ApprovalTransaksiTunai";
+import ApiCetakSuratTagihan from "./Laporan/SuratTagihan";
+import ApiShowRiwayatPembayaran from "./Santri/ShowRiwayatPembayaran";
 
 export {
   // Login,
@@ -32,6 +34,7 @@ export {
   ApiEditSantri,
   ApiDetailSantri,
   ApiShowSantri,
+  ApiShowRiwayatPembayaran,
   ApiShowAdmin,
   ApiDetailAdmin,
   ApiEditAdmin,
@@ -50,5 +53,6 @@ export {
   ApiShowLaporanTunggakan,
   ApiExportLaporanTunggakan,
   ApiApprovalTransaksi,
+  ApiCetakSuratTagihan,
   requestData,
 };

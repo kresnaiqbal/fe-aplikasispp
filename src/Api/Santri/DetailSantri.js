@@ -31,7 +31,7 @@ export default class ApiDetailSantri extends React.Component {
       return instance
         .get(path)
         .then((response) => response)
-        .catch((err) => err);
+        .catch((err) => alert(err.response.data.message));
     }
   };
 
@@ -40,15 +40,12 @@ export default class ApiDetailSantri extends React.Component {
       // console.log('ini detail', data);
       return Promise.all(data)
         .then((response) => {
-          if(response && response.status===200){
+          if (response) {
+            console.log("aw", response);
             return response;
-          
-          // if(response[0].data.santri){
-          //     // console.log('ini detail1', response);
-          //     return response[0].data.santri;
-          }}
-        )
-        .catch((error) => error);
+          }
+        })
+        .catch((error) => alert(error.response.data.message));
     }
   };
 }

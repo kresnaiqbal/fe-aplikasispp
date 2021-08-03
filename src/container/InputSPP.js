@@ -11,6 +11,7 @@ import {
   Select,
   Fragment,
   Link,
+  Typography,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router";
@@ -54,10 +55,10 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: 440,
   },
   paperSize: {
-    width: "100%",
-    borderRadius: "20px",
+    width: "95%",
     marginLeft: "80px",
     marginTop: "-38px",
+    boxShadow: "0 3px 5px 2px#969696",
   },
   Head: {
     color: "black",
@@ -71,7 +72,6 @@ const useStyles = makeStyles((theme) => ({
   MyButton: {
     background: "#368756",
     border: 0,
-    borderRadius: 3,
     boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
     color: "white",
     height: 48,
@@ -121,11 +121,16 @@ function InputSPP() {
     setTotalBayar(35000 * event.target.value + 15000 * event.target.value);
   };
 
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'IDR',
+  })
+
   return (
     <div>
       <Navbar />
       <Paper className={classes.paperSize}>
-        <div className={classes.Head}>Pembayaran SPP santri Tunai</div>
+        <Typography className={classes.Head} style={{paddingTop:10}}>Pembayaran SPP santri Tunai</Typography>
         <Divider />
         <FormControl component="fieldset">
           <div className={classes.pad}>
@@ -134,6 +139,7 @@ function InputSPP() {
                 <FormLabel>NIS</FormLabel>
                 <TextField
                   id="outlined-basic"
+                  required
                   variant="outlined"
                   style={{ width: "400px", marginLeft: "90px" }}
                   onChange={handleChangeNIS}
@@ -144,6 +150,7 @@ function InputSPP() {
                 <Select
                   id="outlined-basic"
                   variant="outlined"
+                  required
                   style={{ width: "400px", marginLeft: "75px" }}
                   onChange={handleChangeJumlahBulan}
                 >
@@ -159,7 +166,7 @@ function InputSPP() {
                 <TextField
                   id="outlined-basic"
                   variant="outlined"
-                  value={spp}
+                  value={formatter.format(spp)} 
                   disabled
                   style={{ width: "400px", marginLeft: "20px" }}
                 />
@@ -171,7 +178,7 @@ function InputSPP() {
                   variant="outlined"
                   disabled
                   style={{ width: "400px", marginLeft: "13px" }}
-                  value={infaq}
+                  value={formatter.format(infaq)}
                 />
               </div>
               <div>
@@ -181,7 +188,7 @@ function InputSPP() {
                   variant="outlined"
                   style={{ width: "400px", marginLeft: "35px" }}
                   disabled
-                  value={totalBayar}
+                  value={formatter.format(totalBayar)} 
                 />
               </div>
               <div style={{ textAlign: "right" }}>
@@ -197,8 +204,8 @@ function InputSPP() {
                 >
                   Bayar
                 </Button>
-                <Link to={`${process.env.PUBLIC_URL}/dashboard`}>
-                  <Button variant="contained" color="secondary">
+                <Link >
+                  <Button variant="contained" color="secondary" to={`${process.env.PUBLIC_URL}/dashboard`}>
                     Kembali
                   </Button>
                 </Link>

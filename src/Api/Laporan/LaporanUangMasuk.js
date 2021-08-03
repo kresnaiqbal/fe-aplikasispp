@@ -33,7 +33,7 @@ export default class ApiShowLaporanUangMasuk extends React.Component {
       return instance
         .get(path)
         .then((response) => response)
-        .catch((err) => err);
+        .catch((err) => alert(err.response.data.message));
     }
   };
 
@@ -42,11 +42,11 @@ export default class ApiShowLaporanUangMasuk extends React.Component {
       return Promise.all(data)
         .then((response) => {
           if(response){
-           console.log("responz", response);
+          //  console.log("responz", response);
            return response;
          }
         })
-        .catch((error) => error);
+        .catch((error) => alert(error.response.data.message));
     }
   };
 }

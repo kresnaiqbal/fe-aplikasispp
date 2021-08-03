@@ -12,9 +12,15 @@ import {
   Button,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { ApiShowLaporanTunggakan, ApiExportLaporanTunggakan } from "../../Api";
+import {
+  ApiShowLaporanTunggakan,
+  ApiExportLaporanTunggakan,
+  ApiCetakSuratTagihan,
+} from "../../Api";
 import { useHistory } from "react-router";
 import { saveAs } from "file-saver";
+
+import GetAppIcon from '@material-ui/icons/GetApp';
 
 const columns = [
   {
@@ -66,8 +72,8 @@ const useStyles = makeStyles((theme) => ({
   },
   paperSize: {
     width: "100%",
-    borderRadius: "20px",
     marginLeft: "80px",
+    marginTop: "-40px"
   },
   Head: {
     color: "black",
@@ -80,7 +86,6 @@ const useStyles = makeStyles((theme) => ({
   MyButton: {
     background: "#368756",
     border: 0,
-    borderRadius: 3,
     boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
     color: "white",
     width: "140px",
@@ -113,20 +118,39 @@ function LaporanTunggakan() {
     let result = gateway.requestData([laporanTunggakanData]);
     result.then((response) => {
       if (Array.isArray(response)) {
-        console.log("ini laporan1", response);
         for (let i = 0; i < response.length; i++) {
           if (response[i].status === 200) {
             if (i === 0) {
               setDataLaporanTunggakan(response[i].data.tunggakan);
+              console.log("ini laporan1", dataLaporanTunggakan);
               // setDataLaporanUangMasuk(response[i].data.transaksi);
             }
-          }else {
+          } else {
             // history.push('/errorHandler')
           }
         }
       }
     });
   }, []);
+
+  const handleCetakSuratTagihan = (nis) => {
+    let tagihanGateway = ApiCetakSuratTagihan.getInstance();
+    let suratTagihanInstance = tagihanGateway.getSuratTagihanInstance();
+
+    let tagihanData = tagihanGateway.getSuratTagihan(suratTagihanInstance, nis);
+    let resultTunggakan = tagihanGateway.requestData([tagihanData]);
+
+    resultTunggakan.then((response) => {
+      console.log('123', response)
+      if (response && response.status===200) {
+        var filename = "surat tunggakan.pdf";
+        var blob = new Blob([response.data], {
+          type: "application/pdf;charset=utf-8",
+        });
+        var filesaver = saveAs(blob, filename);
+      }
+    });
+  };
 
   const handleExportData = () => {
     let exportGateway = ApiExportLaporanTunggakan.getInstance();
@@ -168,7 +192,7 @@ function LaporanTunggakan() {
                   <TableCell
                     key={column.id}
                     align={column.align}
-                    style={{ minWidth: column.minWidth }}
+                    style={{ minWidth: column.minWidth, fontWeight:"bold", fontSize:"13px"   }}
                   >
                     {column.label}
                   </TableCell>
@@ -189,7 +213,9 @@ function LaporanTunggakan() {
                         <Button
                           variant="contained"
                           className={classes.detailBtn}
+                          onClick={() => handleCetakSuratTagihan(data.nis)}
                         >
+                          <GetAppIcon style={{paddingRight:"10px"}}/>
                           Cetak
                         </Button>
                       </TableCell>
@@ -204,6 +230,7 @@ function LaporanTunggakan() {
           style={{ margin: "2%" }}
           onClick={handleExportData}
         >
+          <GetAppIcon style={{paddingRight:"20px"}}/>
           Cetak
         </Button>
         <TablePagination

@@ -29,7 +29,6 @@ import {
   People,
   ListAlt,
   MenuBook,
-  Settings,
   Person,
   ExpandMore,
   ExpandLess,
@@ -161,7 +160,6 @@ const Navbar = () => {
   const isCustomHeight = example === "customHeight";
 
   let permission = sessionStorage.getItem("permission");
-  console.log("ininav", permission);
 
   const handleDrawerOpen = () => {
     setOpen(true);

@@ -55,7 +55,7 @@ export default class ApiEditSantri extends React.Component {
           callback();
         })
 
-        .catch((err) => err);
+        .catch((err) => alert(err.response.data.message));
     }
   };
 
@@ -66,7 +66,7 @@ export default class ApiEditSantri extends React.Component {
           let result = [];
           return result;
         })
-        .catch((error) => error);
+        .catch((error) => alert(error.response.data.message));
     }
   };
 

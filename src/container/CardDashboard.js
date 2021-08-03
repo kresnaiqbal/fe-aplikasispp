@@ -10,11 +10,10 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: 440,
   },
   Paper: {
-    width: "200px",
+    width: "270px",
     height: "100px",
-    borderRadius: "20px",
-    marginTop: "-20px",
-    marginLeft: "80px",
+    marginTop: "-40px",
+    marginLeft:"60px",
     boxShadow: "1px 1px 1px #929191",
   },
   Head: {
@@ -54,12 +53,12 @@ export default function CardDashboard({ params }) {
       </Grid>
       <Grid container direction="row">
         {/* {dataJumlahSantri && */}
-        <Grid item xs={6} sm={6} md={8} lg={8} xl={8}>
+        <Grid item xs={10} sm={10} md={10} lg={10} xl={10}>
           <Typography className={classes.data}>
             {params && params.data}
           </Typography>
         </Grid>
-        <Grid item xs={6} sm={6} md={4} lg={4} xl={4}>
+        <Grid item xs={2} sm={2} md={2} lg={2} xl={2}>
             {params && params.icon}
         </Grid>
         {/* } */}

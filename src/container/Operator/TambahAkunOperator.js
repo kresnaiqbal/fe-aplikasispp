@@ -9,8 +9,9 @@ import {
   MenuItem,
   IconButton,
   InputAdornment,
+  Link,
 } from "@material-ui/core";
-import { makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import AccountCircle from "@material-ui/icons/AccountCircle";
@@ -49,7 +50,6 @@ const useStyles = makeStyles((theme) => ({
   },
   paperSize: {
     width: "100%",
-    borderRadius: "20px",
     marginLeft: "80px",
     marginTop: "-38px",
   },
@@ -65,7 +65,6 @@ const useStyles = makeStyles((theme) => ({
   MyButton: {
     background: "#368756",
     border: 0,
-    borderRadius: 3,
     boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
     color: "white",
     height: 48,
@@ -109,11 +108,11 @@ function TambahAkunOperator() {
   };
 
   const handleChangePassword = (event) => {
-    setPassword( event.target.value);
+    setPassword(event.target.value);
   };
 
   const handleChangeConfirmPassword = (event) => {
-    setConfirmPassword( event.target.value);
+    setConfirmPassword(event.target.value);
   };
 
   const handleChange1 = (event) => {
@@ -276,7 +275,9 @@ function TambahAkunOperator() {
                 <TextField
                   id="outlined-adornment-confrimpassword"
                   required
-                  type={confirmPassword.showConfirmPassword ? "text" : "password"}
+                  type={
+                    confirmPassword.showConfirmPassword ? "text" : "password"
+                  }
                   variant="outlined"
                   style={{ width: "400px" }}
                   onChange={handleChangeConfirmPassword}
@@ -318,9 +319,11 @@ function TambahAkunOperator() {
                 >
                   Tambah
                 </Button>
-                <Button variant="contained" color="secondary">
-                  Kembali
-                </Button>
+                <Link to={`${process.env.PUBLIC_URL}/akunadmin`}>
+                  <Button variant="contained" color="secondary">
+                    Kembali
+                  </Button>
+                </Link>
               </div>
             </form>
           </div>

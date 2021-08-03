@@ -31,7 +31,7 @@ export default class ApiHitungJumlahSantri extends React.Component {
       return instance
         .get(path)
         .then((response) => response)
-        .catch((err) => err);
+        .catch((err) => alert(err.response.data.message));
     }
   };
 
@@ -45,7 +45,7 @@ export default class ApiHitungJumlahSantri extends React.Component {
             return result;
           }
         })
-        .catch((error) => error);
+        .catch((error) => alert(error.response.data.message));
     }
   };
 }

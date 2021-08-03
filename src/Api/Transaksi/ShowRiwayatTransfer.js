@@ -29,7 +29,7 @@ export default class ApiShowRiwayatTransfer extends React.Component{
     getDataRiwayatTransfer = (instance) => {
         if(instance !== null){
             let path = BASE_URL + this.showRiwayatTransferPath()
-            return instance.get(path).then(response => response).catch(err => err)
+            return instance.get(path).then(response => response).catch(err => alert(err.response.data.message))
         }
     }
 
@@ -47,7 +47,7 @@ export default class ApiShowRiwayatTransfer extends React.Component{
                     return result
                 }
                 ).catch(
-                    error => error
+                    error => alert(error.response.data.message)
                     )
         }
     }

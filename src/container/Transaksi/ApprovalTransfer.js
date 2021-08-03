@@ -12,8 +12,11 @@ import {
   TablePagination,
   TableRow,
   Button,
+  Modal,
+  Backdrop,
 } from "@material-ui/core";
 import { useHistory } from "react-router";
+import moment from 'moment';
 
 const columns = [
   { id: "no", label: "No.", minWidth: 60 },
@@ -65,7 +68,6 @@ const useStyles = makeStyles((theme) => ({
   },
   paperSize: {
     width: "100%",
-    borderRadius: "20px",
     marginLeft: "80px",
   },
   Head: {
@@ -73,13 +75,12 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "18px",
     fontFamily: "Roboto",
     fontWeight: 700,
-    marginTop: "20px",
+    marginTop: "-40px",
     marginLeft: "30px",
   },
   MyButton: {
     background: "#368756",
     border: 0,
-    borderRadius: 3,
     boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
     color: "white",
     height: 48,
@@ -92,17 +93,56 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
   },
   pic: {
-    width: 30,
+    // width: "300px",
+    height: "80%",
+    align: "center",
+    objectFit: "contain",
   },
+  pic1: {
+    width: 10,
+  },
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: "white",
+  },
+  redButton: {
+    background: "#FC4445",
+    color: "white",
+    marginLeft: 5,
+  },
+  customColumnStyle: { maxWidth: "-10px" },
 }));
+
+function getModalStyle() {
+  const top = 50;
+  const left = 50;
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
 
 function ApprovalTransfer() {
   const classes = useStyles();
   const history = useHistory();
+  const [modalStyle] = React.useState(getModalStyle);
   const [page, setPage] = React.useState(0);
   const [dataRiwayatTransfer, setDataRiwayatTransfer] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [shallRender, setShallRender] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   let admin_id = sessionStorage.getItem("id_admin");
   let gateway = ApiShowRiwayatTransfer.getInstance();
@@ -138,7 +178,7 @@ function ApprovalTransfer() {
     let riwayatTransaksiData = gateway.editDataApproval(
       RiwayatTransaksiInstance,
       admin_id,
-      id_tf,
+      id_tf
     );
 
     let result = gateway.requestData([riwayatTransaksiData]);
@@ -151,6 +191,11 @@ function ApprovalTransfer() {
       }
     });
   };
+
+  const formatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "IDR",
+  });
 
   return (
     <div>
@@ -165,7 +210,7 @@ function ApprovalTransfer() {
                   <TableCell
                     key={column.id}
                     align={column.align}
-                    style={{ minWidth: column.minWidth }}
+                    style={{ minWidth: column.minWidth, fontWeight:"bold", fontSize:"13px"  }}
                   >
                     {column.label}
                   </TableCell>
@@ -177,24 +222,36 @@ function ApprovalTransfer() {
                 dataRiwayatTransfer.map((data) => {
                   return (
                     <TableRow hover key="{data.id_transaksi}">
-                      <TableCell>{data.id_transfer}</TableCell>
+                      <TableCell style={{ width: "5%" }}>{data.id_transfer}</TableCell>
                       <TableCell>
-                        SPP {data.tanggal_transfer} {data.status_transfer} {data.kode_unik}
+                        SPP {moment(data.tanggal_transfer).format('D MMMM, YYYY')} {data.status_transfer}{" "}
+                        {data.kode_unik}
                       </TableCell>
-                      <TableCell>{data.kode_unik}</TableCell>
+                      <TableCell style={{ width: "5%" }}>{data.kode_unik}</TableCell>
                       <TableCell>{data.nama_santri}</TableCell>
-                      <TableCell>{data.total_transfer}</TableCell>
-                      {dataRiwayatTransfer && (
-                        <TableCell>
+                      <TableCell>
+                        {formatter.format(data.total_transfer)}{" "}
+                      </TableCell>
+                      <TableCell style={{ width: "5%" }}>
+                        {/* <img className={classes.pic1} src={data.path_gambar} /> */}
+                        <Button
+                          variant="contained"
+                          className={classes.detailBtn}
+                          onClick={handleOpen}
+                        >
+                          Lihat
+                        </Button>
+                        <Modal
+                          className={classes.modal}
+                          open={open}
+                          onClose={handleClose}
+                          aria-labelledby="simple-modal-title"
+                          aria-describedby="simple-modal-description"
+                          BackdropComponent={Backdrop}
+                        >
                           <img className={classes.pic} src={data.path_gambar} />
-                          {/* <Button
-                            variant="contained"
-                            className={classes.detailBtn}
-                          >
-                            Lihat
-                          </Button> */}
-                        </TableCell>
-                      )}
+                        </Modal>
+                      </TableCell>
                       <TableCell>
                         <Button
                           variant="contained"
@@ -204,6 +261,15 @@ function ApprovalTransfer() {
                           }
                         >
                           Verifikasi
+                        </Button>
+                        <Button
+                          variant="contained"
+                          className={classes.redButton}
+                          // onClick={() =>
+                          //   handleApproval(admin_id, data.id_transfer)
+                          // }
+                        >
+                          Tolak
                         </Button>
                       </TableCell>
                     </TableRow>

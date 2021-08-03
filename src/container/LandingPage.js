@@ -22,6 +22,7 @@ const theme1 = createMuiTheme({
   },
 });
 
+
 const useStyles = makeStyles((theme) => ({
   iconColor: {
     color: "#fff",
@@ -49,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     alignItems: "center",
     fontSize: "48px",
-    lineHeight: "88%",
+    lineHeight: "100%",
     fontFamily: "Poppins",
     margin: "9px",
     marginLeft: "40px",
@@ -80,7 +81,6 @@ const useStyles = makeStyles((theme) => ({
   MyButton: {
     background: "#368756",
     border: 0,
-    borderRadius: 3,
     boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
     color: "white",
     height: 48,

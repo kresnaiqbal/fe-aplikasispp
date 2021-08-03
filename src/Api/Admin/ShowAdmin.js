@@ -8,6 +8,7 @@ export default class ApiShowAdmin extends React.Component{
 
     static INSTANCE = null
 
+    
     static getInstance(){
         if(ApiShowAdmin.INSTANCE === null){
             ApiShowAdmin.INSTANCE = new ApiShowAdmin()
@@ -29,7 +30,7 @@ export default class ApiShowAdmin extends React.Component{
     getDataAdmin = (instance) => {
         if(instance !== null){
             let path = BASE_URL + this.showAdminPath()
-            return instance.get(path).then(response => response).catch(err => err)
+            return instance.get(path).then(response => response).catch(err => alert(err.response.data.message))
         }
     }
 
@@ -37,14 +38,12 @@ export default class ApiShowAdmin extends React.Component{
         if(Array.isArray(data)){
             return Promise.all(data).then(
                 response => {
-                    let result = []
-                    for(let i = 0; i< response[0].data.admin.length; i++){
-                        result.push(response[0].data.admin[i] ? response[0].data.admin[i] : null)
+                    if(response){
+                        return response 
                     }
-                    return result
                 }
             ).catch(
-                error => error
+                error => alert(error.response.data.message)
             )
         }
     }

@@ -31,7 +31,7 @@ export default class ApiHitungJumlahUangDaily extends React.Component {
       return instance
         .get(path)
         .then((response) => response)
-        .catch((err) => err);
+        .catch((err) => alert(err.response.data.message));
     }
   };
 
@@ -47,6 +47,7 @@ export default class ApiHitungJumlahUangDaily extends React.Component {
           }
         })
         .catch((error) => {
+          alert(error.response.data.message)
           return error;
         });
     }

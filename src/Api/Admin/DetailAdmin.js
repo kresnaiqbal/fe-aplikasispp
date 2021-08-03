@@ -31,7 +31,7 @@ export default class ApiDetailAdmin extends React.Component {
       return instance
         .get(path)
         .then((response) => response)
-        .catch((err) => err);
+        .catch((err) => alert(err.response.data.message));
     }
   };
 
@@ -43,7 +43,7 @@ export default class ApiDetailAdmin extends React.Component {
               return response;
           }}
         )
-        .catch((error) => error);
+        .catch((error) => alert(error.response.data.message));
     }
   };
 }

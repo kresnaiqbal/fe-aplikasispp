@@ -27,14 +27,14 @@ export default class ApiApprovalTransaksi extends React.Component {
 
   editDataApproval = (instance, admin_id, id_tf) => {
     if (instance !== null) {
-      let path = BASE_URL + this.editApprovalPath(id_tf,admin_id);
+      let path = BASE_URL + this.editApprovalPath(id_tf, admin_id);
       return instance
         .delete(path)
         .then((response) => {
           console.log("ini awalan", response);
           return response;
         })
-        .catch((err) => err);
+        .catch((err) => alert(err.response.data.message));
     }
   };
 
@@ -46,7 +46,7 @@ export default class ApiApprovalTransaksi extends React.Component {
             return response[0];
           }
         })
-        .catch((error) => error);
+        .catch((error) => alert(error.response.data.message));
     }
   };
 }

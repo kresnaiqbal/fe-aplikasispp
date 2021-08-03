@@ -1,17 +1,11 @@
 import React, { useEffect, Fragment } from "react";
 import Navbar from "../../components/Navbar";
-import {
-  Paper,
-  Divider,
-  Typography,
-  Grid,
-  Link,
-  Button,
-} from "@material-ui/core";
+import { Paper, Divider, Typography, Grid, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useParams } from "react-router";
 import { ApiDetailSantri } from "../../Api";
 import { useHistory } from "react-router";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,7 +16,6 @@ const useStyles = makeStyles((theme) => ({
   },
   paperSize: {
     width: "100%",
-    borderRadius: "20px",
     marginLeft: "80px",
     marginTop: "-38px",
   },
@@ -46,7 +39,6 @@ const useStyles = makeStyles((theme) => ({
   MyButton: {
     background: "#368756",
     border: 0,
-    borderRadius: 3,
     boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
     color: "white",
     height: 48,
@@ -71,7 +63,7 @@ function DetailDataSantri() {
 
       let result = gateway.requestData([santriData]);
       result.then((response) => {
-        if (response) {
+        if (response && response[0].status === 200) {
           console.log("ini di view detail", response);
           setDataSantri(response[0].data.santri);
         }
@@ -84,62 +76,100 @@ function DetailDataSantri() {
       <Navbar />
       <Paper className={classes.paperSize}>
         <div className={classes.Head}>Detail Data Santri</div>
-        <Divider />
-        <Grid>
-          {dataSantri && dataSantri.nama_santri && (
-            <Typography className={classes.data}>
-              Nama Lengkap : {dataSantri.nama_santri}
-            </Typography>
-          )}
-          {dataSantri && dataSantri.nama_santri && (
-            <Typography className={classes.data}>
-              Tempat Tanggal Lahir :{dataSantri.tanggal_lahir}
-            </Typography>
-          )}
+        <Divider style={{ marginTop: "20px" }} />
+        <Grid container direction="row" style={{ marginTop: "10px" }}>
+          <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
+            {dataSantri && dataSantri.nama_santri && (
+              <Typography className={classes.data}>
+                Nama Lengkap : {dataSantri.nama_santri}
+              </Typography>
+            )}
+          </Grid>
+          <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
+            {dataSantri && dataSantri.nama_santri && (
+              <Typography className={classes.data}>
+                Tempat Tanggal Lahir : {dataSantri.tanggal_lahir}
+              </Typography>
+            )}
+          </Grid>
         </Grid>
-        <Grid>
-          {dataSantri && dataSantri.nis && (
-            <Typography className={classes.data}>
-              NIS : {dataSantri.nis}
-            </Typography>
-          )}
-          {dataSantri && dataSantri.jenis_kelamin && (
-            <Typography className={classes.data}>
-              Jenis Kelamin :{dataSantri.jenis_kelamin}
-            </Typography>
-          )}
+        <Grid container direction="row">
+          <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
+            {dataSantri && dataSantri.nis && (
+              <Typography className={classes.data}>
+                NIS : {dataSantri.nis}
+              </Typography>
+            )}
+          </Grid>
+          <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
+            {dataSantri && dataSantri.jenis_kelamin && (
+              <Typography className={classes.data}>
+                Jenis Kelamin : {dataSantri.jenis_kelamin}
+              </Typography>
+            )}
+          </Grid>
         </Grid>
-        <Grid>
-          {dataSantri && dataSantri.alamat && (
-            <Typography className={classes.data}>
-              Alamat : {dataSantri.alamat}
-            </Typography>
-          )}
-          {dataSantri && dataSantri.nama_santri && (
-            <Typography className={classes.data}>
-              No. Hp : {dataSantri.no_hp}
-            </Typography>
-          )}
+        <Grid container direction="row">
+          <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
+            {dataSantri && dataSantri.alamat && (
+              <Typography className={classes.data}>
+                Alamat : {dataSantri.alamat}
+              </Typography>
+            )}
+          </Grid>
+          <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
+            {dataSantri && dataSantri.nama_santri && (
+              <Typography className={classes.data}>
+                No. Hp : {dataSantri.no_hp}
+              </Typography>
+            )}
+          </Grid>
         </Grid>
-        <Grid>
-          {dataSantri && dataSantri.nama_wali && (
-            <Typography className={classes.data}>
-              Nama Orang Tua :{dataSantri.nama_wali}
-            </Typography>
-          )}
-          {dataSantri && dataSantri.subsidi && (
-            <Typography className={classes.data}>
-              Keterangan Subsidi : {dataSantri.subsidi}
-            </Typography>
-          )}
+
+        <Grid container direction="row">
+          <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
+            {dataSantri && dataSantri.nama_wali && (
+              <Typography className={classes.data}>
+                Nama Orang Tua : {dataSantri.nama_wali}
+              </Typography>
+            )}
+          </Grid>
+          <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
+            {dataSantri && dataSantri.subsidi && (
+              <Typography className={classes.data}>
+                Keterangan Subsidi :{" "}
+                {dataSantri.subsidi === "0" ? "Tidak Subsidi" : "Subsidi"}
+              </Typography>
+              )}
+          </Grid>
         </Grid>
-        <div style={{ textAlign: "right" }}>
-          <Link to={`${process.env.PUBLIC_URL}/dashboard`}>
-            <Button variant="contained" color="secondary">
+        {dataSantri && dataSantri.nis && (
+        <Grid container direction="row">
+          <Link to={`${process.env.PUBLIC_URL}/riwayatpembayaran/${dataSantri.nis}`}>
+            <Button
+              variant="contained"
+              style={{
+                marginLeft: "30px",
+                marginBottom: "20px",
+                background: "#3B945E",
+                color: "white",
+              }}
+              >
+              Riwayat Transaksi
+            </Button>
+          </Link>
+          <Link to={`${process.env.PUBLIC_URL}/daftarsantri`}>
+            <Button
+              variant="contained"
+              color="grey"
+              style={{ marginLeft: "30px", marginBottom: "20px" }}
+              >
               Kembali
             </Button>
           </Link>
-        </div>
+        </Grid>
+            )}
+              
       </Paper>
     </Fragment>
   );
