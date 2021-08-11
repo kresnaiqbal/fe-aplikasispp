@@ -118,7 +118,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "-38px",
   },
   Head: {
-    color: "black",
+    color: "#3B945E",
     fontSize: "18px",
     fontFamily: "Roboto",
     fontWeight: 700,
@@ -129,7 +129,7 @@ const useStyles = makeStyles((theme) => ({
   MyButton: {
     background: "#368756",
     border: 0,
-    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
+    boxShadow: "0 .15rem 1.75rem 0 rgba(58,59,69,.15)!important",
     color: "white",
     height: 48,
     padding: "0 30px",
@@ -161,7 +161,7 @@ function SuntingDataSantri() {
       let result = gateway.requestData([santriData]);
       result.then((response) => {
         console.log("awswa", response);
-        if (response && response[0].status=== 200) {
+        if (response && response[0].status === 200) {
           setDataSantri(response[0].data.santri);
           setKelas(response[0].data.santri.nama_kelas);
           setAlamat(response[0].data.santri.alamat);
@@ -207,6 +207,12 @@ function SuntingDataSantri() {
     setJumlahTunggakan(event.target.value);
   };
 
+  const handleKeyPress = (event) => {
+    if (event.keyCode == 13 /*enter*/) {
+      handleEditSantri(() => history.push("/daftarsantri"));
+    }
+  };
+
   return (
     <div>
       <Navbar />
@@ -218,29 +224,37 @@ function SuntingDataSantri() {
             <form className={classes.root} noValidate autoComplete="off">
               <Grid container direction="row">
                 <FormLabel>Nama Lengkap</FormLabel>
-                {dataSantri && dataSantri.nama_santri && (
-                  <TextField
-                    id="outlined-basic"
-                    variant="outlined"
-                    style={{ width: "400px", marginLeft: "55px" }}
-                    value={dataSantri.nama_santri}
-                    disabled
-                  />
-                )}
-                <div>
-                  <FormLabel>NIS</FormLabel>
-                  {dataSantri && dataSantri.nis && (
+                <Grid onKeyDown={handleKeyPress}>
+                  {dataSantri && dataSantri.nama_santri && (
                     <TextField
                       id="outlined-basic"
                       variant="outlined"
-                      style={{ width: "400px", marginLeft: "100px" }}
-                      value={dataSantri.nis}
+                      style={{ width: "400px", marginLeft: "55px" }}
+                      value={dataSantri.nama_santri}
                       disabled
                     />
                   )}
-                </div>
-                <div>
+                </Grid>
+                <Grid>
+                  <FormLabel>NIS</FormLabel>
+                  <Grid onKeyDown={handleKeyPress}>
+                    {dataSantri && dataSantri.nis && (
+                      <TextField
+                        id="outlined-basic"
+                        variant="outlined"
+                        style={{ width: "400px", marginLeft: "100px" }}
+                        value={dataSantri.nis}
+                        disabled
+                      />
+                    )}
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid container direction="row">
+                <Grid>
                   <FormLabel>Tanggal Lahir</FormLabel>
+                </Grid>
+                <Grid onKeyDown={handleKeyPress}>
                   {dataSantri && dataSantri.tanggal_lahir && (
                     <TextField
                       id="outlined-basic"
@@ -251,22 +265,28 @@ function SuntingDataSantri() {
                       disabled
                     />
                   )}
-                </div>
-                <div>
+                </Grid>
+
+                <Grid>
                   <FormLabel>Jenis Kelamin</FormLabel>
+                </Grid>
+                <Grid onKeyDown={handleKeyPress}>
                   {dataSantri && dataSantri.jenis_kelamin && (
                     <TextField
                       id="outlined-basic"
                       value={dataSantri.jenis_kelamin}
-                      // onChange={handleChange}
                       variant="outlined"
                       style={{ width: "400px", marginLeft: "25px" }}
                       disabled
                     />
                   )}
-                </div>
-                <div>
+                </Grid>
+              </Grid>
+              <Grid container direction="row">
+                <Grid>
                   <FormLabel>Alamat</FormLabel>
+                </Grid>
+                <Grid onKeyDown={handleKeyPress}>
                   {dataSantri && dataSantri.alamat && (
                     <TextField
                       id="outlined-basic"
@@ -276,9 +296,12 @@ function SuntingDataSantri() {
                       onChange={handleChangeAlamat}
                     />
                   )}
-                </div>
-                <div>
+                </Grid>
+
+                <Grid>
                   <FormLabel>Nomor HP</FormLabel>
+                </Grid>
+                <Grid onKeyDown={handleKeyPress}>
                   {dataSantri && dataSantri.no_hp && (
                     <TextField
                       id="outlined-basic"
@@ -288,9 +311,13 @@ function SuntingDataSantri() {
                       onChange={handleChangeNoHp}
                     />
                   )}
-                </div>
-                <div>
+                </Grid>
+              </Grid>
+              <Grid container direction="row">
+                <Grid>
                   <FormLabel>Kelas</FormLabel>
+                </Grid>
+                <Grid onKeyDown={handleKeyPress}>
                   {dataSantri && dataSantri.nama_kelas && kelas && (
                     <Select
                       id="outlined-select-kelas"
@@ -307,9 +334,12 @@ function SuntingDataSantri() {
                       ))}
                     </Select>
                   )}
-                </div>
+                </Grid>
+
                 <Grid>
                   <FormLabel>Keterangan Subsidi</FormLabel>
+                </Grid>
+                <Grid onKeyDown={handleKeyPress}>
                   {dataSantri && dataSantri.subsidi && subsidi && (
                     <Select
                       id="outlined-select-subsidi"
@@ -327,8 +357,12 @@ function SuntingDataSantri() {
                     </Select>
                   )}
                 </Grid>
+              </Grid>
+              <Grid container direction="row">
                 <Grid>
                   <FormLabel>Jumlah Tunggakan</FormLabel>
+                </Grid>
+                <Grid onKeyDown={handleKeyPress}>
                   {dataSantri && (
                     <TextField
                       id="outlined-basic"
@@ -339,8 +373,11 @@ function SuntingDataSantri() {
                     />
                   )}
                 </Grid>
-                <div>
+
+                <Grid>
                   <FormLabel>Nama OrangTua/Wali</FormLabel>
+                </Grid>
+                <Grid onKeyDown={handleKeyPress}>
                   {dataSantri && dataSantri.nama_wali && (
                     <TextField
                       id="outlined-basic"
@@ -350,22 +387,22 @@ function SuntingDataSantri() {
                       disabled
                     />
                   )}
-                </div>
-                <div style={{ textAlign: "right" }}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    style={{ margin: "10px" }}
-                    onClick={() =>
-                      handleEditSantri(() => history.push("/daftarsantri"))
-                    }
-                  >
-                    Tambah
-                  </Button>
-                  <Button variant="contained" color="secondary">
-                    Kembali
-                  </Button>
-                </div>
+                </Grid>
+              </Grid>
+              <Grid container direction="row" style={{ textAlign: "right" }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  style={{ margin: "10px" }}
+                  onClick={() =>
+                    handleEditSantri(() => history.push("/daftarsantri"))
+                  }
+                >
+                  Tambah
+                </Button>
+                <Button variant="contained" color="secondary">
+                  Kembali
+                </Button>
               </Grid>
             </form>
           </div>

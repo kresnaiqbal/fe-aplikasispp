@@ -4,30 +4,30 @@ const axios = require("axios");
 
 const BASE_URL = "https://kota201.xyz/aplikasi_spp/public/api";
 
-export default class ApiShowRiwayatTransfer extends React.Component {
+export default class ApiShowRejectedTransfer extends React.Component {
   static INSTANCE = null;
 
   static getInstance() {
-    if (ApiShowRiwayatTransfer.INSTANCE === null) {
-      ApiShowRiwayatTransfer.INSTANCE = new ApiShowRiwayatTransfer();
+    if (ApiShowRejectedTransfer.INSTANCE === null) {
+      ApiShowRejectedTransfer.INSTANCE = new ApiShowRejectedTransfer();
     }
-    return ApiShowRiwayatTransfer.INSTANCE;
+    return ApiShowRejectedTransfer.INSTANCE;
   }
 
-  getRiwayatTransferInstance = () => {
+  getRejectedTransferInstance = () => {
     // Header API
     return axios.create({
       baseURL: `${BASE_URL}`,
     });
   };
 
-  showRiwayatTransferPath = () => {
-    return "/transfer";
+  showRejectedTransferPath = () => {
+    return "/transfer/failed";
   };
 
-  getDataRiwayatTransfer = (instance) => {
+  getDataRejectedTransfer = (instance) => {
     if (instance !== null) {
-      let path = BASE_URL + this.showRiwayatTransferPath();
+      let path = BASE_URL + this.showRejectedTransferPath();
       return instance
         .get(path)
         .then((response) => response)
@@ -39,11 +39,9 @@ export default class ApiShowRiwayatTransfer extends React.Component {
     if (Array.isArray(data)) {
       return Promise.all(data)
         .then((response) => {
-          // console.log('a', response[0].data.transfer[0])
           let result = [];
-          console.log("bismillah", response);
           for (let i = 0; i < response[0].data.transfer.length; i++) {
-            if (response[0].data.transfer[i].status_transfer !== "Gagal Verifikasi") {
+            if (response[0].data.transfer[i].status_transfer === "Gagal Verifikasi") {
               result.push(
                 response[0].data.transfer[i]
                   ? response[0].data.transfer[i]
@@ -51,7 +49,6 @@ export default class ApiShowRiwayatTransfer extends React.Component {
               );
             }
           }
-          console.log("bismillah", result);
           return result;
         })
         .catch((error) => alert(error.response.data.message));

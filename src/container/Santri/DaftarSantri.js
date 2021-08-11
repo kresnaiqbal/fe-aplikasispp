@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  ApiShowSantri,
-  ApiDeleteSantri,
-} from "../../Api";
+import { ApiShowSantri, ApiDeleteSantri, ApiSearchSantri } from "../../Api";
 import Navbar from "../../components/Navbar";
 import {
   Paper,
@@ -14,10 +11,23 @@ import {
   TablePagination,
   TableRow,
   Button,
+  Typography,
+  Divider,
+  FormControl,
+  FormLabel,
+  TextField,
+  Grid,
+  InputAdornment,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
-import {EditOutlined, AddOutlined, DeleteOutlineOutlined, SearchRounded} from '@material-ui/icons';
+import {
+  EditOutlined,
+  AddOutlined,
+  DeleteOutlineOutlined,
+  SearchRounded,
+  ImportExportRounded,
+} from "@material-ui/icons";
 
 const columns = [
   { id: "nis", label: "Nis", minWidth: 50 },
@@ -42,24 +52,28 @@ const columns = [
   },
 ];
 
-const rows = [
-
-];
+const rows = [];
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
   },
+  body: {
+    padding: 10,
+    paddingLeft: 60,
+  },
   container: {
+    margin: 30,
+    marginTop: 10,
     maxHeight: 440,
+    maxWidth: 1800,
   },
   paperSize: {
     width: "100%",
-    marginLeft: "80px",
     marginTop: "-38px",
   },
   Head: {
-    color: "black",
+    color: "#3B945E",
     fontSize: "18px",
     fontFamily: "Roboto",
     fontWeight: 700,
@@ -68,7 +82,7 @@ const useStyles = makeStyles((theme) => ({
   MyButton: {
     background: "#368756",
     border: 0,
-    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
+    boxShadow: "0 .15rem 1.75rem 0 rgba(58,59,69,.15)!important",
     color: "white",
     height: 48,
     padding: "0 30px",
@@ -84,6 +98,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "1%",
     color: "white",
   },
+  data: { textAlign: "center" },
 }));
 
 function DaftarSantri() {
@@ -92,6 +107,9 @@ function DaftarSantri() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [shallRender, setShallRender] = useState(false);
+  const [render, setRender] = useState(false);
+  const [asc, setAsc] = useState(false);
+  const [namaSantri, setNamaSantri] = useState();
 
   let gateway = ApiShowSantri.getInstance();
 
@@ -107,7 +125,7 @@ function DaftarSantri() {
       }
     });
   }, [shallRender]);
-  
+
   const handleOnClickDelete = (nis) => {
     let gateway = ApiDeleteSantri.getInstance();
 
@@ -116,39 +134,242 @@ function DaftarSantri() {
 
     let result = gateway.requestData([santriData]);
     result.then((response) => {
-      if(response.status === 200 && response.data.message === "Data Santri Berhasil Dihapus"){
-      setShallRender(!shallRender);
-      } 
-    })
+      if (
+        response.status === 200 &&
+        response.data.message === "Data Santri Berhasil Dihapus"
+      ) {
+        setShallRender(!shallRender);
+      }
+    });
   };
+
+  let searchGateway = ApiSearchSantri.getInstance();
+
+  let SearchInstance = searchGateway.getSearchSantriInstance();
+
+  const handleSearch = (callback) => {
+    // callback()
+    let searchData = searchGateway.getSearchSantri(
+      SearchInstance,
+      namaSantri,
+      callback
+    );
+
+    let result = searchGateway.requestData([searchData]);
+    result.then((response) => {
+      if (Array.isArray(response)) {
+        console.log("ini laporan", response);
+        if (response[0].status === 200) {
+          setDataSantri(response[0].data.santri);
+        } else {
+        }
+      }
+    });
+  };
+
+  function handleSortData(label) {
+    console.log("wadu", label);
+    let temp = dataSantri;
+    if (label === "Nis") {
+      if (asc === false) {
+        temp.sort((a, b) => (a.nis > b.nis ? 1 : b.nis > a.nis ? -1 : 0));
+      } else if (asc === true) {
+        temp.sort((a, b) => (a.nis < b.nis ? 1 : b.nis < a.nis ? -1 : 0));
+      }
+      setDataSantri(temp);
+      setRender(!render);
+      setAsc(!asc);
+    } else if (label === "Nama Santri") {
+      if (asc === false) {
+        temp.sort((a, b) =>
+          a.nama_santri > b.nama_santri
+            ? 1
+            : b.nama_santri > a.nama_santri
+            ? -1
+            : 0
+        );
+      } else {
+        temp.sort((a, b) =>
+          a.nama_santri < b.nama_santri
+            ? 1
+            : b.nama_santri < a.nama_santri
+            ? -1
+            : 0
+        );
+      }
+      setDataSantri(temp);
+      setRender(!render);
+      setAsc(!asc);
+    } else if (label === "Kelas") {
+      if (asc === false) {
+        temp.sort((a, b) =>
+          a.nama_kelas > b.nama_kelas ? 1 : b.nama_kelas > a.nama_kelas ? -1 : 0
+        );
+      } else {
+        temp.sort((a, b) =>
+          a.nama_kelas < b.nama_kelas ? 1 : b.nama_kelas < a.nama_kelas ? -1 : 0
+        );
+      }
+      setDataSantri(temp);
+      setRender(!render);
+      setAsc(!asc);
+    } else if (label === "Keterangan Subsidi") {
+      if (asc === false) {
+        temp.sort((a, b) =>
+          a.subsidi > b.subsidi ? 1 : b.subsidi > a.subsidi ? -1 : 0
+        );
+      } else {
+        temp.sort((a, b) =>
+          a.subsidi < b.subsidi ? 1 : b.subsidi < a.subsidi ? -1 : 0
+        );
+      }
+      setDataSantri(temp);
+      setRender(!render);
+      setAsc(!asc);
+    }
+  }
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+  };
+
+  const handleChangeSearchSantri = (event) => {
+    setNamaSantri(event.target.value);
   };
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+  const handleKeyPress = (event) => {
+    if (event.keyCode == 13 /*enter*/) {
+      handleSearch();
+    }
+  };
 
   return (
-    <div>
+    <div className={classes.body}>
       <Navbar />
       <Paper className={classes.paperSize} elevation="1">
-        <div className={classes.Head}>Daftar Santri</div>
+        <Typography className={classes.Head}>Daftar Santri</Typography>
+        <Divider style={{ marginTop: 10, marginBottom: 10 }} />
+        <FormControl component="fieldset">
+          <form className={classes.root} noValidate autoComplete="off">
+            <Grid
+              container
+              direction="row"
+              style={{ margin: 10, paddingLeft:20}}
+            >
+              <Grid item xs={6} sm={6} md={6} lg={6} xl={6} onKeyDown={handleKeyPress}>
+                <TextField
+                  id="outlined-select-gender"
+                  value={namaSantri}
+                  onChange={handleChangeSearchSantri}
+                  variant="outlined"
+                  size="small"
+                  className={classes.monthPicker}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchRounded />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+              <Grid item xs={3} sm={3} md={3} lg={3} xl={3}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  style={{ height: "35px", width: 100, marginLeft: 20 }}
+                  onClick={handleSearch}
+                >
+                  Tampilkan
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
+        </FormControl>
         <TableContainer className={classes.container}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
-                {columns.map((column) => (
-                  <TableCell
-                    key={column.id}
-                    align={column.align}
-                    style={{ minWidth: column.minWidth, fontWeight:"bold", fontSize:"13px"   }}
+                <TableCell
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "13px",
+                    textAlign: "center",
+                  }}
+                >
+                  NIS
+                  <Button
+                    onClick={() => handleSortData("Nis")}
+                    style={{
+                      color: "#c9c9c9",
+                      paddingLeft: "70px",
+                      height: 10,
+                      width: 1,
+                    }}
                   >
-                    {column.label}
-                  </TableCell>
-                ))}
+                    <ImportExportRounded />
+                  </Button>
+                </TableCell>
+                <TableCell
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "13px",
+                    textAlign: "center",
+                    paddingLeft: "40px",
+                  }}
+                >
+                  Nama Santri
+                  <Button
+                    onClick={() => handleSortData("Nama Santri")}
+                    style={{ color: "#c9c9c9" }}
+                  >
+                    <ImportExportRounded />
+                  </Button>
+                </TableCell>
+                <TableCell
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "13px",
+                    textAlign: "center",
+                  }}
+                >
+                  Kelas
+                  <Button
+                    onClick={() => handleSortData("Kelas")}
+                    style={{ color: "#c9c9c9" }}
+                  >
+                    <ImportExportRounded />
+                  </Button>
+                </TableCell>
+                <TableCell
+                  style={{
+                    // minWidth: column.minWidth,
+                    fontWeight: "bold",
+                    fontSize: "13px",
+                    textAlign: "center",
+                  }}
+                >
+                  Keterangan Subsidi
+                  <Button
+                    onClick={() => handleSortData("Keterangan Subsidi")}
+                    style={{ color: "#c9c9c9" }}
+                  >
+                    <ImportExportRounded />
+                  </Button>
+                </TableCell>
+                <TableCell
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "13px",
+                    textAlign: "center",
+                  }}
+                >
+                  Aksi
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -156,12 +377,24 @@ function DaftarSantri() {
                 dataSantri.map((data) => {
                   return (
                     <TableRow key="{data.nis}">
-                      <TableCell> {data.nis}</TableCell>
-                      <TableCell> {data.nama_santri}</TableCell>
-                      <TableCell> {data.nama_kelas}</TableCell>
-                      <TableCell> {data.subsidi=== '0' ? 'Tidak Subsidi' : 'Subsidi'}</TableCell>
+                      <TableCell className={classes.data}>
+                        {" "}
+                        {data.nis}
+                      </TableCell>
+                      <TableCell className={classes.data}>
+                        {" "}
+                        {data.nama_santri}
+                      </TableCell>
+                      <TableCell className={classes.data}>
+                        {" "}
+                        {data.nama_kelas}
+                      </TableCell>
+                      <TableCell className={classes.data}>
+                        {" "}
+                        {data.subsidi === "0" ? "Tidak Subsidi" : "Subsidi"}
+                      </TableCell>
 
-                      <TableCell>
+                      <TableCell className={classes.data}>
                         <Link
                           to={`${process.env.PUBLIC_URL}/DaftarSantri/Detail/${data.nis}`}
                         >
@@ -169,7 +402,7 @@ function DaftarSantri() {
                             variant="contained"
                             className={classes.detailBtn}
                           >
-                            <SearchRounded/>
+                            <SearchRounded />
                             Detail
                           </Button>
                         </Link>
@@ -177,7 +410,7 @@ function DaftarSantri() {
                           to={`${process.env.PUBLIC_URL}/DaftarSantri/Sunting/${data.nis}`}
                         >
                           <Button variant="contained" color="primary">
-                            <EditOutlined/>
+                            <EditOutlined />
                             Sunting
                           </Button>
                         </Link>
@@ -186,7 +419,7 @@ function DaftarSantri() {
                           className={classes.deleteBtn}
                           onClick={() => handleOnClickDelete(data.nis)}
                         >
-                          <DeleteOutlineOutlined/>
+                          <DeleteOutlineOutlined />
                           Hapus
                         </Button>
                       </TableCell>
@@ -198,7 +431,7 @@ function DaftarSantri() {
         </TableContainer>
         <Link to={`${process.env.PUBLIC_URL}/DaftarSantri/Tambah`}>
           <Button variant="contained" color="primary" style={{ margin: "2%" }}>
-            <AddOutlined/>
+            <AddOutlined />
             Tambah Data Santri
           </Button>
         </Link>

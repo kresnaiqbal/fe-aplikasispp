@@ -13,7 +13,7 @@ const UseStyles = makeStyles((theme) => ({
     height: "400px",
     marginTop: "20px",
     marginLeft: "80px",
-    boxShadow: "5px 5px 5px #929191",
+    boxShadow: "0 .15rem 1.75rem 0 rgba(58,59,69,.15)!important",
   },
   Head: {
     color: "#368756",

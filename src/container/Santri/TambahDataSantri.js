@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import clsx from "clsx";
 import Navbar from "../../components/Navbar";
 import { ApiCreateSantri } from "../../Api";
 import {
@@ -10,10 +11,15 @@ import {
   TextField,
   MenuItem,
   Grid,
-  Link,
+  Typography,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router";
+import { Link } from "react-router-dom";
+import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 
 const genders = [
   {
@@ -70,6 +76,12 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(1),
     },
     width: "100%",
+    "&:hover": {
+      backgroundColor: "transparent",
+    },
+    "& .MuiFormControlLabel-label": {
+      minWidth:"max-content" // or black
+    },
   },
   container: {
     maxHeight: 440,
@@ -80,18 +92,17 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "-38px",
   },
   Head: {
-    color: "black",
+    color: "#3B945E",
     fontSize: "18px",
     fontFamily: "Roboto",
     fontWeight: 700,
     marginLeft: "30px",
-    margin: "1%",
-    padding: "2px",
+    marginRight: "10px",
   },
   MyButton: {
     background: "#368756",
     border: 0,
-    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
+    boxShadow: "0 .15rem 1.75rem 0 rgba(58,59,69,.15)!important",
     color: "white",
     height: 48,
     padding: "0 30px",
@@ -103,7 +114,58 @@ const useStyles = makeStyles((theme) => ({
   marginForm: {
     marginLeft: "5px",
   },
+  icon: {
+    borderRadius: "50%",
+    width: 16,
+    height: 16,
+    boxShadow:
+      "inset 0 0 0 1px rgba(16,22,26,.2), inset 0 -1px 0 rgba(16,22,26,.1)",
+    backgroundColor: "#f5f8fa",
+    backgroundImage:
+      "linear-gradient(180deg,hsla(0,0%,100%,.8),hsla(0,0%,100%,0))",
+    "$root.Mui-focusVisible &": {
+      outline: "2px auto rgba(19,124,189,.6)",
+      outlineOffset: 2,
+    },
+    "input:hover ~ &": {
+      backgroundColor: "#ebf1f5",
+    },
+    "input:disabled ~ &": {
+      boxShadow: "none",
+      background: "rgba(206,217,224,.5)",
+    },
+  },
+  checkedIcon: {
+    backgroundColor: "#137cbd",
+    backgroundImage:
+      "linear-gradient(180deg,hsla(0,0%,100%,.1),hsla(0,0%,100%,0))",
+    "&:before": {
+      display: "block",
+      width: 16,
+      height: 16,
+      backgroundImage: "radial-gradient(#fff,#fff 28%,transparent 32%)",
+      content: '""',
+    },
+    "input:hover ~ &": {
+      backgroundColor: "#106ba3",
+    },
+  },
 }));
+
+function StyledRadio(props) {
+  const classes = useStyles();
+
+  return (
+    <Radio
+      className={classes.root}
+      disableRipple
+      color="default"
+      checkedIcon={<span className={clsx(classes.icon, classes.checkedIcon)} />}
+      icon={<span className={classes.icon} />}
+      {...props}
+    />
+  );
+}
 
 function TambahDataSantri() {
   const classes = useStyles();
@@ -176,88 +238,208 @@ function TambahDataSantri() {
     setNamaWali(event.target.value);
   };
 
+  const handleKeyPress = (event) => {
+    if (event.keyCode == 13 /*enter*/) {
+      handleCreateSantri(() => history.push("/daftarsantri"));
+    }
+  };
+
   return (
     <div>
       <Navbar />
       <Paper className={classes.paperSize}>
-        <div className={classes.Head}>Tambah Data Santri</div>
-        <Divider />
+        <Typography className={classes.Head}>Tambah Data Santri</Typography>
+        <Divider style={{ marginTop: 10, marginBottom: 10 }} />
+        <Grid container direction="row">
+          <Grid xs={4} sm={4} md={2} lg={2} xl={2}>
+            <Link to={`${process.env.PUBLIC_URL}/DaftarSantri/Tambah`}>
+              <Typography
+                className={classes.Menu}
+                style={{
+                  marginLeft: "30px",
+                  color: "#3B945E",
+                  fontSize: "15px",
+                  fontWeight: "bold",
+                }}
+              >
+                Input Manual
+              </Typography>
+            </Link>
+          </Grid>
+          <Grid xs={4} sm={4} md={2} lg={2} xl={2}>
+            <Link to={`${process.env.PUBLIC_URL}/UploadDataSantri`}>
+              <Typography
+                className={classes.Menu}
+                style={{
+                  marginLeft: "-100px",
+                  color: "#c9c9c9",
+                  fontSize: "15px",
+                }}
+              >
+                Upload File
+              </Typography>
+            </Link>
+          </Grid>
+        </Grid>
+        <Divider style={{ marginTop: 10, marginBottom: 10 }} />
         <FormControl component="fieldset">
           <div className={classes.pad}>
             <form className={classes.root} noValidate autoComplete="off">
               <Grid container direction="row">
-                <Grid>
+                <Grid xs={6} sm={6} md={1} lg={1} xl={1}>
                   <FormLabel>Nama Lengkap</FormLabel>
+                </Grid>
+                <Grid
+                  xs={6}
+                  sm={6}
+                  md={5}
+                  lg={5}
+                  xl={5}
+                  onKeyDown={handleKeyPress}
+                >
                   <TextField
                     id="outlined-basic"
                     variant="outlined"
-                    style={{ width: "400px", marginLeft: "55px" }}
+                    style={{ width: "400px" }}
                     onChange={handleChangeNamaSantri}
                   />
                 </Grid>
-                <Grid item md={6}>
-                  <FormLabel>NIS</FormLabel>
+                <Grid xs={6} sm={6} md={1} lg={1} xl={1}>
+                  <FormLabel style={{ paddingLeft: "35px" }}>NIS</FormLabel>
+                </Grid>
+                <Grid
+                  xs={6}
+                  sm={6}
+                  md={5}
+                  lg={5}
+                  xl={5}
+                  onKeyDown={handleKeyPress}
+                >
                   <TextField
                     id="outlined-basic"
                     variant="outlined"
-                    style={{ width: "400px", marginLeft: "137px" }}
+                    style={{ width: "400px" }}
                     onChange={handleChangeNIS}
                   />
                 </Grid>
-                <div>
-                  <FormLabel>Tanggal Lahir</FormLabel>
+              </Grid>
+              <Grid container direction="row">
+                <Grid xs={6} sm={6} md={1} lg={1} xl={1}>
+                  <FormLabel>Tanggal Lahir</FormLabel>{" "}
+                </Grid>
+                <Grid
+                  xs={6}
+                  sm={6}
+                  md={5}
+                  lg={5}
+                  xl={5}
+                  onKeyDown={handleKeyPress}
+                >
                   <TextField
                     id="outlined-basic"
                     placeholder="YYYY/MM/DD"
                     variant="outlined"
-                    style={{ width: "400px", marginLeft: "65px" }}
+                    style={{ width: "400px" }}
                     onChange={handleChangeTanggalLahir}
                   />
-                </div>
-                <div>
-                  <FormLabel>Jenis Kelamin</FormLabel>
-                  <TextField
-                    id="outlined-select-gender"
-                    select
+                </Grid>
+                <Grid xs={6} sm={6} md={1} lg={1} xl={1}>
+                  <FormLabel>Jenis Kelamin</FormLabel>{" "}
+                </Grid>
+                <Grid
+                  xs={6}
+                  sm={1}
+                  md={1}
+                  lg={1}
+                  xl={1}
+                  // style={{ width: "400px" }}
+                >
+                  <RadioGroup
+                    name="customized-radios"
                     value={gender}
                     onChange={handleChangeGender}
-                    variant="outlined"
-                    style={{ width: "400px", marginLeft: "60px" }}
+                    style={{width:"270px", minWidth:"max-content"}}
                   >
-                    {genders.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </div>
-                <div>
+                    <div style={{ display: "inline-flex" }}>
+                      <Grid container direction="row">
+                        <Grid xs={6} sm={6} md={6} lg={6} xl={6}>
+                          <FormControlLabel
+                            value="P"
+                            control={<StyledRadio />}
+                            label="Perempuan"
+                            style={{ width:35 }}
+                          />
+                        </Grid>
+                        <Grid xs={6} sm={6} md={6} lg={6} xl={6}>
+                          <FormControlLabel
+                            value="L"
+                            control={<StyledRadio />}
+                            label="Laki-laki"
+                            style={{ width:35 }}
+                          />
+                        </Grid>
+                      </Grid>
+                    </div>
+                  </RadioGroup>
+                </Grid>
+              </Grid>
+              <Grid container direction="row">
+                <Grid xs={6} sm={6} md={1} lg={1} xl={1}>
                   <FormLabel>Alamat</FormLabel>
+                </Grid>
+                <Grid
+                  xs={6}
+                  sm={6}
+                  md={5}
+                  lg={5}
+                  xl={5}
+                  onKeyDown={handleKeyPress}
+                >
                   <TextField
                     id="outlined-basic"
                     variant="outlined"
-                    style={{ width: "400px", marginLeft: "110px" }}
+                    style={{ width: "400px" }}
                     onChange={handleChangeAlamat}
                   />
-                </div>
-                <div>
+                </Grid>
+                <Grid xs={6} sm={6} md={1} lg={1} xl={1}>
                   <FormLabel>Nomor HP</FormLabel>
+                </Grid>
+                <Grid
+                  xs={6}
+                  sm={6}
+                  md={5}
+                  lg={5}
+                  xl={5}
+                  onKeyDown={handleKeyPress}
+                >
                   <TextField
                     id="outlined-basic"
                     variant="outlined"
-                    style={{ width: "400px", marginLeft: "85px" }}
+                    style={{ width: "400px" }}
                     onChange={handleChangeNoHp}
                   />
-                </div>
-                <div>
+                </Grid>
+              </Grid>
+              <Grid container direction="row">
+                <Grid xs={6} sm={6} md={1} lg={1} xl={1}>
                   <FormLabel>Kelas</FormLabel>
+                </Grid>
+                <Grid
+                  xs={6}
+                  sm={6}
+                  md={5}
+                  lg={5}
+                  xl={5}
+                  onKeyDown={handleKeyPress}
+                >
                   <TextField
                     id="outlined-select-kelas"
                     select
                     value={kelas}
                     onChange={handleChangeKelas}
                     variant="outlined"
-                    style={{ width: "400px", marginLeft: "120px" }}
+                    style={{ width: "400px" }}
                   >
                     {kelass.map((option) => (
                       <MenuItem key={option.value} value={option.value}>
@@ -265,16 +447,25 @@ function TambahDataSantri() {
                       </MenuItem>
                     ))}
                   </TextField>
-                </div>
-                <div>
+                </Grid>
+                <Grid xs={6} sm={6} md={1} lg={1} xl={1}>
                   <FormLabel>Keterangan Subsidi</FormLabel>
+                </Grid>
+                <Grid
+                  xs={6}
+                  sm={6}
+                  md={5}
+                  lg={5}
+                  xl={5}
+                  onKeyDown={handleKeyPress}
+                >
                   <TextField
                     id="outlined-select-subsidi"
                     select
                     value={subsidi}
                     onChange={handleChangeSubsidi}
                     variant="outlined"
-                    style={{ width: "400px", marginLeft: "20px" }}
+                    style={{ width: "400px" }}
                   >
                     {subsidis.map((option) => (
                       <MenuItem key={option.value} value={option.value}>
@@ -282,42 +473,63 @@ function TambahDataSantri() {
                       </MenuItem>
                     ))}
                   </TextField>
-                </div>
-                <div>
+                </Grid>
+              </Grid>
+              <Grid container direction="row">
+                <Grid xs={6} sm={6} md={1} lg={1} xl={1}>
                   <FormLabel>Jumlah Tunggakan</FormLabel>
+                </Grid>
+                <Grid
+                  xs={6}
+                  sm={6}
+                  md={5}
+                  lg={5}
+                  xl={5}
+                  onKeyDown={handleKeyPress}
+                >
                   <TextField
                     id="outlined-basic"
                     variant="outlined"
-                    style={{ width: "400px", marginLeft: "20px" }}
+                    style={{ width: "400px" }}
                     onChange={handleChangeJumlahTunggakan}
                   />
-                </div>
-                <div>
+                </Grid>
+
+                <Grid xs={6} sm={6} md={1} lg={1} xl={1}>
                   <FormLabel>Nama OrangTua/Wali</FormLabel>
+                </Grid>
+                <Grid
+                  xs={6}
+                  sm={6}
+                  md={5}
+                  lg={5}
+                  xl={5}
+                  onKeyDown={handleKeyPress}
+                >
                   <TextField
                     id="outlined-basic"
                     variant="outlined"
-                    style={{ width: "400px", marginLeft: "3px" }}
+                    style={{ width: "400px" }}
                     onChange={handleChangeNamaWali}
                   />
-                </div>
-                <div style={{ textAlign: "right" }}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    style={{ margin: "10px" }}
-                    onClick={() =>
-                      handleCreateSantri(() => history.push("/daftarsantri"))
-                    }
-                  >
-                    Tambah
+                </Grid>
+              </Grid>
+              <Grid style={{ textAlign: "right" }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  style={{ margin: "10px" }}
+                  onClick={() =>
+                    handleCreateSantri(() => history.push("/daftarsantri"))
+                  }
+                >
+                  Tambah
+                </Button>
+                <Link to={`${process.env.PUBLIC_URL}/dashboard`}>
+                  <Button variant="contained" color="secondary">
+                    Kembali
                   </Button>
-                  <Link to={`${process.env.PUBLIC_URL}/dashboard`}>
-                    <Button variant="contained" color="secondary">
-                      Kembali
-                    </Button>
-                  </Link>
-                </div>
+                </Link>
               </Grid>
             </form>
           </div>

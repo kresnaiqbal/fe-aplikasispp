@@ -1,10 +1,6 @@
 import React, { useEffect } from "react";
 import Navbar from "../../components/Navbar";
-import {
-  ApiShowRiwayatTransfer,
-  ApiApprovalTransaksi,
-  ApiRejectTransfer,
-} from "../../Api";
+import { ApiShowRejectedTransfer, ApiApprovalTransaksi} from "../../Api";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Paper,
@@ -91,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
   },
   Head: {
-    color: "#3B945E",
+    color:"#3B945E",
     fontSize: "18px",
     fontFamily: "Roboto",
     fontWeight: 700,
@@ -127,6 +123,11 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     borderColor: "white",
   },
+  redButton: {
+    background: "#FC4445",
+    color: "white",
+    marginLeft: 5,
+  },
   customColumnStyle: { maxWidth: "-10px" },
 }));
 
@@ -141,12 +142,12 @@ function getModalStyle() {
   };
 }
 
-function ApprovalTransfer() {
+function RiwayatTransferGagal() {
   const classes = useStyles();
   const history = useHistory();
   const [modalStyle] = React.useState(getModalStyle);
   const [page, setPage] = React.useState(0);
-  const [dataRiwayatTransfer, setDataRiwayatTransfer] = React.useState([]);
+  const [dataRejectedTransfer, setDataRejectedTransfer] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [shallRender, setShallRender] = React.useState(false);
   const [open, setOpen] = React.useState(false);
@@ -160,25 +161,23 @@ function ApprovalTransfer() {
   };
 
   let admin_id = sessionStorage.getItem("id_admin");
-  let gateway = ApiShowRiwayatTransfer.getInstance();
+  let gateway = ApiShowRejectedTransfer.getInstance();
 
-  let RiwayatTransferInstance = gateway.getRiwayatTransferInstance();
+  let RejectedTransferInstance = gateway.getRejectedTransferInstance();
   useEffect(() => {
-    let riwayatTransferData = gateway.getDataRiwayatTransfer(
-      RiwayatTransferInstance
+    let rejectedTransferData = gateway.getDataRejectedTransfer(
+      RejectedTransferInstance
     );
 
-    let result = gateway.requestData([riwayatTransferData]);
+    let result = gateway.requestData([rejectedTransferData]);
     result.then((response) => {
       if (Array.isArray(response)) {
         // if (response.status === 200) {
-        setDataRiwayatTransfer(response);
-        console.log("ini riwayat", dataRiwayatTransfer);
+        setDataRejectedTransfer(response);
         // }
       }
     });
   }, [shallRender]);
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -208,24 +207,6 @@ function ApprovalTransfer() {
     });
   };
 
-  const handleReject = (id_transfer) => {
-    let gateway = ApiRejectTransfer.getInstance();
-
-    let transferInstance = gateway.getRejectTransferInstance();
-    let transferData = gateway.rejectTransfer(transferInstance, id_transfer);
-
-    let result = gateway.requestData([transferData]);
-    result.then((response) => {
-      if (
-        response[0].status === 200 &&
-        response[0].data.message ===
-          "Transfer Tidak Valid, Silahkan Hubungi Admin"
-      ) {
-        setShallRender(!shallRender);
-      }
-    });
-  };
-
   const formatter = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "IDR",
@@ -236,37 +217,20 @@ function ApprovalTransfer() {
       <Navbar />
       <Paper className={classes.paperSize} elevation="1">
         <Typography className={classes.Head}>
-          Approval Pembayaran SPP via ATM
+          Riwayat Transfer Gagal
         </Typography>
         <Divider style={{ marginTop: 10, marginBottom: 10 }} />
         <Grid container direction="row">
           <Grid xs={4} sm={4} md={2} lg={2} xl={2}>
             <Link to={`${process.env.PUBLIC_URL}/ApprovalTransfer`}>
-              <Typography
-                className={classes.Menu}
-                style={{
-                  marginLeft: "30px",
-                  color: "#3B945E",
-                  fontSize: "15px",
-                  fontWeight: "bold",
-                }}
-              >
+              <Typography className={classes.Menu} style={{marginLeft:"30px",color:"#c9c9c9",fontSize:"15px"}}>
                 Riwayat Transfer SPP
               </Typography>
             </Link>
           </Grid>
           <Grid xs={4} sm={4} md={2} lg={2} xl={2}>
-            <Link
-              to={`${process.env.PUBLIC_URL}/ApprovalTransfer/RiwayatTransferGagal`}
-            >
-              <Typography
-                className={classes.Menu}
-                style={{
-                  // marginLeft: "-100px",
-                  color: "#c9c9c9",
-                  fontSize: "15px",
-                }}
-              >
+            <Link to={`${process.env.PUBLIC_URL}/RiwayatTransferGagal`}>
+              <Typography className={classes.Menu} style={{color:"#3B945E" ,fontSize:"15px",fontWeight:"bold"}}>
                 Riwayat Transfer Gagal
               </Typography>
             </Link>
@@ -293,8 +257,8 @@ function ApprovalTransfer() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {dataRiwayatTransfer &&
-                dataRiwayatTransfer.map((data) => {
+              {dataRejectedTransfer &&
+                dataRejectedTransfer.map((data) => {
                   return (
                     <TableRow hover key="{data.id_transaksi}">
                       <TableCell style={{ width: "5%" }}>
@@ -341,14 +305,7 @@ function ApprovalTransfer() {
                             handleApproval(admin_id, data.id_transfer)
                           }
                         >
-                          Verifikasi
-                        </Button>
-                        <Button
-                          variant="contained"
-                          className={classes.deleteBtn}
-                          onClick={() => handleReject(data.id_transfer)}
-                        >
-                          Tolak
+                          Verifikasi 
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -371,4 +328,4 @@ function ApprovalTransfer() {
   );
 }
 
-export default ApprovalTransfer;
+export default RiwayatTransferGagal;

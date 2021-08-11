@@ -30,10 +30,12 @@ import {
   ListAlt,
   MenuBook,
   Person,
+  Notifications,
   ExpandMore,
   ExpandLess,
 } from "@material-ui/icons";
 import RiwayatTransaksi from "../container/RiwayatTransaksi";
+import moment from "moment";
 
 const drawerWidth = 240;
 
@@ -108,7 +110,7 @@ const useStyles = makeStyles((theme) => ({
   NavPaperLong: {
     color: "#fff",
     width: "220px",
-    height: "125px",
+    height: "160px",
     marginLeft: "10px",
   },
   menuprofile: {
@@ -158,6 +160,8 @@ const Navbar = () => {
   const [example, setExample] = useState("secondary");
   const isCustomColor = example === "customColor";
   const isCustomHeight = example === "customHeight";
+
+  let namaAdmin = sessionStorage.getItem("nama_admin").substring(1,sessionStorage.getItem("nama_admin").length-1);
 
   let permission = sessionStorage.getItem("permission");
 
@@ -213,13 +217,24 @@ const Navbar = () => {
         }`}
       >
         <Toolbar>
+          <Typography style={{ marginLeft: 40 }}>
+            {moment().format("D MMMM, YYYY")}
+          </Typography>
           <div style={{ flexGrow: 1 }}></div>
-          <Person />
-          <Typography variant="subtitle1"></Typography>
+          <Link>
+            <Notifications style={{ color: "black" }} />
+          </Link>
+          <Typography style={{ marginLeft: 10, marginRight: 2 }}>
+            {namaAdmin}
+          </Typography>
           <Button
             className={classes.menuprofile}
             size="small"
-            startIcon={<Avatar className={classes.avatarSmall}>U</Avatar>}
+            startIcon={
+              <Avatar className={classes.avatarSmall}>
+                <Person />
+              </Avatar>
+            }
             aria-controls="simple-menu"
             aria-haspopup="true"
             onClick={handleClick}
@@ -378,10 +393,18 @@ const Navbar = () => {
                           />
                         </Link>
                       )}
-                       {permission.includes("riwayat_transaksi") && (
+                      {permission.includes("riwayat_transaksi") && (
                         <Link to={`${process.env.PUBLIC_URL}/RiwayatTransaksi`}>
                           <ListItemText
                             primary="Riwayat Transaksi"
+                            className={classes.DropdownText}
+                          />
+                        </Link>
+                      )}
+                      {permission.includes("riwayat_transaksi") && (
+                        <Link to={`${process.env.PUBLIC_URL}/UbahNominalSPP`}>
+                          <ListItemText
+                            primary="Ubah Nominal SPP"
                             className={classes.DropdownText}
                           />
                         </Link>
@@ -433,19 +456,7 @@ const Navbar = () => {
       <Toolbar />
       {/* <RiwayatTransaksi/> */}
       <main className={classes.content}>
-        <div className={classes.toolbar} />
-        <Switch>
-          <Route
-            exact
-            path={`${process.env.PUBLIC_URL}/home`}
-            component={DashboardView}
-          />
-          <Route
-            exact
-            path={`${process.env.PUBLIC_URL}/home/riwayattransaksi`}
-            component={RiwayatTransaksi}
-          />
-        </Switch>
+        <div className={classes.toolbar} style={{ paddingLeft: 10 }} />
       </main>
     </React.Fragment>
   );

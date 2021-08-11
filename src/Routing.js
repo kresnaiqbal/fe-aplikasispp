@@ -19,7 +19,11 @@ import DetailDataOperator from "./container/Operator/DetailDataOperator";
 import EditDataOperator from "./container/Operator/EditDataOperator";
 import errorHandler from "./components/errorHandler";
 import ApprovalTransfer from "./container/Transaksi/ApprovalTransfer";
+import RiwayatTransferGagal from "./container/Transaksi/riwayatTransferGagal";
 import RiwayatPembayaran from "./container/Santri/RiwayatPembayaran";
+import UbahNominalSPP from "./container/Transaksi/UbahNominalSPP";
+
+import UploadDataSantri from "./container/Santri/UploadDataSantri";
 
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
@@ -51,6 +55,8 @@ function Routing() {
           <Route exact path="/dashboard" component={Dashboard} />
           <PrivateRoute exact path="/errorHandler" component={errorHandler} />
           <PrivateRoute exact path="/DaftarSantri" component={DaftarSantri} />
+          <PrivateRoute exact path="/errorHandler" component={errorHandler} />
+          <PrivateRoute exact path="/UploadDataSantri" component={UploadDataSantri} />
           <PrivateRoute
             exact
             path="/DaftarSantri/Detail/:id"
@@ -111,7 +117,13 @@ function Routing() {
             path="/ApprovalTransfer"
             component={ApprovalTransfer}
           />
+          <PrivateRoute
+            exact
+            path="/ApprovalTransfer/RiwayatTransferGagal"
+            component={RiwayatTransferGagal}
+          />
           <PrivateRoute exact path="/InputSPP" component={InputSPP} />
+          <PrivateRoute exact path="/UbahNominalSPP" component={UbahNominalSPP} />
         </Switch>
       </BrowserRouter>
     </div>

@@ -25,6 +25,12 @@ import ApiExportLaporanTunggakan from "./Laporan/CetakLaporanTunggakan";
 import ApiApprovalTransaksi from "./Transaksi/ApprovalTransaksiTunai";
 import ApiCetakSuratTagihan from "./Laporan/SuratTagihan";
 import ApiShowRiwayatPembayaran from "./Santri/ShowRiwayatPembayaran";
+import ApiRejectTransfer from "./Transaksi/rejectTransfer";
+import ApiShowRejectedTransfer from "./Transaksi/showRejectedTransfer";
+import ApiPerbandinganStatusSPP from "./Transaksi/perbandinganStatusSPPSantri";
+import ApiSearchSantri from "./Santri/SearchSantri";
+import ApiUbahNominalSPP from "./Transaksi/UbahNominalSPP";
+import ApiCekNominalSPP from "./Transaksi/cekNominalSPP";
 
 export {
   // Login,
@@ -53,6 +59,12 @@ export {
   ApiShowLaporanTunggakan,
   ApiExportLaporanTunggakan,
   ApiApprovalTransaksi,
+  ApiRejectTransfer,
+  ApiShowRejectedTransfer,
+  ApiPerbandinganStatusSPP,
   ApiCetakSuratTagihan,
+  ApiSearchSantri,
+  ApiUbahNominalSPP,
+  ApiCekNominalSPP,
   requestData,
 };

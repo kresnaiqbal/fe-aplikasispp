@@ -5,13 +5,11 @@ import { ApiLogin } from "../Api";
 import YouTubeIcon from "@material-ui/icons/YouTube";
 import FacebookIcon from "@material-ui/icons/Facebook";
 import InstagramIcon from "@material-ui/icons/Instagram";
-import { Button, TextField, Grid, Paper } from "@material-ui/core";
+import { Button, TextField, Grid, Paper, Typography } from "@material-ui/core";
 import { createMuiTheme, makeStyles } from "@material-ui/core/styles";
 import Image from "../image/backgroundLP.png";
 import { Link, useHistory } from "react-router-dom";
-import {
-  getToken,
-} from "../components/Common";
+import { getToken } from "../components/Common";
 
 const theme1 = createMuiTheme({
   palette: {
@@ -21,7 +19,6 @@ const theme1 = createMuiTheme({
     },
   },
 });
-
 
 const useStyles = makeStyles((theme) => ({
   iconColor: {
@@ -35,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#76B690",
     marginLeft: "40px",
     marginTop: "20px",
-    width: "300px"
+    width: "300px",
   },
   SidebarLogo: {
     color: "white",
@@ -54,7 +51,6 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: "Poppins",
     margin: "9px",
     marginLeft: "40px",
-
   },
   LoginHeader: {
     color: "white",
@@ -79,9 +75,7 @@ const useStyles = makeStyles((theme) => ({
     width: "600px",
   },
   MyButton: {
-    background: "#368756",
     border: 0,
-    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
     color: "white",
     height: 48,
     padding: "0 30px",
@@ -89,7 +83,7 @@ const useStyles = makeStyles((theme) => ({
   },
   BackgroundLP: {
     backgroundImage: `url(${Image})`,
-    position:'absolute',
+    position: "absolute",
     height: "100%",
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
@@ -110,7 +104,7 @@ function LandingPage() {
   useEffect(() => {
     const token = getToken();
     if (!token) {
-      history.push('/')
+      history.push("/");
     }
   }, []);
   const handleChangeUsername = (event) => {
@@ -121,6 +115,12 @@ function LandingPage() {
     setPassword(event.target.value);
   };
 
+  const handleKeyPress = (event) => {
+    if (event.keyCode == 13 /*enter*/) {
+        ApiLogin(username, password, () => history.push("/dashboard"))
+    }
+  };
+
   return (
     <div className={classes.bp}>
       <div className={classes.root}>
@@ -129,12 +129,28 @@ function LandingPage() {
             <Grid item xs={6} sm={6} md={9} lg={9} xl={9}>
               <div className={classes.SidebarLogo}>SM</div>
             </Grid>
-            <Grid item xs={3} sm={3} md={1} lg={1} xl={1} style={{ marginTop: "2%" }}>
+            <Grid
+              item
+              xs={3}
+              sm={3}
+              md={1}
+              lg={1}
+              xl={1}
+              style={{ marginTop: "2%" }}
+            >
               <Link to={""}>
                 <div className={classes.Menu}>Kontak</div>
               </Link>
             </Grid>
-            <Grid item xs={3} sm={3} md={2} lg={2} xl={2} style={{ marginTop: "2%" }}>
+            <Grid
+              item
+              xs={3}
+              sm={3}
+              md={2}
+              lg={2}
+              xl={2}
+              style={{ marginTop: "2%" }}
+            >
               <Link to={""}>
                 <div className={classes.Menu}>Tentang Kami</div>
               </Link>
@@ -142,8 +158,16 @@ function LandingPage() {
           </Grid>
           <Grid container direction="row" style={{ marginTop: "5%" }}>
             <Grid item xs={12} sm={12} md={8} lg={8} xl={8}>
-              <Grid item xs={12} sm={12} md={8} lg={8} xl={8}style={{ marginLeft: "40px", }}>
-                Madrasah Diniyyah Mubarokulhuda
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                md={8}
+                lg={8}
+                xl={8}
+                style={{ marginLeft: "40px" }}
+              >
+                <Typography style={{color:"white"}}>Madrasah Diniyyah Mubarokulhuda</Typography>
               </Grid>
               <Grid item xs={12} sm={12} md={10} lg={10} xl={10}>
                 <div className={classes.Header}>
@@ -151,7 +175,15 @@ function LandingPage() {
                   Mubarokulhuda
                 </div>
               </Grid>
-              <Grid item xs={8} sm={8} md={8} lg={8} xl={8} style={{ marginLeft: "40px" }}>
+              <Grid
+                item
+                xs={8}
+                sm={8}
+                md={8}
+                lg={8}
+                xl={8}
+                style={{ marginLeft: "40px" }}
+              >
                 <Link
                   to={`https://www.youtube.com/channel/UCfCCVByq3vT7Aj7uqE1J4Xw`}
                 >
@@ -168,7 +200,7 @@ function LandingPage() {
               </Grid>
             </Grid>
             <Grid item xs={12} sm={12} md={4} lg={4} xl={4}>
-              <Paper className={classes.Paper} >
+              <Paper className={classes.Paper}>
                 <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
                   <div
                     className={classes.LoginHeader}
@@ -179,7 +211,7 @@ function LandingPage() {
                     Login
                   </div>
                   <Grid container spacing={2}>
-                    <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+                    <Grid item xs={12} sm={12} md={12} lg={12} xl={12} onKeyDown={handleKeyPress}>
                       <TextField
                         fullWidth
                         label="Username"
@@ -189,9 +221,10 @@ function LandingPage() {
                         variant="outlined"
                         onChange={handleChangeUsername}
                         value={username}
+                        
                       />
                     </Grid>
-                    <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+                    <Grid item xs={12} sm={12} md={12} lg={12} xl={12} onKeyDown={handleKeyPress}>
                       <TextField
                         fullWidth
                         label="Password"
@@ -202,6 +235,7 @@ function LandingPage() {
                         variant="outlined"
                         onChange={handleChangePassword}
                         value={password}
+                        
                       />
                     </Grid>
                   </Grid>
@@ -210,6 +244,7 @@ function LandingPage() {
                     <Button
                       className={classes.MyButton}
                       fullWidth
+                      color="primary"
                       type="submit"
                       variant="contained"
                       onClick={() =>
@@ -223,14 +258,17 @@ function LandingPage() {
                     {/* </Link> */}
                   </Grid>
                   <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-                    <div
-                      className={classes.Kontakdll}
-                      style={{
-                        marginTop: "5%",
-                      }}
-                    >
-                      Lupa Username / Password?
-                    </div>
+                    <Link>
+                      <Typography
+                        className={classes.Kontakdll}
+                        style={{
+                          marginTop: "5%",
+                          color: "#4e73df",
+                        }}
+                      >
+                        Lupa Username / Password?
+                      </Typography>
+                    </Link>
                   </Grid>
                 </Grid>
               </Paper>

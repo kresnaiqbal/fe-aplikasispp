@@ -46,7 +46,6 @@ export default class ApiDeleteAdmin extends React.Component {
       return Promise.all(data)
         .then((response) => {
           if (response[0].data.message === "Data Admin Berhasil Dihapus") {
-            console.log("masuk apa ngga");
             return response[0];
           }
         })

@@ -26,6 +26,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router";
 import { saveAs } from "file-saver";
 import GetAppIcon from "@material-ui/icons/GetApp";
+import moment from "moment";
 
 const months = [
   {
@@ -120,24 +121,28 @@ const useStyles = makeStyles((theme) => ({
     display: "inline",
     marginTop: 10,
   },
+  body: {
+    padding: 10,
+    paddingLeft: 60,
+  },
   container: {
     margin: 30,
     marginTop: 10,
     maxHeight: 440,
+    maxWidth: 1800,
   },
   monthPicker: {
     width: "150px",
     // height: "100px",
   },
   paperSize: {
-    width: "95%",
+    width: "100%",
     height: "50%",
-    marginLeft: "80px",
-    marginTop: "-45px",
-    boxShadow: "0 3px 5px 2px #969696",
+    marginTop: "-60px",
+    boxShadow: "0 .15rem 1.75rem 0 rgba(58,59,69,.15)!important",
   },
   Head: {
-    color: "black",
+    color:"#3B945E",
     fontSize: "18px",
     fontFamily: "Roboto",
     fontWeight: 700,
@@ -148,7 +153,7 @@ const useStyles = makeStyles((theme) => ({
   MyButton: {
     background: "#368756",
     border: 0,
-    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
+    boxShadow: "0 .15rem 1.75rem 0 rgba(58,59,69,.15)!important",
     color: "white",
     width: "140px",
     height: "35px",
@@ -259,7 +264,7 @@ function LaporanKeuangan() {
   };
 
   return (
-    <div>
+    <div className={classes.body}>
       <Navbar />
       <Paper className={classes.paperSize} elevation="1">
         <Typography className={classes.Head}>Laporan Keuangan</Typography>
@@ -286,7 +291,7 @@ function LaporanKeuangan() {
                 >
                   {months.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
-                      <Typography style={{ textAlign: "center" }}>
+                      <Typography>
                         {option.label}
                       </Typography>
                     </MenuItem>
@@ -327,7 +332,7 @@ function LaporanKeuangan() {
                   return (
                     <TableRow hover key="{data.id_transaksi}">
                       <TableCell>{data.id_transaksi}</TableCell>
-                      <TableCell>{data.tanggal_transaksi}</TableCell>
+                      <TableCell>{moment(data.tanggal_transaksi).format('D MMMM, YYYY')}</TableCell>
                       <TableCell>{data.nis}</TableCell>
                       <TableCell>{data.nama_santri}</TableCell>
                       <TableCell>{data.nama_kelas}</TableCell>

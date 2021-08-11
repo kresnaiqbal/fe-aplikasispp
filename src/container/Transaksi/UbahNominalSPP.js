@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Navbar from "../components/Navbar";
+import Navbar from "../../components/Navbar";
 import {
   Paper,
   Button,
@@ -16,33 +16,32 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router";
-import ApiPembayaranSPPTunai from "../Api/Transaksi/PembayaranSPPTunai";
-import { ApiCekNominalSPP } from "../Api";
+import { ApiUbahNominalSPP } from "../../Api";
 
-const totalMonths = [
+const totalYears = [
   {
-    value: 1,
-    label: "1",
+    value: 2021,
+    label: "2021",
   },
   {
-    value: 2,
-    label: "2",
+    value: 2022,
+    label: "2022",
   },
   {
-    value: 3,
-    label: "3",
+    value: 2023,
+    label: "2023",
   },
   {
-    value: 4,
-    label: "4",
+    value: 2024,
+    label: "2024",
   },
   {
-    value: 5,
-    label: "5",
+    value: 2025,
+    label: "2025",
   },
   {
-    value: 6,
-    label: "6",
+    value: 2026,
+    label: "2026",
   },
 ];
 
@@ -85,59 +84,43 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function InputSPP() {
+function UbahNominalSPP() {
   const classes = useStyles();
   const history = useHistory();
-  const [jumlahBulan, setJumlahBulan] = useState();
-  const [nis, setNis] = useState();
-  const [totalBayar, setTotalBayar] = useState(0);
+  const [tahun, setTahun] = useState();
+  const [nominalSPP, setNominalSPP] = useState(0);
   const [spp, setSpp] = useState(0);
   const [infaq, setInfaq] = useState(0);
 
   let admin_id = sessionStorage.getItem("id_admin");
-  let gateway = ApiPembayaranSPPTunai.getInstance();
+  let gateway = ApiUbahNominalSPP.getInstance();
 
   let SPPInstance = gateway.getSPPInstance();
 
-  const handlePembayaranSPPTunai = (callback) => {
+  const handleUbahNominalSPP = (callback) => {
     let sppData = gateway.createDataSPP(
       SPPInstance,
-      nis,
-      jumlahBulan,
-      totalBayar,
+      tahun,
+      nominalSPP,
       spp,
       infaq,
-      admin_id,
       callback
     );
   };
 
-  const handleCekNominal = (nis, jumlahBulan) => {
-    let gateway = ApiCekNominalSPP.getInstance();
-    let NominalSPPInstance = gateway.getCekNominalSPPInstance();
-    let NominalSPPData = gateway.getCekNominalSPP(
-      NominalSPPInstance,
-      nis,
-      jumlahBulan
-    );
-
-    let result = gateway.requestData([NominalSPPData]);
-    result.then((response) => {
-      if (response.status === 200) {
-        console.log("Allah", response);
-        setSpp(response.data.spp);
-        setInfaq(response.data.infaq);
-        setTotalBayar(response.data.total_bayar);
-      }
-    });
+  const handleChangeTahun = (event) => {
+    setTahun(event.target.value);
   };
 
-  const handleChangeNIS = (event) => {
-    setNis(event.target.value);
+  const handleChangeInfaq = (event) => {
+    setInfaq(event.target.value);
   };
 
-  const handleChangeJumlahBulan = (event) => {
-    setJumlahBulan(event.target.value);
+  const handleChangeSPP = (event) => {
+    setSpp(event.target.value);
+  };
+  const handleChangeNominalSPP = (event) => {
+    setNominalSPP(event.target.value);
   };
 
   const formatter = new Intl.NumberFormat("en-US", {
@@ -147,13 +130,7 @@ function InputSPP() {
 
   const handleKeyPress = (event) => {
     if (event.keyCode == 13 /*enter*/) {
-      handlePembayaranSPPTunai(() => history.push("/RiwayatTransaksi"));
-    }
-  };
-
-  const handleKeyDown = (event) => {
-    if (event.keyCode == 13 /*enter*/) {
-      handleCekNominal();
+      handleUbahNominalSPP(() => history.push("/Dashboard"));
     }
   };
 
@@ -162,55 +139,35 @@ function InputSPP() {
       <Navbar />
       <Paper className={classes.paperSize}>
         <Typography className={classes.Head} style={{ paddingTop: 10 }}>
-          Pembayaran SPP santri Tunai
+          Ubah Nominal SPP
         </Typography>
         <Divider />
         <FormControl component="fieldset">
           <div className={classes.pad}>
             <form className={classes.root} noValidate autoComplete="off">
               <Grid onKeyDown={handleKeyPress}>
-                <FormLabel>NIS</FormLabel>
-                <TextField
-                  id="outlined-basic"
-                  required
-                  variant="outlined"
-                  style={{ width: "400px", marginLeft: "90px" }}
-                  onChange={handleChangeNIS}
-                />
-              </Grid>
-              <Grid onKeyDown={handleKeyDown}>
-                <FormLabel>Bulan</FormLabel>
+                <FormLabel>Tahun Ajaran</FormLabel>
                 <Select
                   id="outlined-basic"
                   variant="outlined"
                   required
-                  style={{ width: "400px", marginLeft: "75px" }}
-                  onChange={handleChangeJumlahBulan}
+                  style={{ width: "400px", marginLeft: "35px" }}
+                  onChange={handleChangeTahun}
                 >
-                  {totalMonths.map((option) => (
+                  {totalYears.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>
                   ))}
                 </Select>
-                <Grid>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    style={{ margin: "10px" }}
-                    onClick={() => handleCekNominal(nis,jumlahBulan)}
-                  >
-                    Cek Nominal
-                  </Button>
-                </Grid>
               </Grid>
-              <Grid onKeyDown={handleKeyDown}>
+              <Grid onKeyDown={handleKeyPress}>
                 <FormLabel>Nominal SPP</FormLabel>
                 <TextField
                   id="outlined-basic"
                   variant="outlined"
-                  value={formatter.format(spp)}
-                  // disabled
+                  onChange={handleChangeSPP}
+                  required
                   style={{ width: "400px", marginLeft: "35px" }}
                 />
               </Grid>
@@ -219,19 +176,19 @@ function InputSPP() {
                 <TextField
                   id="outlined-basic"
                   variant="outlined"
-                  // disabled
+                  required
                   style={{ width: "400px", marginLeft: "30px" }}
-                  value={formatter.format(infaq)}
+                  onChange={handleChangeInfaq}
                 />
               </Grid>
               <Grid onKeyDown={handleKeyPress}>
-                <FormLabel>Total Bayar</FormLabel>
+                <FormLabel>NominalSPP</FormLabel>
                 <TextField
                   id="outlined-basic"
                   variant="outlined"
                   style={{ width: "400px", marginLeft: "45px", color: "black" }}
-                  // disabled
-                  value={formatter.format(totalBayar)}
+                  required
+                  onChange={handleChangeNominalSPP}
                 />
               </Grid>
               <Grid style={{ textAlign: "right" }}>
@@ -240,12 +197,12 @@ function InputSPP() {
                   color="primary"
                   style={{ margin: "10px" }}
                   onClick={() =>
-                    handlePembayaranSPPTunai(() =>
-                      history.push("/RiwayatTransaksi")
+                    handleUbahNominalSPP(() =>
+                      history.push("/Dashboard")
                     )
                   }
                 >
-                  Bayar
+                  Ubah
                 </Button>
                 <Link>
                   <Button
@@ -265,4 +222,4 @@ function InputSPP() {
   );
 }
 
-export default InputSPP;
+export default UbahNominalSPP;

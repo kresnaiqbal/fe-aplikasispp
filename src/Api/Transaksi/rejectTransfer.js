@@ -4,32 +4,35 @@ const axios = require("axios");
 
 const BASE_URL = "https://kota201.xyz/aplikasi_spp/public/api/";
 
-export default class ApiApprovalTransaksi extends React.Component {
+export default class ApiRejectTransfer extends React.Component {
   static INSTANCE = null;
 
   static getInstance() {
-    if (ApiApprovalTransaksi.INSTANCE === null) {
-      ApiApprovalTransaksi.INSTANCE = new ApiApprovalTransaksi();
+    if (ApiRejectTransfer.INSTANCE === null) {
+      ApiRejectTransfer.INSTANCE = new ApiRejectTransfer();
     }
-    return ApiApprovalTransaksi.INSTANCE;
+    return ApiRejectTransfer.INSTANCE;
   }
 
-  getApprovalInstance = () => {
+  getRejectTransferInstance = () => {
     // Header API
     return axios.create({
       baseURL: `${BASE_URL}`,
     });
   };
 
-  editApprovalPath = (id, admin_id) => {
-    return "transfer/" + id + "?id_admin=" + admin_id;
+  rejectTransferPath = (id) => {
+    return "transfer/" + id;
   };
 
-  editDataApproval = (instance, admin_id, id_tf) => {
+  rejectTransfer = (instance, id_transfer) => {
     if (instance !== null) {
-      let path = BASE_URL + this.editApprovalPath(id_tf, admin_id);
+      let params = {
+        id_transfer: id_transfer,
+      };
+      let path = BASE_URL + this.rejectTransferPath(id_transfer);
       return instance
-        .delete(path)
+        .put(path, params)
         .then((response) => {
           console.log("ini awalan", response);
           return response;
@@ -42,9 +45,9 @@ export default class ApiApprovalTransaksi extends React.Component {
     if (Array.isArray(data)) {
       return Promise.all(data)
         .then((response) => {
-          if (response) {
-            console.log("aqwea", response);
-            return response[0];
+            if (response[0].data.message === "Transfer Tidak Valid, Silahkan Hubungi Admin") {
+                console.log("masuk apa ngga", response[0]);
+                return response;
           }
         })
         .catch((error) => alert(error.response.data.message));

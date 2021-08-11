@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "-40px",
   },
   Head: {
-    color: "black",
+    color:"#3B945E",
     fontSize: "18px",
     fontFamily: "Roboto",
     fontWeight: 700,
@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
   MyButton: {
     background: "#368756",
     border: 0,
-    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
+    boxShadow: "0 .15rem 1.75rem 0 rgba(58,59,69,.15)!important",
     color: "white",
     height: 48,
     padding: "0 30px",

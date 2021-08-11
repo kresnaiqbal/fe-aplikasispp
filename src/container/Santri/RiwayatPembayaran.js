@@ -54,16 +54,22 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
   },
+  body: {
+    padding: 10,
+    paddingLeft: 60,
+  },
   container: {
+    margin: 30,
+    marginTop: 10,
     maxHeight: 440,
+    maxWidth: 1800,
   },
   paperSize: {
     width: "100%",
-    marginLeft: "80px",
     marginTop: "-40px",
   },
   Head: {
-    color: "black",
+    color:"#3B945E",
     fontSize: "18px",
     fontFamily: "Roboto",
     fontWeight: 700,
@@ -73,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
   MyButton: {
     background: "#368756",
     border: 0,
-    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
+    boxShadow: "0 .15rem 1.75rem 0 rgba(58,59,69,.15)!important",
     color: "white",
     height: 48,
     padding: "0 30px",
@@ -87,6 +93,7 @@ const useStyles = makeStyles((theme) => ({
   pic: {
     width: 30,
   },
+  data: { textAlign: "center" },
 }));
 
 function RiwayatPembayaran() {
@@ -131,11 +138,11 @@ function RiwayatPembayaran() {
     currency: "IDR",
   });
   return (
-    <div>
+    <div className={classes.body}>
       <Navbar />
       <Paper className={classes.paperSize} elevation="1">
         <div className={classes.Head}>Riwayat Pembayaran </div>
-        <Divider style={{ marginTop: "10px" }} />
+        <Divider style={{ marginTop: 10, marginBottom: 10 }} />
         <TableContainer
           className={classes.container}
           style={{ marginTop: "10px" }}
@@ -163,20 +170,20 @@ function RiwayatPembayaran() {
                 dataRiwayatPembayaran.map((data) => {
                   return (
                     <TableRow hover key="{data.id_transaksi}">
-                      <TableCell style={{ width: "10%" }}>
+                      <TableCell style={{ width: "10%" }} >
                         {data.id_transaksi}
                       </TableCell>
                       <TableCell style={{ width: "20%" }}>
                         {/* {data.tanggal_transaksi} */}
                         {moment(data.tanggal_transaksi).format('D MMMM, YYYY')}
                       </TableCell>
-                      <TableCell style={{ width: "10%" }}>
+                      <TableCell style={{ width: "10%" }} >
                         {moment().month(data.bulan).format("MMMM")}
                       </TableCell>
                       <TableCell style={{ width: "15%" }}>
                         {formatter.format(data.total_bayar)}
                       </TableCell>
-                      <TableCell>{data.paraf}</TableCell>
+                      <TableCell >{data.paraf}</TableCell>
                       <TableCell>{data.status_transaksi}</TableCell>
                     </TableRow>
                   );
@@ -187,7 +194,7 @@ function RiwayatPembayaran() {
         <Link to={`${process.env.PUBLIC_URL}/DaftarSantri`}>
           <Button
             variant="contained"
-            style={{ margin: "2%", background: "#c4c4c4" }}
+            style={{ margin: "2%", background: "#c4c4c4", alignItems:"right", justifyContent:"right"}}
           >
             Kembali
           </Button>

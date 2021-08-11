@@ -13,11 +13,11 @@ const useStyles = makeStyles((theme) => ({
     width: "270px",
     height: "100px",
     marginTop: "-40px",
-    marginLeft:"60px",
-    boxShadow: "1px 1px 1px #929191",
+    // marginLeft:"60px",
+    boxShadow: "0 .15rem 1.75rem 0 rgba(58,59,69,.15)!important",
   },
   Head: {
-    color: "black",
+    color:"black",
     fontSize: 13,
     fontFamily: "Roboto",
     fontWeight: 700,
@@ -38,31 +38,34 @@ export default function CardDashboard({ params }) {
   const classes = useStyles();
   const [dataJumlahSantri, setJumlahSantri] = useState([]);
 
-
   return (
-    <Paper
-      className={classes.Paper}
-      style={{ borderLeft: `5px solid ${params.color}` }}
-    >
-      <Grid container direction="row">
-        <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-          <Typography className={classes.Head}>
-            {params && params.title}
-          </Typography>
-        </Grid>
+    <Grid container direction="row">
+      {/* <Grid item xs={12} sm={12} md={12} lg={12} xl={12}> */}
+        <Paper
+          className={classes.Paper}
+          style={{ borderLeft: `5px solid ${params.color}` }}
+        >
+          <Grid container direction="row">
+            <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+              <Typography className={classes.Head}>
+                {params && params.title}
+              </Typography>
+            </Grid>
+          </Grid>
+          <Grid container direction="row">
+            {/* {dataJumlahSantri && */}
+            <Grid item xs={10} sm={10} md={10} lg={10} xl={10}>
+              <Typography className={classes.data}>
+                {params && params.data}
+              </Typography>
+            </Grid>
+            <Grid item xs={2} sm={2} md={2} lg={2} xl={2}>
+              {params && params.icon}
+            </Grid>
+            {/* } */}
+          </Grid>
+        </Paper>
       </Grid>
-      <Grid container direction="row">
-        {/* {dataJumlahSantri && */}
-        <Grid item xs={10} sm={10} md={10} lg={10} xl={10}>
-          <Typography className={classes.data}>
-            {params && params.data}
-          </Typography>
-        </Grid>
-        <Grid item xs={2} sm={2} md={2} lg={2} xl={2}>
-            {params && params.icon}
-        </Grid>
-        {/* } */}
-      </Grid>
-    </Paper>
+    // </Grid>
   );
 }

@@ -8,6 +8,7 @@ import {
   TextField,
   MenuItem,
   InputAdornment,
+  Grid,
 } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import AccountCircle from "@material-ui/icons/AccountCircle";
@@ -20,11 +21,11 @@ import { useParams } from "react-router-dom";
 
 const roles = [
   {
-    value: "admin",
+    value: "Admin",
     label: "Admin",
   },
   {
-    value: "operator",
+    value: "Operator",
     label: "Operator",
   },
 ];
@@ -50,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "-38px",
   },
   Head: {
-    color: "black",
+    color:"#3B945E",
     fontSize: "18px",
     fontFamily: "Roboto",
     fontWeight: 700,
@@ -61,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
   MyButton: {
     background: "#368756",
     border: 0,
-    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
+    boxShadow: "0 .15rem 1.75rem 0 rgba(58,59,69,.15)!important",
     color: "white",
     height: 48,
     padding: "0 30px",
@@ -121,6 +122,8 @@ function EditDataOperator() {
     // console.log(event.target.value);
   };
 
+
+
   const handleEditAdmin = (callback) => {
     let gateway = ApiEditAdmin.getInstance();
     let AdminInstance = gateway.getAdminInstance();
@@ -135,6 +138,12 @@ function EditDataOperator() {
     );
   };
 
+  const handleKeyPress = (event) => {
+    if (event.keyCode == 13 /*enter*/) {
+      handleEditAdmin(() => history.push("/akunadmin"))
+    }
+  };
+
   return (
     <div>
       <Navbar />
@@ -144,7 +153,7 @@ function EditDataOperator() {
         <FormControl component="fieldset">
           <div className={classes.pad}>
             <form className={classes.root} noValidate autoComplete="off">
-              <div>
+              <Grid onKeyDown={handleKeyPress}>
                 {dataAdmin && dataAdmin.nama_admin && (
                   <TextField
                     id="outlined-basic"
@@ -163,8 +172,8 @@ function EditDataOperator() {
                     }}
                   />
                 )}
-              </div>
-              <div>
+              </Grid>
+              <Grid onKeyDown={handleKeyPress}>
                 {dataAdmin && dataAdmin.role && (
                   <TextField
                     id="outlined-select-gender"
@@ -190,8 +199,8 @@ function EditDataOperator() {
                     ))}
                   </TextField>
                 )}
-              </div>
-              <div>
+              </Grid>
+              <Grid onKeyDown={handleKeyPress}>
                 {dataAdmin && dataAdmin.paraf && (
                   <TextField
                     id="outlined-basic"
@@ -209,8 +218,8 @@ function EditDataOperator() {
                     }}
                   />
                 )}
-              </div>
-              <div>
+              </Grid>
+              <Grid onKeyDown={handleKeyPress}>
                 {dataAdmin && dataAdmin.username && (
                   <TextField
                     id="outlined-basic"
@@ -229,7 +238,7 @@ function EditDataOperator() {
                     }}
                   />
                 )}
-              </div>
+              </Grid>
               <div style={{ textAlign: "right" }}>
                 <Button
                   variant="contained"

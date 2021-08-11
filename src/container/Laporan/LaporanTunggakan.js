@@ -10,6 +10,8 @@ import {
   TablePagination,
   TableRow,
   Button,
+  Divider,
+  Typography,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -67,16 +69,22 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
   },
+  body: {
+    padding: 10,
+    paddingLeft: 60,
+  },
   container: {
+    margin: 30,
+    marginTop: 10,
     maxHeight: 440,
+    maxWidth: 1800,
   },
   paperSize: {
     width: "100%",
-    marginLeft: "80px",
-    marginTop: "-40px"
+    marginTop: "-60px"
   },
   Head: {
-    color: "black",
+    color:"#3B945E",
     fontSize: "18px",
     fontFamily: "Roboto",
     fontWeight: 700,
@@ -86,7 +94,7 @@ const useStyles = makeStyles((theme) => ({
   MyButton: {
     background: "#368756",
     border: 0,
-    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
+    boxShadow: "0 .15rem 1.75rem 0 rgba(58,59,69,.15)!important",
     color: "white",
     width: "140px",
     height: "35px",
@@ -180,10 +188,11 @@ function LaporanTunggakan() {
   };
 
   return (
-    <div>
+    <div className={classes.body}>
       <Navbar />
       <Paper className={classes.paperSize} elevation="1">
-        <div className={classes.Head}>Laporan Tunggakan</div>
+        <Typography className={classes.Head}>Laporan Tunggakan</Typography>
+        <Divider style={{ marginTop: 10, marginBottom: 10 }} />
         <TableContainer className={classes.container}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>

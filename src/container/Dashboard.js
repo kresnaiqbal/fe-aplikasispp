@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import CardGraphHitungUang from "./CardGraphHitungUang";
 import CardDashboard from "./CardDashboard";
-import CardGraphPersentaseKelas from "./CardGraphPersentaseKelas";
+import CardDoughnutChart from "./CardDoughnutChart"
 import { Grid, CircularProgress } from "@material-ui/core";
 import { AssignmentTurnedIn, AssignmentLate, Money } from "@material-ui/icons";
 import ApiHitungJumlahSantri from "../Api/Transaksi/HitungJumlahSantri";
@@ -20,6 +20,10 @@ const useStyles = makeStyles((theme) => ({
     color: "#C4C4C4",
     fontSize: 36,
   },
+  body: {
+    padding: 10,
+    paddingLeft: 60,
+  }
 }));
 
 function DashboardView() {
@@ -126,7 +130,7 @@ function DashboardView() {
   
 
   return (
-    <div>
+    <div className={classes.body}>
       <Navbar />
       <Grid container direction="row">
         {cardDashboard &&
@@ -137,12 +141,12 @@ function DashboardView() {
           ))}
       </Grid>
       <Grid container direction="row">
-        <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+        <Grid item xs={12} sm={12} md={6} lg={6} xl={4}>
           <CardGraphHitungUang />
         </Grid>
-        {/* <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-          <CardGraphPersentaseKelas /> 
-        </Grid> */}
+        <Grid item xs={12} sm={12} md={6} lg={6} xl={4}>
+          <CardDoughnutChart /> 
+        </Grid>
       </Grid>
     </div>
   );
