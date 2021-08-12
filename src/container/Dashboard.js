@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import CardGraphHitungUang from "./CardGraphHitungUang";
 import CardDashboard from "./CardDashboard";
-import CardDoughnutChart from "./CardDoughnutChart"
-import { Grid, CircularProgress } from "@material-ui/core";
+import CardDoughnutChart from "./CardDoughnutChart";
+import { Grid, LinearProgress } from "@material-ui/core";
 import { AssignmentTurnedIn, AssignmentLate, Money } from "@material-ui/icons";
 import ApiHitungJumlahSantri from "../Api/Transaksi/HitungJumlahSantri";
 import {
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   body: {
     padding: 10,
     paddingLeft: 60,
-  }
+  },
 }));
 
 function DashboardView() {
@@ -47,13 +47,19 @@ function DashboardView() {
   useEffect(() => {
     const token = getToken();
     const timer = setInterval(() => {
-      setProgress((prevProgress) => (prevProgress >= 100 ? 0 : prevProgress + 10));
-    }, 800);
+      setProgress((oldProgress) => {
+        if (oldProgress === 100) {
+          return 0;
+        }
+        const diff = Math.random() * 10;
+        return Math.min(oldProgress + diff, 100);
+      });
+    }, 500);
 
-    const formatter = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'IDR',
-    })
+    const formatter = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "IDR",
+    });
 
     if (!token) {
       history.push("/");
@@ -121,13 +127,15 @@ function DashboardView() {
     clearInterval(timer);
   }, [hasResponse]);
 
-
   if (!hasResponse) {
     console.log("return loading");
-    return <CircularProgress variant="determinate" value={progress} />;
+    return (
+      <LinearProgress
+        color="primary"
+        style={{ marginTop: "300px", width: "600px", marginLeft: "400px" }}
+      />
+    );
   }
-
-  
 
   return (
     <div className={classes.body}>
@@ -135,7 +143,15 @@ function DashboardView() {
       <Grid container direction="row">
         {cardDashboard &&
           cardDashboard.map((data) => (
-            <Grid item xs={6} sm={6} md={3} lg={3} xl={3} style={{marginBottom:'30px'}}>
+            <Grid
+              item
+              xs={6}
+              sm={6}
+              md={3}
+              lg={3}
+              xl={3}
+              style={{ marginBottom: "30px" }}
+            >
               <CardDashboard params={data} />
             </Grid>
           ))}
@@ -145,7 +161,7 @@ function DashboardView() {
           <CardGraphHitungUang />
         </Grid>
         <Grid item xs={12} sm={12} md={6} lg={6} xl={4}>
-          <CardDoughnutChart /> 
+          <CardDoughnutChart />
         </Grid>
       </Grid>
     </div>

@@ -98,7 +98,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "1%",
     color: "white",
   },
-  data: { textAlign: "center" },
+  data: { },
 }));
 
 function DaftarSantri() {
@@ -258,15 +258,24 @@ function DaftarSantri() {
             <Grid
               container
               direction="row"
-              style={{ margin: 10, paddingLeft:20}}
+              style={{ margin: 10, paddingLeft: 20, textAlign: "right" }}
             >
-              <Grid item xs={6} sm={6} md={6} lg={6} xl={6} onKeyDown={handleKeyPress}>
+              <Grid
+                item
+                xs={6}
+                sm={6}
+                md={6}
+                lg={6}
+                xl={6}
+                onKeyDown={handleKeyPress}
+              >
                 <TextField
                   id="outlined-select-gender"
                   value={namaSantri}
                   onChange={handleChangeSearchSantri}
                   variant="outlined"
                   size="small"
+                  placeholder="Cari Santri"
                   className={classes.monthPicker}
                   InputProps={{
                     startAdornment: (
@@ -306,7 +315,6 @@ function DaftarSantri() {
                     onClick={() => handleSortData("Nis")}
                     style={{
                       color: "#c9c9c9",
-                      paddingLeft: "70px",
                       height: 10,
                       width: 1,
                     }}
@@ -429,13 +437,18 @@ function DaftarSantri() {
             </TableBody>
           </Table>
         </TableContainer>
-        <Link to={`${process.env.PUBLIC_URL}/DaftarSantri/Tambah`}>
-          <Button variant="contained" color="primary" style={{ margin: "2%" }}>
-            <AddOutlined />
-            Tambah Data Santri
-          </Button>
-        </Link>
-
+        <Grid style={{ textAlign: "right" }}>
+          <Link to={`${process.env.PUBLIC_URL}/DaftarSantri/Tambah`}>
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ margin: "2%" }}
+            >
+              <AddOutlined />
+              Tambah Data Santri
+            </Button>
+          </Link>
+        </Grid>
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"

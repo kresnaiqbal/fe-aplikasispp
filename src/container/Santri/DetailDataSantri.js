@@ -6,6 +6,7 @@ import { useParams } from "react-router";
 import { ApiDetailSantri } from "../../Api";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,13 +25,19 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "18px",
     lineHeight: "88%",
     fontFamily: "Roboto",
-    margin: "9px",
     marginLeft: "40px",
-    marginBottom: "40px",
     color: "black",
+    marginBottom: "20px",
+  },
+  header: {
+    alignItems: "center",
+    fontSize: "14px",
+    fontFamily: "Roboto",
+    marginLeft: "40px",
+    color: "#828282",
   },
   Head: {
-    color:"#3B945E",
+    color: "#3B945E",
     fontSize: "18px",
     fontFamily: "Roboto",
     fontWeight: 700,
@@ -79,48 +86,55 @@ function DetailDataSantri() {
         <Divider style={{ marginTop: "20px" }} />
         <Grid container direction="row" style={{ marginTop: "10px" }}>
           <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
+            <Typography className={classes.header}>Nama Lengkap</Typography>
             {dataSantri && dataSantri.nama_santri && (
               <Typography className={classes.data}>
-                Nama Lengkap : {dataSantri.nama_santri}
+                {dataSantri.nama_santri}
               </Typography>
             )}
           </Grid>
           <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
+            <Typography className={classes.header}>
+              Tempat Tanggal Lahir
+            </Typography>
             {dataSantri && dataSantri.nama_santri && (
               <Typography className={classes.data}>
-                Tempat Tanggal Lahir : {dataSantri.tanggal_lahir}
+                {moment(dataSantri.tanggal_lahir).format("D MMMM, YYYY")}
               </Typography>
             )}
           </Grid>
         </Grid>
         <Grid container direction="row">
           <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
+            <Typography className={classes.header}>Nomor Induk Siswa</Typography>
             {dataSantri && dataSantri.nis && (
-              <Typography className={classes.data}>
-                NIS : {dataSantri.nis}
-              </Typography>
+              <Typography className={classes.data}>{dataSantri.nis}</Typography>
             )}
           </Grid>
           <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
+            <Typography className={classes.header}>Jenis Kelamin</Typography>
             {dataSantri && dataSantri.jenis_kelamin && (
               <Typography className={classes.data}>
-                Jenis Kelamin : {dataSantri.jenis_kelamin}
+                {" "}
+                {dataSantri.jenis_kelamin === "P" ? "Perempuan" : "Laki-laki"}
               </Typography>
             )}
           </Grid>
         </Grid>
         <Grid container direction="row">
           <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
+            <Typography className={classes.header}>Alamat</Typography>
             {dataSantri && dataSantri.alamat && (
               <Typography className={classes.data}>
-                Alamat : {dataSantri.alamat}
+                {dataSantri.alamat}
               </Typography>
             )}
           </Grid>
           <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
+            <Typography className={classes.header}>Nomor Telepon</Typography>
             {dataSantri && dataSantri.nama_santri && (
               <Typography className={classes.data}>
-                No. Hp : {dataSantri.no_hp}
+                {dataSantri.no_hp}
               </Typography>
             )}
           </Grid>
@@ -128,48 +142,51 @@ function DetailDataSantri() {
 
         <Grid container direction="row">
           <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
+            <Typography className={classes.header}>Nama Orang Tua</Typography>
             {dataSantri && dataSantri.nama_wali && (
               <Typography className={classes.data}>
-                Nama Orang Tua : {dataSantri.nama_wali}
+                {dataSantri.nama_wali}
               </Typography>
             )}
           </Grid>
           <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
+            <Typography className={classes.header}>Keterangan Subsidi</Typography>
             {dataSantri && dataSantri.subsidi && (
               <Typography className={classes.data}>
-                Keterangan Subsidi :{" "}
+                {" "}
                 {dataSantri.subsidi === "0" ? "Tidak Subsidi" : "Subsidi"}
               </Typography>
-              )}
+            )}
           </Grid>
         </Grid>
         {dataSantri && dataSantri.nis && (
-        <Grid container direction="row">
-          <Link to={`${process.env.PUBLIC_URL}/riwayatpembayaran/${dataSantri.nis}`}>
-            <Button
-              variant="contained"
-              style={{
-                marginLeft: "30px",
-                marginBottom: "20px",
-                background: "#3B945E",
-                color: "white",
-              }}
+          <Grid container direction="row">
+            <Link
+              to={`${process.env.PUBLIC_URL}/riwayatpembayaran/${dataSantri.nis}`}
+            >
+              <Button
+                variant="contained"
+                style={{
+                  marginLeft: "30px",
+                  marginBottom: "20px",
+                  background: "#3B945E",
+                  color: "white",
+                }}
               >
-              Riwayat Pembayaran
-            </Button>
-          </Link>
-          <Link to={`${process.env.PUBLIC_URL}/daftarsantri`}>
-            <Button
-              variant="contained"
-              color="grey"
-              style={{ marginLeft: "30px", marginBottom: "20px" }}
+                Riwayat Pembayaran
+              </Button>
+            </Link>
+            <Link to={`${process.env.PUBLIC_URL}/daftarsantri`}>
+              <Button
+                variant="contained"
+                color="grey"
+                style={{ marginLeft: "30px", marginBottom: "20px" }}
               >
-              Kembali
-            </Button>
-          </Link>
-        </Grid>
-            )}
-              
+                Kembali
+              </Button>
+            </Link>
+          </Grid>
+        )}
       </Paper>
     </Fragment>
   );

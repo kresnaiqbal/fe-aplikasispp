@@ -5,7 +5,6 @@ import {
   Button,
   Divider,
   FormControl,
-  FormLabel,
   TextField,
   MenuItem,
   Select,
@@ -82,6 +81,10 @@ const useStyles = makeStyles((theme) => ({
   pad: {
     margin: "20px",
   },
+  typo: {
+    paddingLeft: "10px",
+    marginBottom: "5px",
+  },
 }));
 
 function UbahNominalSPP() {
@@ -144,77 +147,84 @@ function UbahNominalSPP() {
         <Divider />
         <FormControl component="fieldset">
           <div className={classes.pad}>
-            <form className={classes.root} noValidate autoComplete="off">
-              <Grid onKeyDown={handleKeyPress}>
-                <FormLabel>Tahun Ajaran</FormLabel>
-                <Select
-                  id="outlined-basic"
-                  variant="outlined"
-                  required
-                  style={{ width: "400px", marginLeft: "35px" }}
-                  onChange={handleChangeTahun}
-                >
-                  {totalYears.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </Grid>
-              <Grid onKeyDown={handleKeyPress}>
-                <FormLabel>Nominal SPP</FormLabel>
-                <TextField
-                  id="outlined-basic"
-                  variant="outlined"
-                  onChange={handleChangeSPP}
-                  required
-                  style={{ width: "400px", marginLeft: "35px" }}
-                />
-              </Grid>
-              <Grid onKeyDown={handleKeyPress}>
-                <FormLabel>Nominal Infaq</FormLabel>
-                <TextField
-                  id="outlined-basic"
-                  variant="outlined"
-                  required
-                  style={{ width: "400px", marginLeft: "30px" }}
-                  onChange={handleChangeInfaq}
-                />
-              </Grid>
-              <Grid onKeyDown={handleKeyPress}>
-                <FormLabel>NominalSPP</FormLabel>
-                <TextField
-                  id="outlined-basic"
-                  variant="outlined"
-                  style={{ width: "400px", marginLeft: "45px", color: "black" }}
-                  required
-                  onChange={handleChangeNominalSPP}
-                />
-              </Grid>
-              <Grid style={{ textAlign: "right" }}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  style={{ margin: "10px" }}
-                  onClick={() =>
-                    handleUbahNominalSPP(() =>
-                      history.push("/Dashboard")
-                    )
-                  }
-                >
-                  Ubah
-                </Button>
-                <Link>
+            <Grid container direction="row">
+              <form className={classes.root} noValidate autoComplete="off">
+                <Grid onKeyDown={handleKeyPress}>
+                  <Typography className={classes.typo}>Tahun Ajaran</Typography>
+                  <Select
+                    id="outlined-basic"
+                    variant="outlined"
+                    value={tahun}
+                    required
+                    style={{
+                      width: "400px",
+                      marginLeft: 10,
+                      marginTop: 8,
+                      marginBottom: 10,
+                    }}
+                    onChange={handleChangeTahun}
+                  >
+                    {totalYears.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Grid>
+                <Grid onKeyDown={handleKeyPress}>
+                  <Typography className={classes.typo}>Nominal SPP</Typography>
+                  <TextField
+                    id="outlined-basic"
+                    variant="outlined"
+                    onChange={handleChangeSPP}
+                    style={{ width: "400px", color: "black" }}
+                  />
+                </Grid>
+                <Grid onKeyDown={handleKeyPress}>
+                  <Typography className={classes.typo}>
+                    Nominal Infaq
+                  </Typography>
+                  <TextField
+                    id="outlined-basic"
+                    variant="outlined"
+                    required
+                    style={{ width: "400px", color: "black" }}
+                    onChange={handleChangeInfaq}
+                  />
+                </Grid>
+                <Grid onKeyDown={handleKeyPress}>
+                  <Typography className={classes.typo}>Akumulasi SPP dan Infaq</Typography>
+                  <TextField
+                    id="outlined-basic"
+                    variant="outlined"
+                    style={{ width: "400px", color: "black" }}
+                    required
+                    onChange={handleChangeNominalSPP}
+                  />
+                </Grid>
+                <Grid style={{ textAlign: "right" }}>
                   <Button
                     variant="contained"
-                    color="secondary"
-                    to={`${process.env.PUBLIC_URL}/dashboard`}
+                    color="primary"
+                    style={{ margin: "10px" }}
+                    onClick={() =>
+                      handleUbahNominalSPP(() => history.push("/Dashboard"))
+                    }
                   >
-                    Kembali
+                    Ubah
                   </Button>
-                </Link>
-              </Grid>
-            </form>
+                  <Link>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      to={`${process.env.PUBLIC_URL}/dashboard`}
+                    >
+                      Kembali
+                    </Button>
+                  </Link>
+                </Grid>
+              </form>
+            </Grid>
           </div>
         </FormControl>
       </Paper>

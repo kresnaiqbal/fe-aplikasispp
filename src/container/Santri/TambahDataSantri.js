@@ -7,11 +7,10 @@ import {
   Button,
   Divider,
   FormControl,
-  FormLabel,
+  Typography,
   TextField,
   MenuItem,
   Grid,
-  Typography,
   Radio,
   RadioGroup,
   FormControlLabel,
@@ -19,6 +18,7 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
+import moment from "moment";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 
 const genders = [
@@ -80,7 +80,10 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "transparent",
     },
     "& .MuiFormControlLabel-label": {
-      minWidth:"max-content" // or black
+      minWidth: "max-content", // or black
+    },
+    "& .MuiTyphography-body1": {
+      minWidth: "max-content", // or black
     },
   },
   container: {
@@ -113,6 +116,10 @@ const useStyles = makeStyles((theme) => ({
   },
   marginForm: {
     marginLeft: "5px",
+  },
+  typo: {
+    paddingLeft: "10px",
+    marginBottom: "5px",
   },
   icon: {
     borderRadius: "50%",
@@ -286,17 +293,15 @@ function TambahDataSantri() {
           <div className={classes.pad}>
             <form className={classes.root} noValidate autoComplete="off">
               <Grid container direction="row">
-                <Grid xs={6} sm={6} md={1} lg={1} xl={1}>
-                  <FormLabel>Nama Lengkap</FormLabel>
-                </Grid>
                 <Grid
                   xs={6}
                   sm={6}
-                  md={5}
-                  lg={5}
-                  xl={5}
+                  md={6}
+                  lg={6}
+                  xl={6}
                   onKeyDown={handleKeyPress}
                 >
+                  <Typography className={classes.typo}>Nama Lengkap</Typography>
                   <TextField
                     id="outlined-basic"
                     variant="outlined"
@@ -304,17 +309,16 @@ function TambahDataSantri() {
                     onChange={handleChangeNamaSantri}
                   />
                 </Grid>
-                <Grid xs={6} sm={6} md={1} lg={1} xl={1}>
-                  <FormLabel style={{ paddingLeft: "35px" }}>NIS</FormLabel>
-                </Grid>
+
                 <Grid
                   xs={6}
                   sm={6}
-                  md={5}
-                  lg={5}
-                  xl={5}
+                  md={6}
+                  lg={6}
+                  xl={6}
                   onKeyDown={handleKeyPress}
                 >
+                  <Typography className={classes.typo}>NIS</Typography>
                   <TextField
                     id="outlined-basic"
                     variant="outlined"
@@ -324,17 +328,15 @@ function TambahDataSantri() {
                 </Grid>
               </Grid>
               <Grid container direction="row">
-                <Grid xs={6} sm={6} md={1} lg={1} xl={1}>
-                  <FormLabel>Tanggal Lahir</FormLabel>{" "}
-                </Grid>
                 <Grid
                   xs={6}
                   sm={6}
-                  md={5}
-                  lg={5}
-                  xl={5}
+                  md={6}
+                  lg={6}
+                  xl={6}
                   onKeyDown={handleKeyPress}
                 >
+                  <Typography className={classes.typo}>Tanggal Lahir</Typography>{" "}
                   <TextField
                     id="outlined-basic"
                     placeholder="YYYY/MM/DD"
@@ -343,9 +345,7 @@ function TambahDataSantri() {
                     onChange={handleChangeTanggalLahir}
                   />
                 </Grid>
-                <Grid xs={6} sm={6} md={1} lg={1} xl={1}>
-                  <FormLabel>Jenis Kelamin</FormLabel>{" "}
-                </Grid>
+
                 <Grid
                   xs={6}
                   sm={1}
@@ -354,11 +354,12 @@ function TambahDataSantri() {
                   xl={1}
                   // style={{ width: "400px" }}
                 >
+                  <Typography className={classes.typo}>Jenis Kelamin</Typography>{" "}
                   <RadioGroup
                     name="customized-radios"
                     value={gender}
                     onChange={handleChangeGender}
-                    style={{width:"270px", minWidth:"max-content"}}
+                    style={{ width: "270px", minWidth: "max-content" }}
                   >
                     <div style={{ display: "inline-flex" }}>
                       <Grid container direction="row">
@@ -367,7 +368,7 @@ function TambahDataSantri() {
                             value="P"
                             control={<StyledRadio />}
                             label="Perempuan"
-                            style={{ width:35 }}
+                            style={{ width: 35, paddingTop:"15px" }}
                           />
                         </Grid>
                         <Grid xs={6} sm={6} md={6} lg={6} xl={6}>
@@ -375,7 +376,7 @@ function TambahDataSantri() {
                             value="L"
                             control={<StyledRadio />}
                             label="Laki-laki"
-                            style={{ width:35 }}
+                            style={{ width: 35, paddingTop:"15px" }}
                           />
                         </Grid>
                       </Grid>
@@ -384,17 +385,15 @@ function TambahDataSantri() {
                 </Grid>
               </Grid>
               <Grid container direction="row">
-                <Grid xs={6} sm={6} md={1} lg={1} xl={1}>
-                  <FormLabel>Alamat</FormLabel>
-                </Grid>
                 <Grid
                   xs={6}
                   sm={6}
-                  md={5}
-                  lg={5}
-                  xl={5}
+                  md={6}
+                  lg={6}
+                  xl={6}
                   onKeyDown={handleKeyPress}
                 >
+                  <Typography className={classes.typo}>Alamat</Typography>
                   <TextField
                     id="outlined-basic"
                     variant="outlined"
@@ -402,17 +401,16 @@ function TambahDataSantri() {
                     onChange={handleChangeAlamat}
                   />
                 </Grid>
-                <Grid xs={6} sm={6} md={1} lg={1} xl={1}>
-                  <FormLabel>Nomor HP</FormLabel>
-                </Grid>
+
                 <Grid
                   xs={6}
                   sm={6}
-                  md={5}
-                  lg={5}
-                  xl={5}
+                  md={6}
+                  lg={6}
+                  xl={6}
                   onKeyDown={handleKeyPress}
                 >
+                  <Typography className={classes.typo}>Nomor HP</Typography>
                   <TextField
                     id="outlined-basic"
                     variant="outlined"
@@ -422,17 +420,15 @@ function TambahDataSantri() {
                 </Grid>
               </Grid>
               <Grid container direction="row">
-                <Grid xs={6} sm={6} md={1} lg={1} xl={1}>
-                  <FormLabel>Kelas</FormLabel>
-                </Grid>
                 <Grid
                   xs={6}
                   sm={6}
-                  md={5}
-                  lg={5}
-                  xl={5}
+                  md={6}
+                  lg={6}
+                  xl={6}
                   onKeyDown={handleKeyPress}
                 >
+                  <Typography className={classes.typo}>Kelas</Typography>
                   <TextField
                     id="outlined-select-kelas"
                     select
@@ -448,17 +444,16 @@ function TambahDataSantri() {
                     ))}
                   </TextField>
                 </Grid>
-                <Grid xs={6} sm={6} md={1} lg={1} xl={1}>
-                  <FormLabel>Keterangan Subsidi</FormLabel>
-                </Grid>
+
                 <Grid
                   xs={6}
                   sm={6}
-                  md={5}
-                  lg={5}
-                  xl={5}
+                  md={6}
+                  lg={6}
+                  xl={6}
                   onKeyDown={handleKeyPress}
                 >
+                  <Typography className={classes.typo}>Keterangan Subsidi</Typography>
                   <TextField
                     id="outlined-select-subsidi"
                     select
@@ -476,17 +471,15 @@ function TambahDataSantri() {
                 </Grid>
               </Grid>
               <Grid container direction="row">
-                <Grid xs={6} sm={6} md={1} lg={1} xl={1}>
-                  <FormLabel>Jumlah Tunggakan</FormLabel>
-                </Grid>
                 <Grid
                   xs={6}
                   sm={6}
-                  md={5}
-                  lg={5}
-                  xl={5}
+                  md={6}
+                  lg={6}
+                  xl={6}
                   onKeyDown={handleKeyPress}
                 >
+                  <Typography className={classes.typo}>Jumlah Tunggakan</Typography>
                   <TextField
                     id="outlined-basic"
                     variant="outlined"
@@ -494,18 +487,15 @@ function TambahDataSantri() {
                     onChange={handleChangeJumlahTunggakan}
                   />
                 </Grid>
-
-                <Grid xs={6} sm={6} md={1} lg={1} xl={1}>
-                  <FormLabel>Nama OrangTua/Wali</FormLabel>
-                </Grid>
                 <Grid
                   xs={6}
                   sm={6}
-                  md={5}
-                  lg={5}
-                  xl={5}
+                  md={6}
+                  lg={6}
+                  xl={6}
                   onKeyDown={handleKeyPress}
                 >
+                  <Typography className={classes.typo}>Nama OrangTua/Wali</Typography>
                   <TextField
                     id="outlined-basic"
                     variant="outlined"

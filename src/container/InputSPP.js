@@ -5,7 +5,6 @@ import {
   Button,
   Divider,
   FormControl,
-  FormLabel,
   TextField,
   MenuItem,
   Select,
@@ -82,6 +81,10 @@ const useStyles = makeStyles((theme) => ({
   },
   pad: {
     margin: "20px",
+  },
+  typo: {
+    paddingLeft: "10px",
+    marginBottom: "5px",
   },
 }));
 
@@ -166,25 +169,30 @@ function InputSPP() {
         </Typography>
         <Divider />
         <FormControl component="fieldset">
-          <div className={classes.pad}>
+          <div className={classes.pad} style={{ alignItems: "right" }}>
             <form className={classes.root} noValidate autoComplete="off">
-              <Grid onKeyDown={handleKeyPress}>
-                <FormLabel>NIS</FormLabel>
+              <Grid onKeyDown={handleKeyPress} >
+                <Typography className={classes.typo}>NIS</Typography>
                 <TextField
                   id="outlined-basic"
                   required
                   variant="outlined"
-                  style={{ width: "400px", marginLeft: "90px" }}
+                  style={{ width: "400px" }}
                   onChange={handleChangeNIS}
                 />
               </Grid>
               <Grid onKeyDown={handleKeyDown}>
-                <FormLabel>Bulan</FormLabel>
+                <Typography className={classes.typo}>Jumlah Bulan</Typography>
                 <Select
                   id="outlined-basic"
                   variant="outlined"
                   required
-                  style={{ width: "400px", marginLeft: "75px" }}
+                  style={{
+                    width: "400px",
+                    marginLeft: 8,
+                    marginTop: 8,
+                    marginBottom: 10,
+                  }}
                   onChange={handleChangeJumlahBulan}
                 >
                   {totalMonths.map((option) => (
@@ -193,44 +201,44 @@ function InputSPP() {
                     </MenuItem>
                   ))}
                 </Select>
-                <Grid>
+                <Grid style={{ textAlign: "right" }}>
                   <Button
                     variant="contained"
                     color="primary"
                     style={{ margin: "10px" }}
-                    onClick={() => handleCekNominal(nis,jumlahBulan)}
+                    onClick={() => handleCekNominal(nis, jumlahBulan)}
                   >
                     Cek Nominal
                   </Button>
                 </Grid>
               </Grid>
               <Grid onKeyDown={handleKeyDown}>
-                <FormLabel>Nominal SPP</FormLabel>
+                <Typography className={classes.typo}>Nominal SPP</Typography>
                 <TextField
                   id="outlined-basic"
                   variant="outlined"
                   value={formatter.format(spp)}
-                  // disabled
-                  style={{ width: "400px", marginLeft: "35px" }}
+                  disabled
+                  style={{ width: "400px" }}
                 />
               </Grid>
               <Grid onKeyDown={handleKeyPress}>
-                <FormLabel>Nominal Infaq</FormLabel>
+                <Typography className={classes.typo}>Nominal Infaq</Typography>
                 <TextField
                   id="outlined-basic"
                   variant="outlined"
-                  // disabled
-                  style={{ width: "400px", marginLeft: "30px" }}
+                  disabled
+                  style={{ width: "400px" }}
                   value={formatter.format(infaq)}
                 />
               </Grid>
               <Grid onKeyDown={handleKeyPress}>
-                <FormLabel>Total Bayar</FormLabel>
+                <Typography className={classes.typo}>Total Bayar</Typography>
                 <TextField
                   id="outlined-basic"
                   variant="outlined"
-                  style={{ width: "400px", marginLeft: "45px", color: "black" }}
-                  // disabled
+                  style={{ width: "400px", color: "black" }}
+                  disabled
                   value={formatter.format(totalBayar)}
                 />
               </Grid>

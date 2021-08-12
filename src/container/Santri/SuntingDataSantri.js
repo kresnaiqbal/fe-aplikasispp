@@ -10,11 +10,13 @@ import {
   MenuItem,
   Select,
   Grid,
+  Typography,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useParams } from "react-router-dom";
 import { ApiEditSantri, ApiDetailSantri } from "../../Api";
 import { useHistory } from "react-router";
+import moment from "moment";
 
 const kelass = [
   {
@@ -138,6 +140,10 @@ const useStyles = makeStyles((theme) => ({
   pad: {
     margin: "20px",
   },
+  typo: {
+    paddingLeft: "10px",
+    marginBottom: "5px",
+  },
 }));
 
 function SuntingDataSantri() {
@@ -223,26 +229,42 @@ function SuntingDataSantri() {
           <div className={classes.pad}>
             <form className={classes.root} noValidate autoComplete="off">
               <Grid container direction="row">
-                <FormLabel>Nama Lengkap</FormLabel>
-                <Grid onKeyDown={handleKeyPress}>
+                <Grid
+                  item
+                  xs={6}
+                  sm={6}
+                  md={6}
+                  lg={6}
+                  xl={6}
+                  onKeyDown={handleKeyPress}
+                >
+                  <Typography className={classes.typo}>Nama Lengkap</Typography>
                   {dataSantri && dataSantri.nama_santri && (
                     <TextField
                       id="outlined-basic"
                       variant="outlined"
-                      style={{ width: "400px", marginLeft: "55px" }}
+                      style={{ width: "400px" }}
                       value={dataSantri.nama_santri}
                       disabled
                     />
                   )}
                 </Grid>
                 <Grid>
-                  <FormLabel>NIS</FormLabel>
-                  <Grid onKeyDown={handleKeyPress}>
+                  <Grid
+                    item
+                    xs={6}
+                    sm={6}
+                    md={6}
+                    lg={6}
+                    xl={6}
+                    onKeyDown={handleKeyPress}
+                  >
+                    <Typography className={classes.typo}>NIS</Typography>
                     {dataSantri && dataSantri.nis && (
                       <TextField
                         id="outlined-basic"
                         variant="outlined"
-                        style={{ width: "400px", marginLeft: "100px" }}
+                        style={{ width: "400px" }}
                         value={dataSantri.nis}
                         disabled
                       />
@@ -251,62 +273,92 @@ function SuntingDataSantri() {
                 </Grid>
               </Grid>
               <Grid container direction="row">
-                <Grid>
-                  <FormLabel>Tanggal Lahir</FormLabel>
-                </Grid>
-                <Grid onKeyDown={handleKeyPress}>
+                <Grid
+                  item
+                  xs={6}
+                  sm={6}
+                  md={6}
+                  lg={6}
+                  xl={6}
+                  onKeyDown={handleKeyPress}
+                >
+                  <Typography className={classes.typo}>Tanggal Lahir</Typography>
                   {dataSantri && dataSantri.tanggal_lahir && (
                     <TextField
                       id="outlined-basic"
                       placeholder="YYYY/MM/DD"
                       variant="outlined"
-                      style={{ width: "400px", marginLeft: "65px" }}
-                      value={dataSantri.tanggal_lahir}
+                      style={{ width: "400px" }}
+                      value={moment(dataSantri.tanggal_lahir).format(
+                        "D MMMM, YYYY"
+                      )}
                       disabled
                     />
                   )}
                 </Grid>
 
-                <Grid>
-                  <FormLabel>Jenis Kelamin</FormLabel>
-                </Grid>
-                <Grid onKeyDown={handleKeyPress}>
+                <Grid
+                  item
+                  xs={6}
+                  sm={6}
+                  md={6}
+                  lg={6}
+                  xl={6}
+                  onKeyDown={handleKeyPress}
+                >
+                  <Typography className={classes.typo}>Jenis Kelamin</Typography>
                   {dataSantri && dataSantri.jenis_kelamin && (
                     <TextField
                       id="outlined-basic"
-                      value={dataSantri.jenis_kelamin}
+                      value={
+                        dataSantri.jenis_kelamin === "P"
+                          ? "Perempuan"
+                          : "Laki-laki"
+                      }
                       variant="outlined"
-                      style={{ width: "400px", marginLeft: "25px" }}
+                      style={{ width: "400px" }}
                       disabled
                     />
                   )}
                 </Grid>
               </Grid>
               <Grid container direction="row">
-                <Grid>
-                  <FormLabel>Alamat</FormLabel>
-                </Grid>
-                <Grid onKeyDown={handleKeyPress}>
+                <Grid
+                  item
+                  xs={6}
+                  sm={6}
+                  md={6}
+                  lg={6}
+                  xl={6}
+                  onKeyDown={handleKeyPress}
+                >
+                  <Typography className={classes.typo}>Alamat</Typography>
                   {dataSantri && dataSantri.alamat && (
                     <TextField
                       id="outlined-basic"
                       variant="outlined"
-                      style={{ width: "400px", marginLeft: "110px" }}
+                      style={{ width: "400px" }}
                       value={alamat}
                       onChange={handleChangeAlamat}
                     />
                   )}
                 </Grid>
 
-                <Grid>
-                  <FormLabel>Nomor HP</FormLabel>
-                </Grid>
-                <Grid onKeyDown={handleKeyPress}>
+                <Grid
+                  item
+                  xs={6}
+                  sm={6}
+                  md={6}
+                  lg={6}
+                  xl={6}
+                  onKeyDown={handleKeyPress}
+                >
+                  <Typography className={classes.typo}>Nomor HP</Typography>
                   {dataSantri && dataSantri.no_hp && (
                     <TextField
                       id="outlined-basic"
                       variant="outlined"
-                      style={{ width: "400px", marginLeft: "50px" }}
+                      style={{ width: "400px" }}
                       value={noHp}
                       onChange={handleChangeNoHp}
                     />
@@ -314,10 +366,16 @@ function SuntingDataSantri() {
                 </Grid>
               </Grid>
               <Grid container direction="row">
-                <Grid>
-                  <FormLabel>Kelas</FormLabel>
-                </Grid>
-                <Grid onKeyDown={handleKeyPress}>
+                <Grid
+                  item
+                  xs={6}
+                  sm={6}
+                  md={6}
+                  lg={6}
+                  xl={6}
+                  onKeyDown={handleKeyPress}
+                >
+                  <Typography className={classes.typo}>Kelas</Typography>
                   {dataSantri && dataSantri.nama_kelas && kelas && (
                     <Select
                       id="outlined-select-kelas"
@@ -325,7 +383,7 @@ function SuntingDataSantri() {
                       value={kelas}
                       onChange={handleChangeKelas}
                       variant="outlined"
-                      style={{ width: "400px", marginLeft: "121px" }}
+                      style={{ width: "400px" }}
                     >
                       {kelass.map((option) => (
                         <MenuItem key={option.value} value={option.value}>
@@ -336,10 +394,16 @@ function SuntingDataSantri() {
                   )}
                 </Grid>
 
-                <Grid>
-                  <FormLabel>Keterangan Subsidi</FormLabel>
-                </Grid>
-                <Grid onKeyDown={handleKeyPress}>
+                <Grid
+                  item
+                  xs={6}
+                  sm={6}
+                  md={6}
+                  lg={6}
+                  xl={6}
+                  onKeyDown={handleKeyPress}
+                >
+                  <Typography className={classes.typo}>Keterangan Subsidi</Typography>
                   {dataSantri && dataSantri.subsidi && subsidi && (
                     <Select
                       id="outlined-select-subsidi"
@@ -359,10 +423,16 @@ function SuntingDataSantri() {
                 </Grid>
               </Grid>
               <Grid container direction="row">
-                <Grid>
-                  <FormLabel>Jumlah Tunggakan</FormLabel>
-                </Grid>
-                <Grid onKeyDown={handleKeyPress}>
+                <Grid
+                  item
+                  xs={6}
+                  sm={6}
+                  md={6}
+                  lg={6}
+                  xl={6}
+                  onKeyDown={handleKeyPress}
+                >
+                  <Typography className={classes.typo}>Jumlah Tunggakan</Typography>
                   {dataSantri && (
                     <TextField
                       id="outlined-basic"
@@ -374,10 +444,16 @@ function SuntingDataSantri() {
                   )}
                 </Grid>
 
-                <Grid>
-                  <FormLabel>Nama OrangTua/Wali</FormLabel>
-                </Grid>
-                <Grid onKeyDown={handleKeyPress}>
+                <Grid
+                  item
+                  xs={6}
+                  sm={6}
+                  md={6}
+                  lg={6}
+                  xl={6}
+                  onKeyDown={handleKeyPress}
+                >
+                  <Typography className={classes.typo}>Nama OrangTua/Wali</Typography>
                   {dataSantri && dataSantri.nama_wali && (
                     <TextField
                       id="outlined-basic"
@@ -389,18 +465,23 @@ function SuntingDataSantri() {
                   )}
                 </Grid>
               </Grid>
-              <Grid container direction="row" style={{ textAlign: "right" }}>
+              <Grid container direction="row" style={{ alignContent: "right" }}>
                 <Button
                   variant="contained"
                   color="primary"
-                  style={{ margin: "10px" }}
+                  style={{ height: 30, width: 80, margin: "10px" }}
                   onClick={() =>
                     handleEditSantri(() => history.push("/daftarsantri"))
                   }
                 >
                   Tambah
                 </Button>
-                <Button variant="contained" color="secondary">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  size="small"
+                  style={{ height: 30, width: 80, margin: "10px" }}
+                >
                   Kembali
                 </Button>
               </Grid>
